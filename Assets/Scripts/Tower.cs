@@ -3,16 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-
-public class Goose : MonoBehaviour
-{
-    public bool getDamage(float dmg)
-    {
-        return false;
-    }
-    public float Hp { get; set; }
-}
-
 public class Tower : MonoBehaviour
 {
 
@@ -24,7 +14,6 @@ public class Tower : MonoBehaviour
     [SerializeField]
     public float ProjectileSpeed;
 
-    public List<Goose> Gooses;
     [SerializeField]
     Transform spawnPoint;
 
@@ -91,7 +80,7 @@ public class Tower : MonoBehaviour
     {
         float minDistance = 9999;
         Goose temp = null;
-        foreach (var goose in Gooses)
+        foreach (var goose in GooseFabric.Instance.geese)
         {
             float distance = (goose.transform.position - transform.position).magnitude;
             if (distance < minDistance)

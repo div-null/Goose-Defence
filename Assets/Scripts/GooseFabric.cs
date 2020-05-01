@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GooseFabric : MonoBehaviour
+public class GooseFabric : Singleton<GooseFabric>
 {
     public bool fabric_activity;                     //активность фабрики
     public List<Goose> geese;                       //ГУУУУСИИИИ
-
-
 
     public IEnumerator SpawnGeese(int level, List<GameObject> prefabs)
     {
