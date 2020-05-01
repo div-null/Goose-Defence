@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class GooseFabric : MonoBehaviour
 {
-    public bool fabricActivity;                     //активность фабрики
+    public bool fabric_activity;                     //активность фабрики
     public List<Goose> geese;                       //ГУУУУСИИИИ
+
+
 
     public IEnumerator SpawnGeese(int level, List<GameObject> prefabs)
     {
@@ -27,10 +29,19 @@ public class GooseFabric : MonoBehaviour
         }
         
     }
-
     public GooseFabric()
     {
-        fabricActivity = true;
+        fabric_activity = true;
         geese = new List<Goose>();
+    }
+
+    public void OnAttack(float radius, Vector2 target, int damage)
+    {
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(target,radius,Vector2.down,5);                  //находим побитых гусей
+
+        foreach(var hit in hits)                                                    //увидели гуся
+        {
+            hit.transform.gameObject.GetComponent<Goose>().OnDamage(damage);        //Бьём гуся
+        }
     }
 }
