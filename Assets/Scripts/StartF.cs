@@ -10,7 +10,7 @@ public class StartF : MonoBehaviour
     void Start()
     {
         GooseFabric fabric = new GooseFabric();
-        StartCoroutine(fabric.SpawnGeese(1,goose_prefabs));
+        StartCoroutine(fabric.SpawnGeese(3,goose_prefabs));
     }
 
     // Update is called once per frame

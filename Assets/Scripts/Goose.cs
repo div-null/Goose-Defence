@@ -11,13 +11,13 @@ public class Goose : MonoBehaviour
     public float goose_speed = 10f;           //скорость гуся
 
 
-    //конструктор гуся (уровень слож-ти, спрайт, трансформ-спавн)
-    public Goose(int level)
+    //инициализатор гуся (уровень слож-ти, спрайт, трансформ-спавн)
+    public void Initialize(int level)
     {
-        max_hp = max_hp * level;
+        max_hp = 300 * level;
         cur_hp = max_hp;
-        goose_damage = goose_damage * level;
-        goose_speed = goose_speed + level;
+        goose_damage = 150 * level;
+        goose_speed = 10f + level*1f;
     }
 
     //расчет характеристик в следствие эффектов
@@ -26,7 +26,7 @@ public class Goose : MonoBehaviour
 
     }
     //расчет урона
-    public void DamageCalc()
+    public void OnDamage()
     {
 
     }
