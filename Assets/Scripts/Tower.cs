@@ -126,9 +126,15 @@ public class Tower : MonoBehaviour
         {
             Goose aim = FindGoose();
 
+            if (aim == null)
+            {
+                yield return new WaitForSeconds(0.1f);
+                continue;
+            }
             // добавляю скрипт на префаб
             var projectile = GameObject.Instantiate(ProjectilePrefab);
             Projectile proj = projectile.GetComponent<Projectile>();
+            proj.Radius = 0.2f;
             proj.Loauch(spawnPoint.position, aim.transform.position, ProjectileSpeed, Damage);
 
             yield return new WaitForSeconds(AttackDelay);
@@ -137,7 +143,10 @@ public class Tower : MonoBehaviour
         }
     }
 
-
+    private void FixedUpdate()
+    {
+        
+    }
     void Start()
     {
         // УБРАТЬ В ДАЛЬНЕЙШЕМ

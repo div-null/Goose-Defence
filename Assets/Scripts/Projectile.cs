@@ -8,7 +8,7 @@ public class Projectile : MonoBehaviour
     /// Радиус дамага
     /// </summary>
     [SerializeField]
-    public float Radius;
+    public float Radius = 2f;
 
     [SerializeField]
     public int Damage;

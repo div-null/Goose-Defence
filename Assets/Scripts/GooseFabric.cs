@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class GooseFabric : Singleton<GooseFabric>
 {
+    
+
     public bool fabric_activity;                     //активность фабрики
     [SerializeField]
     public List<Goose> geese;                       //ГУУУУСИИИИ
@@ -13,9 +16,12 @@ public class GooseFabric : Singleton<GooseFabric>
         int count = 5 + level * 2;                  //формуля для вычисления кол-ва гусей
         for(int i = 0; i < count; i++)
         {
+            float x = Random.Range(-5f, 5f);
+            float z = Random.Range(-1f, 0f);
+            float y = (z+0.5f)*10;
             GameObject goose = GameObject.Instantiate(
-                prefabs[Random.Range(0,3)],
-                new Vector2(Random.Range(-5,5),Random.Range(-5,5)),
+                prefabs[0],
+                new Vector3(x,y,z),
                 Quaternion.identity
             );    //случайный префаб
 
@@ -28,6 +34,8 @@ public class GooseFabric : Singleton<GooseFabric>
         }
         
     }
+
+
     public GooseFabric()
     {
         fabric_activity = true;
@@ -43,4 +51,7 @@ public class GooseFabric : Singleton<GooseFabric>
             hit.transform.gameObject.GetComponent<Goose>().OnDamage(damage);        //Бьём гуся
         }
     }
+     
+
+
 }
