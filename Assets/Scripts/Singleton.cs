@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Singleton<T> where T: MonoBehaviour
 {
-    T instance;
-    public T Instance
+    static T instance;
+    public static T Instance
     {
         get
         {
@@ -17,6 +17,6 @@ public class Singleton<T> where T: MonoBehaviour
         }
     }
 
-    bool isExists { get { return instance != null; } }
+    public static bool isExists { get { return instance != null; } }
 
 }
