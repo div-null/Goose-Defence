@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SocialPlatforms;
 
 public class Tower : MonoBehaviour
 {
@@ -14,20 +15,35 @@ public class Tower : MonoBehaviour
     [SerializeField]
     public float ProjectileSpeed;
 
+    /// <summary>
+    /// Точка спавна снарядов
+    /// </summary>
     [SerializeField]
     Transform spawnPoint;
-
+    /// <summary>
+    /// Префаб снаряда
+    /// </summary>
     [SerializeField]
     GameObject ProjectilePrefab;
 
     /// <summary>
-    /// 
+    /// Время перезарядки
     /// </summary>
     [SerializeField]
     float AttackDelay = 2f;
 
+    /// <summary>
+    /// Урон снаряда
+    /// </summary>
     [SerializeField]
-    float Damage = 200f;
+    int Damage = 200;
+
+
+    /// <summary>
+    /// Радиус действия башни
+    /// </summary>
+    [SerializeField]
+    public float AttackRange;
 
     public bool isAvailable { get; set; }
     public bool Destroyed
@@ -63,22 +79,22 @@ public class Tower : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Создание башни, МГНОВЕННО начинает стрелять
     /// </summary>
     /// <param name="Hp">Здоровье</param>
     /// <param name="Dmg">Урон за атаку</param>
     /// <param name="DmgRate">Количество ударов в секудну</param>
-    public void Initialize(float Hp, float Dmg, float DmgRate)
+    public void Initialize(float Hp, int Dmg, float DmgDelay)
     {
         HP = Hp;
         Damage = Dmg;
-        AttackDelay = DmgRate;
+        AttackDelay = DmgDelay;
         spawnPoint = transform.Find("SpawnPoint");
     }
 
     Goose FindGoose()
     {
-        float minDistance = 9999;
+        float minDistance = AttackRange;
         Goose temp = null;
         foreach (var goose in GooseFabric.Instance.geese)
         {
@@ -95,11 +111,13 @@ public class Tower : MonoBehaviour
     public void MakeDamage()
     {
         StartCoroutine("Attack");
+        isAvailable = true;
     }
 
     public void StopDamage()
     {
         StopCoroutine("Attack");
+        isAvailable = false;
     }
 
     public IEnumerator Attack()
@@ -111,19 +129,18 @@ public class Tower : MonoBehaviour
             // добавляю скрипт на префаб
             var projectile = GameObject.Instantiate(ProjectilePrefab);
             Projectile proj = projectile.GetComponent<Projectile>();
-            proj.Loauch(spawnPoint.position, SpawnPos.transform.position, ProjectileSpeed);
-            //proj.Loauch(spawnPoint.position, aim.transform.position);
+            proj.Loauch(spawnPoint.position, aim.transform.position, ProjectileSpeed, Damage);
 
             yield return new WaitForSeconds(AttackDelay);
-            //if (aim.Hp>0)
-            //    aim.getDamage(Damage);
+            // может быть не нужен
             yield return new WaitForEndOfFrame();
         }
     }
 
-    // Start is called before the first frame update
+
     void Start()
     {
+        // УБРАТЬ В ДАЛЬНЕЙШЕМ
         MakeDamage();
     }
 }

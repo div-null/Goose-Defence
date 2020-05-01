@@ -10,6 +10,9 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     public float Radius;
 
+    [SerializeField]
+    public int Damage;
+
     /// <summary>
     /// Скорость снаряда
     /// </summary>
@@ -25,8 +28,9 @@ public class Projectile : MonoBehaviour
     Vector3 Direction;
 
     float RemainTime;
-    public void Loauch(Vector3 tower, Vector3 point, float Velocity)
+    public void Loauch(Vector3 tower, Vector3 point, float Velocity, int damage)
     {
+        Damage = damage;
         this.Velocity = Velocity;
         transform.position = tower;
         Direction = (point - tower).normalized;
@@ -39,8 +43,9 @@ public class Projectile : MonoBehaviour
 
     void MakeDamage()
     {
+        Vector2 pos = transform.position;
         // TODO: Вызов метода дамага гусей
-
+        GooseFabric.Instance.OnAttack(Radius, pos, Damage);
         Debug.Log("Destroy ball");
         GameObject.Destroy(gameObject, DestroyTime);
         this.enabled = false;

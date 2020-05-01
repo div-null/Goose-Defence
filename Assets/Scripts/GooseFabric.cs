@@ -5,6 +5,7 @@ using UnityEngine;
 public class GooseFabric : Singleton<GooseFabric>
 {
     public bool fabric_activity;                     //активность фабрики
+    [SerializeField]
     public List<Goose> geese;                       //ГУУУУСИИИИ
 
     public IEnumerator SpawnGeese(int level, List<GameObject> prefabs)

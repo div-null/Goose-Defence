@@ -25,9 +25,12 @@ public class Goose : MonoBehaviour
     {
 
     }
+
     //расчет урона
     public void OnDamage(int damage)
     {
         cur_hp -= damage;
+        if (cur_hp < 0)
+            cur_hp = 0;
     }
 }
