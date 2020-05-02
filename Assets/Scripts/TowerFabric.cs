@@ -40,6 +40,14 @@ public class TowerFabric : Singleton<TowerFabric>
         Towers[order].TowerDestroyed += deleteTower;
     }
 
+    public void TryDamageTower(int order, int dmg)
+    {
+        if (Towers[order])
+            Towers[order].GetDamage(dmg);
+        else
+            Game.Instance.DamageWall(dmg);
+    }
+
     /// <summary>
     /// Обработчик уничтожения башни
     /// </summary>
@@ -59,18 +67,5 @@ public class TowerFabric : Singleton<TowerFabric>
         Towers[order].RemoveTower();
         Towers[order] = null;
         placeAwailable[order] = false;
-    }
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

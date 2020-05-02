@@ -24,8 +24,11 @@ public class Goose : MonoBehaviour
 
     public int goose_damage = 100;            //урон гуся
     public float goose_speed = 10f;           //скорость гуся
-
-
+    public float speed_multiplier = 1;
+    /// <summary>
+    /// Номер башни, которую атакует гусь
+    /// </summary>
+    public int TowerNumber;
     public GooseState state;                  //состояние гуся
     public Animator animator;                   //аниматор
 
@@ -43,12 +46,24 @@ public class Goose : MonoBehaviour
     /// Инициализация через статы(ХП, Дамаг, Множитель скорости)
     /// </summary>
     /// <param name="stats"></param>
-    public void Initialize(GooseTypeStats stats)
+    public void Initialize(GooseTypeStats stats, int towerNumber)
     {
         max_hp = stats.Hp;
         cur_hp = max_hp;
         goose_damage = stats.Damage;
         goose_speed *= stats.SpeedMultiplier;
+        this.speed_multiplier = stats.SpeedMultiplier;
+    }
+
+    IEnumerator Attack()
+    {
+        state = GooseState.atack;
+        while (true)
+        {
+            TowerFabric.Instance.TryDamageTower(TowerNumber, goose_damage);
+            // <- ВЫЗОВ АНИМАЦИИ
+            yield return new WaitForSeconds(2f / goose_speed);
+        }
     }
 
     //расчет характеристик в следствие эффектов
@@ -57,6 +72,12 @@ public class Goose : MonoBehaviour
 
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        StartCoroutine("Attack");
+    }
+
+
     //расчет урона
     public void OnDamage(int damage)
     {
@@ -64,9 +85,9 @@ public class Goose : MonoBehaviour
         if (cur_hp < 0)
         {
             cur_hp = 0;
-            Destroy(this.gameObject);
+            state = GooseState.back;
+            //Destroy(this.gameObject);
             GooseFabric.Instance.geese.Remove(this);
-            //пополнение очков
         }
     }
 

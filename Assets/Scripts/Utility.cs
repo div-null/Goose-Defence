@@ -117,3 +117,18 @@ public struct GooseTypeStats
     public int Hp;
     public float SpeedMultiplier;
 }
+
+
+/// <summary>
+/// Тропа(линия) от min до max
+/// </summary>
+public struct WalkLine
+{
+    public WalkLine(float minY, float maxY)
+    {
+        MinY = minY;
+        MaxY = maxY;
+    }
+    public float MinY;
+    public float MaxY;
+}

@@ -85,6 +85,10 @@ public class Game : Singleton<Game>
         Money -= ammount;
     }
 
+    public void DamageWall(int dmg)
+    {
+        WallHp -= dmg;
+    }
 
     /// <summary>
     /// КОРУТИНА СПАВНА ГУСЕЙ И УВЕЛИЧЕНИЯ СЛОЖНОСТИ
@@ -139,9 +143,6 @@ public class Game : Singleton<Game>
         yield return new WaitForSeconds(4f);
     }
 
-    
-
-
     void Awake()
     {
         ///
@@ -165,6 +166,4 @@ public class Game : Singleton<Game>
         TowersTypes[2, 0] = new TowerStats(30000, 6, 15/18f, 12,    4500, ProjectilesTypes[2, 0]);
 
     }
-
-
 }
