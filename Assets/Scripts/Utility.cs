@@ -13,15 +13,17 @@ enum ProjectileType
 /// <summary>
 /// Уровень башни
 /// </summary>
-enum Level
+public enum TowerLevel
 {
     T1 = 0,
     T2,
     T3
 }
 
-
-struct ProjectileStats
+/// <summary>
+/// Статы снаряда
+/// </summary>
+public struct ProjectileStats
 {
     public ProjectileStats(int Damage, float Range, float Speed)
     {
@@ -47,7 +49,10 @@ struct ProjectileStats
 }
 
 
-struct TowerStats
+/// <summary>
+/// Статы башни
+/// </summary>
+public struct TowerStats
 {
     public TowerStats(int Hp, float range, float attackDelay, float deployTime, float cost, ProjectileStats projectile)
     {
@@ -90,3 +95,25 @@ struct TowerStats
     float Cost;
 }
 
+/// <summary>
+/// Статы гуся определённого ТИПА
+/// </summary>
+public struct GooseTypeStats
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="hp">Хп</param>
+    /// <param name="dmg">Дамаг</param>
+    /// <param name="speedMul">Множитель скорости</param>
+    public GooseTypeStats(int hp, int dmg, float speedMul)
+    {
+        Damage = dmg;
+        Hp = hp;
+        SpeedMultiplier = speedMul;
+    }
+
+    public int Damage;
+    public int Hp;
+    public float SpeedMultiplier;
+}
