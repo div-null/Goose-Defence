@@ -11,8 +11,8 @@ public class StartF : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-    //    fabric = new GooseFabric();
-        StartCoroutine(GooseFabric.Instance.SpawnGeese(3,goose_prefabs));
+        //    fabric = new GooseFabric();
+        //StartCoroutine(GooseFabric.Instance.SpawnGeese(1, 3, goose_prefabs);
     }
 
     // Update is called once per frame

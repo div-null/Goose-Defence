@@ -5,42 +5,54 @@ using UnityEngine;
 
 public class GooseFabric : Singleton<GooseFabric>
 {
-    
+    GooseTypeStats[] GooseTypes;
 
     public bool fabric_activity;                     //активность фабрики
     [SerializeField]
     public List<Goose> geese;                       //ГУУУУСИИИИ
 
-    public IEnumerator SpawnGeese(int level, List<GameObject> prefabs)
+    public GooseFabric()
     {
-        int count = 5 + level * 2;                  //формуля для вычисления кол-ва гусей
-        for(int i = 0; i < count; i++)
+        fabric_activity = true;
+        geese = new List<Goose>();
+        GooseTypes = new GooseTypeStats[3];
+        GooseTypes[0] = new GooseTypeStats(250, 100, 1);
+        GooseTypes[1] = new GooseTypeStats(400, 200, 1.2f);
+        GooseTypes[2] = new GooseTypeStats(600, 300, 1.4f);
+    }
+
+    public IEnumerator SpawnGeese(int gooseLvl, int gooseCount, List<GameObject> prefabs)
+    {
+        GooseTypeStats stats = GooseTypes[gooseLvl - 1];
+
+        for (int i = 0; i < gooseCount; i++)
         {
             float x = Random.Range(-5f, 5f);
             float z = Random.Range(-1f, 0f);
             float y = (z+0.5f)*10;
             GameObject goose = GameObject.Instantiate(
-                prefabs[0],
+                prefabs[gooseLvl-1],
                 new Vector3(x,y,z),
                 Quaternion.identity
             );    //случайный префаб
 
+
             //добавление гуся
             Goose g = goose.AddComponent<Goose>();
-            goose.GetComponent<Goose>().Initialize(level);
+            goose.GetComponent<Goose>().Initialize(stats);
             geese.Add(g);
 
-            yield return null;
+            yield return new WaitForSeconds(0.3f);
         }
         
     }
 
-
-    public GooseFabric()
+    public void spawnGeeseOfType(int gooseLvl, int gooseCount)
     {
-        fabric_activity = true;
-        geese = new List<Goose>();
+        StartCoroutine("SpawnGeese");
     }
+
+
 
     public void OnAttack(float radius, Vector2 target, int damage)
     {
