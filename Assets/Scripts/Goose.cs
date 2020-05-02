@@ -91,7 +91,7 @@ public class Goose : MonoBehaviour
     {
         var position = TowerFabric.Instance.FindNearTower(transform.position);
         var direction = (position - transform.position);
-        if (direction != Vector3.zero)
+        if (direction.magnitude > 0.3)
         {
             Movement = direction.normalized * goose_speed;
             state = GooseState.walk;
