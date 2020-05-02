@@ -472,8 +472,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb38095f7ca8f2646a6d8c293cc1e7cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UpSpawnPoint: {fileID: 0}
-  DownSpawnPoint: {fileID: 0}
+  UpSpawnPoint: {fileID: 671373830}
+  DownSpawnPoint: {fileID: 1804561646}
   fabric_activity: 1
   geese: []
   goose_prefabs: []
