@@ -35,12 +35,11 @@ public class UI_manager : MonoBehaviour
 
     void UI_TurnOnGame()
     {
-        transitor.SetBool("Status", false);
+        StartCoroutine("WairForTransition");
         UIInMenu.SetActive(false);
         infoPanel.SetActive(false);
         buyPanel.SetActive(false);
         UIInGame.SetActive(true);
-        transitor.SetBool("Status", true);
     }
 
     void UI_SetAmountOfGold(int amount)
@@ -144,5 +143,11 @@ public class UI_manager : MonoBehaviour
         }
         canSkip = true;
         pressKeyToStart.GetComponent<Text>().text = "Нажмите на любую клавишу, чтобы начать игру";
+    }
+    IEnumerator WairForTransition()
+    {
+        transitor.SetBool("Status", false);
+        yield return new WaitForSeconds(3f);
+        transitor.SetBool("Status", true);
     }
 }
