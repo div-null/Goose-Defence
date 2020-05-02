@@ -2,9 +2,9 @@
 using System.Collections;
 
 /// <summary>
-/// Тип снаряда
+/// Тип снаряда/башни
 /// </summary>
-enum ProjectileType
+public enum TowerType
 {
     //Капуста
     Cabbage = 0

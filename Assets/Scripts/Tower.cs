@@ -4,10 +4,22 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.SocialPlatforms;
 
+public delegate void TowerEvent(Tower tower);
+
 public class Tower : MonoBehaviour
 {
+    public event TowerEvent TowerDestroyed;
+    
+    [SerializeField]
+    public Animator Anim;
 
+    [SerializeField]
     public GameObject SpawnPos;
+
+    /// <summary>
+    /// Уровень башни
+    /// </summary>
+    public TowerLevel Level;
 
     /// <summary>
     /// Скорость летящего снаряда
@@ -55,6 +67,9 @@ public class Tower : MonoBehaviour
     }
 
     float selfHp;
+    /// <summary>
+    /// Хп Башни, вызывает событие уничтожения уничтожение
+    /// </summary>
     float HP
     {
         get
@@ -63,8 +78,11 @@ public class Tower : MonoBehaviour
         }
         set
         {
-            if (value < 0)
+            if (value <= 0)
+            {
                 selfHp = 0;
+                TowerDestroyed?.Invoke(this);
+            }
             else
                 selfHp = value;
         }
@@ -143,10 +161,13 @@ public class Tower : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    public void RemoveTower()
     {
-        
+        StopCoroutine("Attack");
+        this.enabled = false;
+        GameObject.Destroy(this);
     }
+
     void Start()
     {
         // УБРАТЬ В ДАЛЬНЕЙШЕМ

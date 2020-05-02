@@ -1,16 +1,40 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+delegate void EndGame(bool result, int score);
+
 public class Game : Singleton<Game>
 {
-    public bool isGameStarted { get; protected set; }
+
+    // События победы и поражения
+    event EndGame LooseGame;
+    event EndGame WinGame;
+
+    /// <summary>
+    /// Игра идёт
+    /// </summary>
+    public bool isGameStarted { get; protected set; } = false;
+
+    /// <summary>
+    /// УРОВЕНЬ УГРОЗЫ
+    /// </summary>
+    public int WarnLevel { get; protected set; } = 1;
+    
+    int gooseCount { get { return Mathf.RoundToInt((WarnLevel / 25) / Mathf.Sqrt(1 + WarnLevel ^ 2) * 50); } }
 
     /// <summary>
     /// Хп стены
     /// </summary>
     [SerializeField]
-    int WallHp = 50000;
+    int wallHp = 50000;
+
+    public int WallHp { get { return wallHp; } set {
+            wallHp = value;
+            if (wallHp <= 0)
+                LooseGame?.Invoke(false, Score);
+                } }
 
     [SerializeField]
     public int baseMoney = 5000;
@@ -50,6 +74,20 @@ public class Game : Singleton<Game>
     }
 
 
+    /// <summary>
+    /// КОРУТИНА СПАВНА ГУСЕЙ И УВЕЛИЧЕНИЯ СЛОЖНОСТИ
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator SpawnGooses()
+    {
+        while (true)
+        {
+            GooseFabric.Instance.spawnGeeseOfType(1, gooseCount);
+            yield return new WaitForSeconds(15);
+            WarnLevel++;
+        }
+    }
+
     public void startGame()
     {
         StartCoroutine("BeginGame");
@@ -70,9 +108,6 @@ public class Game : Singleton<Game>
         {
             yield return new WaitForSeconds(moneyBackDelay);
             Money += moneyPerDelay;
-            // остановка
-            if (!isGameStarted)
-                StopCoroutine("EarnMoney");
         }
     }
 
@@ -81,11 +116,14 @@ public class Game : Singleton<Game>
         yield return new WaitForSeconds(3f);
         isGameStarted = true;
         StartCoroutine("EarnMoney");
+        StartCoroutine("SpawnGooses");
     }
 
     IEnumerator EndGame()
     {
         isGameStarted = false;
+        StopCoroutine("EarnMoney");
+        StopCoroutine("SpawnGooses");
         yield return new WaitForSeconds(4f);
     }
 
@@ -101,8 +139,8 @@ public class Game : Singleton<Game>
         ///
         /// Статы Башен и снарядов
         ///
-        int Lvl = (int)Level.T3 + 1;
-        int Proj = (int)ProjectileType.Cabbage + 1;
+        int Lvl = (int)TowerLevel.T3 + 1;
+        int Proj = (int)TowerType.Cabbage + 1;
 
         ProjectilesTypes = new ProjectileStats[Lvl, Proj];
         TowersTypes = new TowerStats[Lvl, Proj];
