@@ -10,15 +10,6 @@ public enum TowerType
     Cabbage = 0
 }
 
-/// <summary>
-/// Уровень башни
-/// </summary>
-public enum TowerLevel
-{
-    T1 = 0,
-    T2,
-    T3
-}
 
 /// <summary>
 /// Статы снаряда
@@ -49,51 +40,7 @@ public struct ProjectileStats
 }
 
 
-/// <summary>
-/// Статы башни
-/// </summary>
-public struct TowerStats
-{
-    public TowerStats(int Hp, float range, float attackDelay, float deployTime, float cost, ProjectileStats projectile)
-    {
-        HP = Hp;
-        Range = range;
-        AttackDelay = attackDelay;
-        DeployTime = deployTime;
-        Projectile = projectile;
-        Cost = cost;
-    }
 
-    /// <summary>
-    /// Статы Снаряда
-    /// </summary>
-    public ProjectileStats Projectile;
-
-    /// <summary>
-    /// Здоровье башни
-    /// </summary>
-    public int HP;
-
-    /// <summary>
-    /// Время между атаками
-    /// </summary>
-    public float AttackDelay;
-
-    /// <summary>
-    /// Дальность стрельбы
-    /// </summary>
-    public float Range;
-
-    /// <summary>
-    /// Время установки
-    /// </summary>
-    public float DeployTime;
-
-    /// <summary>
-    /// Стоимость постройки башни
-    /// </summary>
-    public float Cost;
-}
 
 /// <summary>
 /// Статы гуся определённого ТИПА

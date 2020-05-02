@@ -12,11 +12,7 @@ public class Game : Singleton<Game>
     event EndGame LooseGame;
     event EndGame WinGame;
 
-    /// <summary>
-    /// Типы башен
-    /// </summary>
-    [SerializeField]
-    public TowerStats[,] TowersTypes;
+    
     /// <summary>
     /// Типы снарядов
     /// </summary>
@@ -143,25 +139,7 @@ public class Game : Singleton<Game>
 
     void Awake()
     {
-        ///
-        /// Статы Башен и снарядов
-        ///
-        int Lvl = (int)TowerLevel.T3 + 1;
-        int Proj = (int)TowerType.Cabbage + 1;
 
-        ProjectilesTypes = new ProjectileStats[Lvl, Proj];
-        TowersTypes = new TowerStats[Lvl, Proj];
-
-        //                                          Dmg  Range Speed
-        ProjectilesTypes[0, 0] = new ProjectileStats(600, 0.4f,  4.2f);
-        ProjectilesTypes[1, 0] = new ProjectileStats(2160, 0.4f, 4.2f);
-        ProjectilesTypes[2, 0] = new ProjectileStats(2700, 0.4f, 4.2f);
-
-
-        //                                 Hp  Range Delay   Deploy Cost  Projectile
-        TowersTypes[0, 0] = new TowerStats(10000, 22, 15/12f, 4,     2500, ProjectilesTypes[0, 0]);
-        TowersTypes[1, 0] = new TowerStats(20000, 22, 15/15f, 8,     3000, ProjectilesTypes[1, 0]);
-        TowersTypes[2, 0] = new TowerStats(30000, 22, 15/18f, 12,    4500, ProjectilesTypes[2, 0]);
 
     }
 }

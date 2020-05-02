@@ -11,8 +11,8 @@ public class StartF : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        TowerFabric.Instance.placeTower(0, Game.Instance.TowersTypes[0, 0], TowerType.Cabbage);
-        TowerFabric.Instance.placeTower(1, Game.Instance.TowersTypes[0, 0], TowerType.Cabbage);
+        TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerTomatoT1(), TowerType.Cabbage);
+        TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerTomatoT1(), TowerType.Cabbage);
 
         Game.Instance.startGame();
     }

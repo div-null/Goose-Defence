@@ -36,7 +36,7 @@ public class TowerFabric : Singleton<TowerFabric>
         Towers.Add(blank);
     }
 
-    public void placeTower(int order, TowerStats stats, TowerType type)
+    public void placeTower(int order, TowerStatsList stats, TowerType type)
     {
         // НЕ ДЕЛАЮ БАЩНЮ ДОЧЕРНЕЙ 
         GameObject tower = GameObject.Instantiate(TowerPrefabs[(int)type], place[order].transform.position + new Vector3(0,2f), Quaternion.identity);
@@ -46,7 +46,13 @@ public class TowerFabric : Singleton<TowerFabric>
         Towers[order].TowerDestroyed += deleteTower;
     }
 
-    public Vector3 FindNearTower(Vector3 pos)
+	public TowerStatsList GetInfoByOrder(int order)
+	{
+		return Towers[order].info;
+	}
+
+
+	public Vector3 FindNearTower(Vector3 pos)
     {
         Vector3 temp = Vector3.down*1000;
         float distance = 9999;
