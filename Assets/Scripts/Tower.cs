@@ -17,8 +17,6 @@ public class Tower : MonoBehaviour
     [SerializeField]
     public GameObject SpawnPos;
 
-
-
     /// <summary>
     /// Точка спавна снарядов
     /// </summary>
@@ -32,10 +30,6 @@ public class Tower : MonoBehaviour
 	[SerializeField]
 	public TowerStatsList info = new TowerStatsList.TowerCabbageT1();
 	
-
-
-
-
 	public bool isAvailable { get; set; }
     public bool Destroyed
     {
@@ -122,7 +116,6 @@ public class Tower : MonoBehaviour
             // добавляю скрипт на префаб
             var projectile = GameObject.Instantiate(ProjectilePrefab, spawnPoint.position, Quaternion.identity);
             Projectile proj = projectile.GetComponent<Projectile>();
-
 
             float distance = Vector3.Distance(spawnPoint.position, aim.transform.position);
             float u1 = Math.Abs(info.Projectile.Velocity);

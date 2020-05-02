@@ -8,6 +8,7 @@
 	public abstract float Range { get; }
 	public abstract float Cost { get; }
 	public abstract float FreezeCoef { get; }
+	public abstract int PrefabId { get; }
 
 	const float SredDMG = 9000f;
 	const float SredMaxHP = 10000f;
@@ -85,6 +86,7 @@
 		public override float Range => SredAttackFar* TomatoFarCoef;
 		public override float Cost => CostT1;
 		public override float FreezeCoef => 0;
+		public override int PrefabId => 0;
 	}
 	public class TowerTomatoT2: TowerStatsList
 	{
@@ -96,6 +98,7 @@
 		public override float Range => SredAttackFar * TomatoFarCoef * T2CoefAttackFar;
 		public override float Cost => CostT2;
 		public override float FreezeCoef => 0;
+		public override int PrefabId => 1;
 	}
 	public class TowerTomatoT3 : TowerStatsList
 	{
@@ -107,6 +110,7 @@
 		public override float Range => SredAttackFar * TomatoFarCoef * T3CoefAttackFar;
 		public override float Cost => CostT3;
 		public override float FreezeCoef => 0;
+		public override int PrefabId => 2;
 	}
 	public class TowerCabbageT1 : TowerStatsList
 	{
@@ -118,6 +122,7 @@
 		public override float Range => SredAttackFar * CabbageFarCoef;
 		public override float Cost => CostT1;
 		public override float FreezeCoef => 0;
+		public override int PrefabId => 3;
 	}
 	public class TowerCabbageT2 : TowerStatsList
 	{
@@ -129,6 +134,7 @@
 		public override float Range => SredAttackFar * CabbageFarCoef * T2CoefAttackFar;
 		public override float Cost => CostT2;
 		public override float FreezeCoef => 0;
+		public override int PrefabId => 4;
 	}
 
 	public class TowerCabbageT3 : TowerStatsList
@@ -141,6 +147,7 @@
 		public override float Range => SredAttackFar * CabbageFarCoef * T3CoefAttackFar;
 		public override float Cost => CostT3;
 		public override float FreezeCoef => 0;
+		public override int PrefabId => 5;
 	}
 
 	public class TowerPeasT1 : TowerStatsList
@@ -153,6 +160,7 @@
 		public override float Range => SredAttackFar * PeasFarCoef;
 		public override float Cost => CostT1;
 		public override float FreezeCoef => 0.7f;
+		public override int PrefabId => 6;
 	}
 	public class TowerPeasT2 : TowerStatsList
 	{
@@ -164,6 +172,7 @@
 		public override float Range => SredAttackFar * PeasFarCoef * T2CoefAttackFar;
 		public override float Cost => CostT2;
 		public override float FreezeCoef => 0.6f;
+		public override int PrefabId => 7;
 	}
 
 	public class TowerPeasT3 : TowerStatsList
@@ -176,6 +185,19 @@
 		public override float Range => SredAttackFar * PeasFarCoef * T3CoefAttackFar;
 		public override float Cost => CostT3;
 		public override float FreezeCoef => 0.5f;
+		public override int PrefabId => 8;
+	}
+	public class Wall : TowerStatsList
+	{
+		public override string Name => "Стена";
+		public override string Discription => "Очень колючая и сухая.";
+		public override float AttackDelay => SredAttackSpeed * PeasAttackSpeedCoef * T3AttackSpeed;
+		public override ProjectileStats Projectile => new ProjectileStats(0, 0f, 0f, 0f, 0f);
+		public override int MaxHP => (int)(SredMaxHP * T3MaxHP);
+		public override float Range => 0;
+		public override float Cost => 20000;
+		public override float FreezeCoef => 0;
+		public override int PrefabId => 9;
 	}
 
 }

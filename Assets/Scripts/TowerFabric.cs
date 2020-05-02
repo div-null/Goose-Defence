@@ -36,12 +36,12 @@ public class TowerFabric : Singleton<TowerFabric>
         Towers.Add(blank);
     }
 
-    public void placeTower(int order, TowerStatsList stats, TowerType type)
+    public void placeTower(int order, TowerStatsList stats)
     {
         // НЕ ДЕЛАЮ БАЩНЮ ДОЧЕРНЕЙ 
-        GameObject tower = GameObject.Instantiate(TowerPrefabs[(int)type], place[order].transform.position + new Vector3(0,2f), Quaternion.identity);
+        GameObject tower = GameObject.Instantiate(TowerPrefabs[stats.PrefabId], place[order].transform.position + new Vector3(0,2f), Quaternion.identity);
         Towers[order] = tower.AddComponent<Tower>();
-        Towers[order].Initialize(stats, ProjectilePrefabs[(int)type]);
+        Towers[order].Initialize(stats, ProjectilePrefabs[stats.PrefabId / 3]);
         Towers[order].MakeDamage();
         Towers[order].TowerDestroyed += deleteTower;
     }
