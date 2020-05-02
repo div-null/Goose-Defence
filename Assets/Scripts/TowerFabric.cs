@@ -19,13 +19,13 @@ public class TowerFabric : Singleton<TowerFabric>
 
 
 
-    TowerFabric()
+    void Awake()
     {
-        Towers = new List<Tower>(MaxTowerCount);
+        Towers = new List<Tower>();
         placeAwailable = new bool[MaxTowerCount];
         for (int i = 0; i < MaxTowerCount; i++)
         {
-            Towers[i] = null;
+            Towers.Add(null);
             placeAwailable[i] = false;
         }
     }
@@ -33,7 +33,7 @@ public class TowerFabric : Singleton<TowerFabric>
     public void placeTower(int order, TowerStats stats, TowerType type)
     {
         // НЕ ДЕЛАЮ БАЩНЮ ДОЧЕРНЕЙ 
-        GameObject tower = GameObject.Instantiate(TowerPrefabs[(int)type], place[order].transform.position, Quaternion.identity);
+        GameObject tower = GameObject.Instantiate(TowerPrefabs[(int)type], place[order].transform.position + new Vector3(0,2f), Quaternion.identity);
         Towers[order] = tower.AddComponent<Tower>();
         Towers[order].Initialize(stats);
         Towers[order].MakeDamage();
@@ -60,6 +60,7 @@ public class TowerFabric : Singleton<TowerFabric>
         Towers[order] = null;
         placeAwailable[order] = false;
     }
+
 
     // Start is called before the first frame update
     void Start()

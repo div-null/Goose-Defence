@@ -10,6 +10,8 @@ public class GooseFabric : Singleton<GooseFabric>
     public bool fabric_activity;                     //активность фабрики
     [SerializeField]
     public List<Goose> geese;                       //ГУУУУСИИИИ
+    [SerializeField]
+    public List<GameObject> goose_prefabs;
 
     public GooseFabric()
     {
@@ -21,7 +23,7 @@ public class GooseFabric : Singleton<GooseFabric>
         GooseTypes[2] = new GooseTypeStats(600, 300, 1.4f);
     }
 
-    public IEnumerator SpawnGeese(int gooseLvl, int gooseCount, List<GameObject> prefabs)
+    public IEnumerator SpawnGeese(int gooseLvl, int gooseCount)
     {
         GooseTypeStats stats = GooseTypes[gooseLvl - 1];
 
@@ -31,7 +33,7 @@ public class GooseFabric : Singleton<GooseFabric>
             float z = Random.Range(-1f, 0f);
             float y = (z+0.5f)*10;
             GameObject goose = GameObject.Instantiate(
-                prefabs[gooseLvl-1],
+                goose_prefabs[gooseLvl-1],
                 new Vector3(x,y,z),
                 Quaternion.identity
             );    //случайный префаб
@@ -49,7 +51,7 @@ public class GooseFabric : Singleton<GooseFabric>
 
     public void spawnGeeseOfType(int gooseLvl, int gooseCount)
     {
-        StartCoroutine("SpawnGeese");
+        StartCoroutine(SpawnGeese(gooseLvl,gooseCount));
     }
 
 

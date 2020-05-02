@@ -13,6 +13,8 @@ public class StartF : MonoBehaviour
     {
         TowerFabric.Instance.placeTower(0, Game.Instance.TowersTypes[0, 0], TowerType.Cabbage);
         TowerFabric.Instance.placeTower(1, Game.Instance.TowersTypes[0, 0], TowerType.Cabbage);
+
+        Game.Instance.startGame();
     }
 
     // Update is called once per frame

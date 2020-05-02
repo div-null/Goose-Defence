@@ -27,6 +27,7 @@ public class Goose : MonoBehaviour
 
 
     public GooseState state;                  //состояние гуся
+    public Animator animator;                   //аниматор
 
     //инициализатор гуся (уровень слож-ти, спрайт, трансформ-спавн)
     public void Initialize(int Dmg, float SpdMul, int maxHp)
@@ -35,8 +36,9 @@ public class Goose : MonoBehaviour
         cur_hp = max_hp;
         goose_damage = Dmg;
         goose_speed *= SpdMul;
+        state = GooseState.stay;
     }
-
+   
     /// <summary>
     /// Инициализация через статы(ХП, Дамаг, Множитель скорости)
     /// </summary>
@@ -68,6 +70,11 @@ public class Goose : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        state = GooseState.walk;
+    }
 
-    
+
+
 }

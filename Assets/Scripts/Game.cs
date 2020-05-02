@@ -31,9 +31,10 @@ public class Game : Singleton<Game>
     /// <summary>
     /// УРОВЕНЬ УГРОЗЫ
     /// </summary>
-    public int WarnLevel { get; protected set; } = 1;
-    
-    int gooseCount { get { return Mathf.RoundToInt((WarnLevel / 25) / Mathf.Sqrt(1 + WarnLevel ^ 2) * 50); } }
+    public int WarnLevel = 1;
+
+    //return Mathf.RoundToInt((WarnLevel / 25f) / Mathf.Sqrt(1 + WarnLevel*WarnLevel) * 10f);
+    int gooseCount { get { return WarnLevel+4; } }
 
     /// <summary>
     /// Хп стены
