@@ -75,7 +75,7 @@ public class GooseFabric : Singleton<GooseFabric>
 		while (true)
 		{
 			spawnedGooseCount++;
-			int countGooseOnLvl = (gooseLvl / 25) / (int)Mathf.Sqrt(1 + (int)Mathf.Pow(gooseLvl / 25, 2)) * 50;
+			int countGooseOnLvl = (int)((gooseLvl / 25f) / Mathf.Sqrt(1 + Mathf.Pow(gooseLvl / 25f, 2)) * 50);
 
 			
 
@@ -90,9 +90,7 @@ public class GooseFabric : Singleton<GooseFabric>
 			Goose tmpGoose = new Goose();
 			tmpGoose.Initialize(gooseLvl);
 
-			GameObject tmpGM = new GameObject(
-				"Goose")
-				;
+			GameObject tmpGM = new GameObject("Goose");
 
 			tmpGM.transform.position = new Vector3(x, y, z);
 			tmpGM.transform.rotation = Quaternion.identity;

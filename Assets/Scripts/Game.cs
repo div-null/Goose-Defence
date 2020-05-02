@@ -96,12 +96,10 @@ public class Game : Singleton<Game>
     /// <returns></returns>
     IEnumerator SpawnGooses()
     {
-        while (true)
-        {
+        
             GooseFabric.Instance.StartSpawning();
-            yield return new WaitForSeconds(15);
+            yield return null;
             WarnLevel++;
-        }
     }
 
     public void startGame()
