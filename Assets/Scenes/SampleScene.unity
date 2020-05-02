@@ -155,10 +155,14 @@ MonoBehaviour:
   - {fileID: 7547832449182807081, guid: 68b92a60d9ffdf84eb62fb0c02a54507, type: 3}
   - {fileID: 32795727283468509, guid: 3f7d037f196f0d2449ce73aa74bfb651, type: 3}
   Towers: []
-  placeAwailable: 0101
+  placeAwailable: 010101010101
   place:
   - {fileID: 525592553}
   - {fileID: 1298918690}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &116439275
 Transform:
   m_ObjectHideFlags: 0
@@ -228,7 +232,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 14.020069
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -301,6 +305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a75e2da7b25574d9d9ad01fe0bdc5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WarnLevel: 1
   wallHp: 50000
   baseMoney: 5000
   moneyBackDelay: 5
@@ -413,6 +418,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fabric_activity: 1
   geese: []
+  goose_prefabs:
+  - {fileID: 3327667129983530547, guid: 1dc8c9172191bca48b9df72f3bab5946, type: 3}
 --- !u!4 &1845006132
 Transform:
   m_ObjectHideFlags: 0
