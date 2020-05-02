@@ -2,101 +2,122 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-struct ProjectileStats
-{
-    public ProjectileStats(int Damage, float Range, float Speed)
-    {
-        this.Damage = Damage;
-        ExplosionRange = Range;
-        Velocity = Speed;
-    }
-
-    /// <summary>
-    /// Скорость снаряда
-    /// </summary>
-    int Damage;
-
-    /// <summary>
-    /// Радиус дамага
-    /// </summary>
-    float ExplosionRange;
-
-    /// <summary>
-    /// Скорость полёта снаряда
-    /// </summary>
-    float Velocity;
-}
-
-
-struct TowerStats
-{
-    public TowerStats(int Hp, float range, float attackDelay, float deployTime, ProjectileStats projectile)
-    {
-        HP = Hp;
-        Range = range;
-        AttackDelay = attackDelay;
-        DeployTime = deployTime;
-        Projectile = projectile;
-    }
-
-    /// <summary>
-    /// Статы Снаряда
-    /// </summary>
-    ProjectileStats Projectile;
-
-    /// <summary>
-    /// Здоровье башни
-    /// </summary>
-    int HP;
-
-    /// <summary>
-    /// Время между атаками
-    /// </summary>
-    float AttackDelay;
-
-    /// <summary>
-    /// Дальность стрельбы
-    /// </summary>
-    float Range;
-
-    /// <summary>
-    /// Время установки
-    /// </summary>
-    float DeployTime;
-}
-
-
 public class Game : Singleton<Game>
 {
-    TowerStats[] TowersTypes;
+    public bool isGameStarted { get; protected set; }
 
-    ProjectileStats[] ProjectilesTypes;
+    /// <summary>
+    /// Хп стены
+    /// </summary>
+    [SerializeField]
+    int WallHp = 50000;
 
     [SerializeField]
-    int WallHp = 15000;
+    public int baseMoney = 5000;
+
+    /// <summary>
+    /// Ожидание между получением денег
+    /// </summary>
+    [SerializeField]
+    float moneyBackDelay = 5f;
+
+    /// <summary>
+    /// Количество денег получаемое за ожидание
+    /// </summary>
+    int moneyPerDelay = 450;
+
+    [SerializeField]
+    int money;
+    public int Money { get { return money; } protected set { money = value; } }
+
+    [SerializeField]
+    int score;
+    public int Score { get { return score; } protected set { score = value; } }
+
+    public void increaseScore(int ammount)
+    {
+        Score += ammount;
+    }
+
+    public void increaseMoney(int ammount)
+    {
+        Money += ammount;
+    }
+
+    public void decreaseMoney(int ammount)
+    {
+        Money -= ammount;
+    }
+
+
+    public void startGame()
+    {
+        StartCoroutine("BeginGame");
+    }
+
+    public void finishGame()
+    {
+        StartCoroutine("EndGame");
+    }
+
+    /// <summary>
+    /// Регулярное получение денег
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator EarnMoney()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(moneyBackDelay);
+            Money += moneyPerDelay;
+            // остановка
+            if (!isGameStarted)
+                StopCoroutine("EarnMoney");
+        }
+    }
+
+    IEnumerator BeginGame()
+    {
+        yield return new WaitForSeconds(3f);
+        isGameStarted = true;
+        StartCoroutine("EarnMoney");
+    }
+
+    IEnumerator EndGame()
+    {
+        isGameStarted = false;
+        yield return new WaitForSeconds(4f);
+    }
+
+    [SerializeField]
+    TowerStats[,] TowersTypes;
+
+    [SerializeField]
+    ProjectileStats[,] ProjectilesTypes;
+
 
     void Awake()
     {
         ///
         /// Статы Башен и снарядов
         ///
-        ProjectilesTypes = new ProjectileStats[3]
-        {
-            //                  Hp  Range   Speed
-            new ProjectileStats(300, 0.5f, 2f),
-            new ProjectileStats(460, 0.8f, 1.5f),
-            new ProjectileStats(550, 1.2f, 1.3f),
-        };
+        int Lvl = (int)Level.T3 + 1;
+        int Proj = (int)ProjectileType.Cabbage + 1;
 
-        TowersTypes = new TowerStats[3]
-        {
-            //             Hp   Range Delay Deploy  Projectile
-            new TowerStats(4000,    6,  2,   4,     ProjectilesTypes[0]),
-            //            +1200
-            new TowerStats(5200,    5, 1.7f, 8,     ProjectilesTypes[0]),
-            //            +1600
-            new TowerStats(6800,    4, 2.4f, 12,    ProjectilesTypes[0]),
-        };
+        ProjectilesTypes = new ProjectileStats[Lvl, Proj];
+        TowersTypes = new TowerStats[Lvl, Proj];
+
+        //                                          Dmg  Range Speed
+        ProjectilesTypes[0, 0] = new ProjectileStats(600, 0.3f, 1.5f);
+        ProjectilesTypes[1, 0] = new ProjectileStats(2160, 0.3f, 1.5f);
+        ProjectilesTypes[2, 0] = new ProjectileStats(2700, 0.3f, 1.5f);
+
+
+        //                                 Hp  Range Delay   Deploy Cost  Projectile
+        TowersTypes[0, 0] = new TowerStats(10000, 6, 15/12f, 4,     2500, ProjectilesTypes[0, 0]);
+        TowersTypes[1, 0] = new TowerStats(20000, 6, 15/15f, 8,     3000, ProjectilesTypes[1, 0]);
+        TowersTypes[2, 0] = new TowerStats(30000, 6, 15/18f, 12,    4500, ProjectilesTypes[2, 0]);
+
     }
 
 
