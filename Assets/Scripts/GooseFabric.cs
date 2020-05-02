@@ -41,6 +41,22 @@ public class GooseFabric : Singleton<GooseFabric>
             Lines[i] = new WalkLine(start - i * step, start - (i + 1) * step);
     }
 
+    public Goose FindGoose(Vector3 pos, float range)
+    {
+        float minDistance = range;
+        Goose temp = null;
+        foreach (var goose in geese)
+        {
+            float distance = (goose.transform.position - pos).magnitude;
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                temp = goose;
+            }
+        }
+        return temp;
+    }
+
     int calcLineNumber(float pos)
     {
         for (int i = 0; i < 6; i++)
@@ -85,10 +101,6 @@ public class GooseFabric : Singleton<GooseFabric>
 			float y = UpSpawnPoint.position.y + z * length;
 			
 			
-
-			//добавление гуся
-			Goose tmpGoose = new Goose();
-			tmpGoose.Initialize(gooseLvl);
 
 			GameObject tmpGM = new GameObject(
 				"Goose")
