@@ -75,6 +75,26 @@
 	const float CostT1 = 1000f;
 	const float CostT2 = 3000f;
 	const float CostT3 = 5000f;
+	
+	public static TowerStatsList GetStatsByPrefabId(int PrefabId)
+	{
+		switch (PrefabId)
+		{
+			case 0: return new TowerTomatoT1();
+			case 1: return new TowerTomatoT2();
+			case 2: return new TowerTomatoT3();
+			case 3: return new TowerCabbageT1();
+			case 4: return new TowerCabbageT2();
+			case 5: return new TowerCabbageT3();
+			case 6: return new TowerPeasT1();
+			case 7: return new TowerPeasT2();
+			case 8: return new TowerPeasT3();
+			case 9: return new Wall();
+
+			default:
+				return new Wall();
+		}
+	}
 
 	public class TowerTomatoT1 : TowerStatsList
 	{
