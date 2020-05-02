@@ -50,6 +50,7 @@ public class Tower : MonoBehaviour
     [SerializeField]
     int Damage = 200;
 
+    ProjectileStats projectileStats;
 
     /// <summary>
     /// Радиус действия башни
@@ -102,6 +103,7 @@ public class Tower : MonoBehaviour
         Damage = stats.Projectile.Damage;
         AttackDelay = stats.AttackDelay;
         AttackRange = stats.Range;
+        projectileStats = stats.Projectile;
         spawnPoint = transform.Find("SpawnPoint");
         ProjectilePrefab = projectilePref;
     }
@@ -118,6 +120,11 @@ public class Tower : MonoBehaviour
         isAvailable = false;
     }
 
+
+    private void Awake()
+    {
+        spawnPoint = transform.Find("spawn_point");
+    }
     public IEnumerator Attack()
     {
         while (true)
@@ -129,12 +136,10 @@ public class Tower : MonoBehaviour
                 yield return new WaitForSeconds(0.1f);
                 continue;
             }
-            
             // добавляю скрипт на префаб
             var projectile = GameObject.Instantiate(ProjectilePrefab);
             Projectile proj = projectile.GetComponent<Projectile>();
-            proj.Radius = 0.2f;
-            proj.Loauch(spawnPoint.position, aim.transform.position, ProjectileSpeed, Damage);
+            proj.Loauch(spawnPoint.position, aim.transform.position, projectileStats);
 
             yield return new WaitForSeconds(AttackDelay);
             // может быть не нужен

@@ -150,12 +150,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a028783f32ce67458931d5e8e966e42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ProjectilePrefabs:
+  - {fileID: 7401667174298765926, guid: 4df34fd4a2a49674d88b7a7482ad9fa6, type: 3}
   TowerPrefabs:
   - {fileID: 8658753523784515100, guid: 204adc908697cd5428a4c2974cfa5711, type: 3}
   - {fileID: 7547832449182807081, guid: 68b92a60d9ffdf84eb62fb0c02a54507, type: 3}
   - {fileID: 32795727283468509, guid: 3f7d037f196f0d2449ce73aa74bfb651, type: 3}
   Towers: []
-  placeAwailable: 0101
+  placeAwailable: 010101010101
   place:
   - {fileID: 525592553}
   - {fileID: 1298918690}
@@ -361,7 +363,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 671373829}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 20, y: 5.97, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -421,7 +423,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1804561645}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 20, y: -8.44, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -472,11 +474,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb38095f7ca8f2646a6d8c293cc1e7cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UpSpawnPoint: {fileID: 0}
-  DownSpawnPoint: {fileID: 0}
+  UpSpawnPoint: {fileID: 671373830}
+  DownSpawnPoint: {fileID: 1804561646}
   fabric_activity: 1
   geese: []
-  goose_prefabs: []
+  goose_prefabs:
+  - {fileID: 3327667129983530547, guid: 1dc8c9172191bca48b9df72f3bab5946, type: 3}
 --- !u!4 &1845006132
 Transform:
   m_ObjectHideFlags: 0

@@ -66,8 +66,6 @@ public class Goose : MonoBehaviour
         }
     }
 
-
-
     void FixedUpdate()
     {
         var position = TowerFabric.Instance.FindNearTower(transform.position);
@@ -100,7 +98,7 @@ public class Goose : MonoBehaviour
         if (cur_hp < 0)
         {
             cur_hp = 0;
-            state = GooseState.back;
+            state = GooseState.death;
             //Destroy(this.gameObject);
             GooseFabric.Instance.geese.Remove(this);
         }

@@ -56,7 +56,7 @@ public class TowerFabric : Singleton<TowerFabric>
                 continue;
             Vector3 towerPos = tower.transform.position;
             var dist = Vector3.Distance(towerPos, pos);
-            if (distance < dist)
+            if ( dist<distance)
             {
                 distance = dist;
                 temp = towerPos;
