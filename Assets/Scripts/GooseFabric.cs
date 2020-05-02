@@ -7,10 +7,10 @@ using UnityEngine;
 public class GooseFabric : Singleton<GooseFabric>
 {
     [SerializeField]
-    Transform UpSpawnPoint;
+    Vector3 UpSpawnPoint;
 
     [SerializeField]
-    Transform DownSpawnPoint;
+    Vector3 DownSpawnPoint;
 
     /// <summary>
     /// Линии нумеруются сверху вниз
@@ -30,12 +30,12 @@ public class GooseFabric : Singleton<GooseFabric>
 
 		Camera camera = GameObject.Find("Main Camera").GetComponent<Camera>();
 		var depth = 0;
-		UpSpawnPoint.position = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, depth));
-		DownSpawnPoint.position = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, depth));
+		UpSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, depth));
+		DownSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, depth));
 
-		float length = UpSpawnPoint.position.y - DownSpawnPoint.position.y;
+		float length = UpSpawnPoint.y - DownSpawnPoint.y;
         float step = length / 6;
-        float start = UpSpawnPoint.position.y;
+        float start = UpSpawnPoint.y;
         Lines = new WalkLine[6];
         for (int i = 0; i < 6; i++)
             Lines[i] = new WalkLine(start - i * step, start - (i + 1) * step);
@@ -95,10 +95,10 @@ public class GooseFabric : Singleton<GooseFabric>
 
 			
 
-			float length = Mathf.Abs(UpSpawnPoint.position.y - DownSpawnPoint.position.y);
-			float x = DownSpawnPoint.position.x;			
+			float length = Mathf.Abs(UpSpawnPoint.y - DownSpawnPoint.y);
+			float x = DownSpawnPoint.x;			
 			float z = Random.Range(-1f, 0f);
-			float y = UpSpawnPoint.position.y + z * length;
+			float y = UpSpawnPoint.y + z * length;
 			
 			
 

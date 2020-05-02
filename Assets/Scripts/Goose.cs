@@ -100,15 +100,10 @@ public class Goose : MonoBehaviour
         else
         {
             Movement = Vector3.zero;
-            state = GooseState.atack;
+            state = GooseState.stay;
         }
     }
 
-    //расчет характеристик в следствие эффектов
-    public void OnEffect()
-    {
-        
-    }
 	IEnumerator SlowDown(float coefSlow = 1, float timeSlow = 0)
 	{
 		speed_multiplier = (1 + gooseLvl / 25) * coefSlow;
@@ -124,6 +119,7 @@ public class Goose : MonoBehaviour
         if (state != GooseState.atack) 
             StartCoroutine("Attack");
     }
+
 
     //Наносит урон гусю
     public void OnDamage(int damage, float coefSlow = 1, float timeSlow = 0)

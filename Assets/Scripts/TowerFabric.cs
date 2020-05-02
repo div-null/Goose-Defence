@@ -10,22 +10,22 @@ public class TowerFabric : Singleton<TowerFabric>
     /// <summary>
     /// Количество не пустых мест
     /// </summary>
-    public int TowerCount { get { return placeAwailable.Count(place => place); } }
+    public int TowerCount { get { return freePlace.Count(place => place); } }
 
     public GameObject[] ProjectilePrefabs;
     public GameObject[] TowerPrefabs;
     public List<Tower> Towers;
-    public bool[] placeAwailable;
+    public bool[] freePlace;
     public GameObject[] place;
 
     void Awake()
     {
         Towers = new List<Tower>();
-        placeAwailable = new bool[MaxTowerCount];
+        freePlace = new bool[MaxTowerCount];
         for (int i = 0; i < MaxTowerCount; i++)
         {
             Towers.Add(null);
-            placeAwailable[i] = false;
+            freePlace[i] = true;
         }
 
         //////////////////////////
@@ -44,6 +44,7 @@ public class TowerFabric : Singleton<TowerFabric>
         Towers[order].Initialize(stats, ProjectilePrefabs[(int)type]);
         Towers[order].MakeDamage();
         Towers[order].TowerDestroyed += deleteTower;
+        freePlace[order] = false;
     }
 
     public Vector3 FindNearTower(Vector3 pos)
@@ -91,6 +92,6 @@ public class TowerFabric : Singleton<TowerFabric>
     {
         Towers[order].RemoveTower();
         Towers[order] = null;
-        placeAwailable[order] = false;
+        freePlace[order] = true;
     }
 }
