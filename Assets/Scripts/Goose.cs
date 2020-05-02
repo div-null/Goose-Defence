@@ -23,7 +23,7 @@ public class Goose : MonoBehaviour
     int cur_hp = 250;                  //текущее значение показателя здоровья
 
     public int goose_damage = 100;            //урон гуся
-    public float goose_speed = 10f;           //скорость гуся
+    public float goose_speed = 3f;           //скорость гуся
     public float speed_multiplier = 1;
     /// <summary>
     /// Номер башни, которую атакует гусь
@@ -66,17 +66,32 @@ public class Goose : MonoBehaviour
         }
     }
 
+
+
+    void FixedUpdate()
+    {
+        var position = TowerFabric.Instance.FindNearTower(transform.position);
+        var direction = (position - transform.position);
+        if (direction != Vector3.zero)
+        {
+            state = GooseState.walk;
+            transform.position += direction.normalized * goose_speed * Time.deltaTime;
+        }
+        else
+            state = GooseState.atack;
+    }
+
     //расчет характеристик в следствие эффектов
     public void OnEffect()
     {
-
+        
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
-        StartCoroutine("Attack");
+        if (state != GooseState.atack) 
+            StartCoroutine("Attack");
     }
-
 
     //расчет урона
     public void OnDamage(int damage)
@@ -91,11 +106,8 @@ public class Goose : MonoBehaviour
         }
     }
 
-    private void Start()
+    void Start()
     {
         state = GooseState.walk;
     }
-
-
-
 }

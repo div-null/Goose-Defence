@@ -52,6 +52,22 @@ public class GooseFabric : Singleton<GooseFabric>
         return 5;
     }
 
+    public Goose FindGoose(Vector3 pos, float range)
+    {
+        float minDistance = range;
+        Goose temp = null;
+        foreach (var goose in geese)
+        {
+            float distance = (goose.transform.position - pos).magnitude;
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                temp = goose;
+            }
+        }
+        return temp;
+    }
+
     public IEnumerator SpawnGeese(int gooseLvl, int gooseCount)
     {
         GooseTypeStats stats = GooseTypes[gooseLvl - 1];
