@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.SocialPlatforms;
+using System;
 
 public delegate void TowerEvent(Tower tower);
 
@@ -121,30 +122,42 @@ public class Tower : MonoBehaviour
     }
 
 
-    private void Awake()
+    private void Start()
     {
         spawnPoint = transform.Find("spawn_point");
     }
     public IEnumerator Attack()
     {
+
         while (true)
         {
             Goose aim = GooseFabric.Instance.FindGoose(transform.position, AttackRange);
             // null или далеко
-            if (aim == null)
+            if (aim == null || spawnPoint == null)
             {
                 yield return new WaitForSeconds(0.1f);
                 continue;
             }
             // добавляю скрипт на префаб
-            var projectile = GameObject.Instantiate(ProjectilePrefab);
+            var projectile = GameObject.Instantiate(ProjectilePrefab, spawnPoint.position, Quaternion.identity);
             Projectile proj = projectile.GetComponent<Projectile>();
-            proj.Loauch(spawnPoint.position, aim.transform.position, projectileStats);
+
+
+            float distance = Vector3.Distance(spawnPoint.position, aim.transform.position);
+            float u1 = projectileStats.Velocity;
+            float u2 = aim.goose_speed;
+
+            float time = Math.Abs(0.5f * (Mathf.Sqrt(-u1 * u1 + 2 * u1 * u2 - u2 * u2 + 2 * distance) - u1 - u2));
+            //float time = Math.Abs(0.5f * (-u1 - u2));
+            Vector3 prediction = aim.Movement * time;
+
+            proj.Loauch(spawnPoint.position, aim.transform.position + prediction, projectileStats);
 
             yield return new WaitForSeconds(AttackDelay);
             // может быть не нужен
             yield return new WaitForEndOfFrame();
         }
+
     }
 
     public void RemoveTower()

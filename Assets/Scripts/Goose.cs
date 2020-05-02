@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 public enum GooseState
@@ -20,6 +21,7 @@ public class Goose : MonoBehaviour
     static int[] GooseLvlHp = new int[3] { 250, 400, 650 };
 
     public int max_hp;                  //кол-во стартового (максимального) здоровья у гуся
+    [SerializeField]
     int cur_hp;                  //текущее значение показателя здоровья
 
 	public int gooseLvl;
@@ -31,7 +33,9 @@ public class Goose : MonoBehaviour
 	public GooseState state;                //состояние гуся
     public Animator animator;                   //аниматор
 	public int typeGoose;
-    
+
+    public Vector3 Movement;
+
 	public void Initialize(int lvl)
 	{
 		gooseLvl = lvl;
@@ -89,11 +93,15 @@ public class Goose : MonoBehaviour
         var direction = (position - transform.position);
         if (direction != Vector3.zero)
         {
+            Movement = direction.normalized * goose_speed;
             state = GooseState.walk;
             transform.position += direction.normalized * goose_speed * Time.deltaTime;
         }
         else
+        {
+            Movement = Vector3.zero;
             state = GooseState.atack;
+        }
     }
 
     //расчет характеристик в следствие эффектов
@@ -127,7 +135,7 @@ public class Goose : MonoBehaviour
         {
             cur_hp = 0;
             state = GooseState.death;
-            //Destroy(this.gameObject);
+            Destroy(this.gameObject);
             GooseFabric.Instance.geese.Remove(this);
         }
     }

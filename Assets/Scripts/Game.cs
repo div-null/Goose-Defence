@@ -153,9 +153,9 @@ public class Game : Singleton<Game>
         TowersTypes = new TowerStats[Lvl, Proj];
 
         //                                          Dmg  Range Speed
-        ProjectilesTypes[0, 0] = new ProjectileStats(600, 0.3f, 1.5f);
-        ProjectilesTypes[1, 0] = new ProjectileStats(2160, 0.3f, 1.5f);
-        ProjectilesTypes[2, 0] = new ProjectileStats(2700, 0.3f, 1.5f);
+        ProjectilesTypes[0, 0] = new ProjectileStats(600, 0.3f,  4.2f);
+        ProjectilesTypes[1, 0] = new ProjectileStats(2160, 0.3f, 4.2f);
+        ProjectilesTypes[2, 0] = new ProjectileStats(2700, 0.3f, 4.2f);
 
 
         //                                 Hp  Range Delay   Deploy Cost  Projectile

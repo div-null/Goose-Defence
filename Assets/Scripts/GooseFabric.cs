@@ -131,7 +131,13 @@ public class GooseFabric : Singleton<GooseFabric>
 		
         foreach(var hit in hits)                                                    //увидели гуся
         {
-            hit.transform.gameObject.GetComponent<Goose>().OnDamage(damage, coefSlow, timeSlow);        //Бьём гуся
+            var parent = hit.transform.parent;
+            if (parent == null)
+                continue;
+
+            var goose = parent.gameObject.GetComponent<Goose>();
+            if (goose)
+                goose.OnDamage(damage, coefSlow, timeSlow);        //Бьём гуся
         }
     }
      
