@@ -79,6 +79,7 @@ public class Goose : MonoBehaviour
 
     private void Update()
     {
+        
         if (Input.GetKey(KeyCode.Alpha0))
         {
             state = 0;
