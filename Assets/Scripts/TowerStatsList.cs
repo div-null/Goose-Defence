@@ -22,13 +22,13 @@
 	const float WallCoefDMG = 0f;
 
 	//Дальность атаки
-	const float T2CoefAttackFar = 4.5f;
-	const float T3CoefAttackFar = 6.75f;
+	const float T2CoefAttackFar = 1.8f;
+	const float T3CoefAttackFar = 3f;
 	const float WallCoefAttackFar = 0f;
 
 	//АОЕ радиус
-	const float T2CoefAttackAOE = 4.5f;
-	const float T3CoefAttackAOE = 6.75f;
+	const float T2CoefAttackAOE = 2f;
+	const float T3CoefAttackAOE = 3f;
 	const float WallCoefAttackAOE = 0f;
 
 	//Макс ХП
@@ -42,8 +42,8 @@
 	const float WallFlightSpeed = 0f;
 
 	//Скорость атаки
-	const float T2AttackSpeed = 0.75f;
-	const float T3AttackSpeed = 0.5f;
+	const float T2AttackSpeed = 0.85f;
+	const float T3AttackSpeed = 0.7f;
 	const float WallAttackSpeed = 0f;
 
 	//
@@ -68,8 +68,8 @@
 	const float PeasAOECoef = 2f;
 
 	const float TomatoAttackSpeedCoef = 1f;
-	const float CabbageAttackSpeedCoef = 0.5f;
-	const float PeasAttackSpeedCoef = 0.8f;
+	const float CabbageAttackSpeedCoef = 2f;
+	const float PeasAttackSpeedCoef = 1.2f;
 
 	const float CostT1 = 1000f;
 	const float CostT2 = 3000f;
@@ -148,7 +148,7 @@
 		public override string Name => "Гороховая башня";
 		public override string Discription => "Стреляет большим количеством горошин, кормит несколько гусей. Дополнительно замедляет их.";
 		public override float AttackDelay => SredAttackSpeed * PeasAttackSpeedCoef;
-		public override ProjectileStats Projectile => new ProjectileStats((int)(SredDMG * PeasDMGCoef / (SredAttackSpeed * PeasAttackSpeedCoef)), PeasAOECoef, SredSpeed * PeasSpeedCoef);
+		public override ProjectileStats Projectile => new ProjectileStats((int)(SredDMG * PeasDMGCoef / (SredAttackSpeed * PeasAttackSpeedCoef)), PeasAOECoef, SredSpeed * PeasSpeedCoef, 0.8f, 2f);
 		public override int MaxHP => (int)(SredMaxHP * PeasHPCoef);
 		public override float Range => SredAttackFar * PeasFarCoef;
 		public override float Cost => CostT1;
@@ -159,7 +159,7 @@
 		public override string Name => "Гороховая башня Т2";
 		public override string Discription => "Стреляет большим количеством горошин, кормит несколько гусей. Дополнительно замедляет их.";
 		public override float AttackDelay => SredAttackSpeed * PeasAttackSpeedCoef * T2AttackSpeed;
-		public override ProjectileStats Projectile => new ProjectileStats((int)(SredDMG * PeasDMGCoef * T2CoefDMG / (SredAttackSpeed * PeasAttackSpeedCoef * T2AttackSpeed)), PeasAOECoef * T2CoefAttackAOE, SredSpeed * PeasSpeedCoef * T2FlightSpeed);
+		public override ProjectileStats Projectile => new ProjectileStats((int)(SredDMG * PeasDMGCoef * T2CoefDMG / (SredAttackSpeed * PeasAttackSpeedCoef * T2AttackSpeed)), PeasAOECoef * T2CoefAttackAOE, SredSpeed * PeasSpeedCoef * T2FlightSpeed, 0.7f, 2.5f);
 		public override int MaxHP => (int)(SredMaxHP * PeasHPCoef * T2MaxHP);
 		public override float Range => SredAttackFar * PeasFarCoef * T2CoefAttackFar;
 		public override float Cost => CostT2;
@@ -171,7 +171,7 @@
 		public override string Name => "Гороховая башня Т3";
 		public override string Discription => "Стреляет большим количеством горошин, кормит несколько гусей. Дополнительно замедляет их.";
 		public override float AttackDelay => SredAttackSpeed * PeasAttackSpeedCoef * T3AttackSpeed;
-		public override ProjectileStats Projectile => new ProjectileStats((int)(SredDMG * PeasDMGCoef * T3CoefDMG / (SredAttackSpeed * PeasAttackSpeedCoef * T3AttackSpeed)), PeasAOECoef * T3CoefAttackAOE, SredSpeed * PeasSpeedCoef * T3FlightSpeed);
+		public override ProjectileStats Projectile => new ProjectileStats((int)(SredDMG * PeasDMGCoef * T3CoefDMG / (SredAttackSpeed * PeasAttackSpeedCoef * T3AttackSpeed)), PeasAOECoef * T3CoefAttackAOE, SredSpeed * PeasSpeedCoef * T3FlightSpeed, 0.7f, 3f);
 		public override int MaxHP => (int)(SredMaxHP * PeasHPCoef * T3MaxHP);
 		public override float Range => SredAttackFar * PeasFarCoef * T3CoefAttackFar;
 		public override float Cost => CostT3;

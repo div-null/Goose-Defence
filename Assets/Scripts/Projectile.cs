@@ -25,7 +25,18 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     public float DestroyTime;
 
-    Vector3 Direction;
+	/// <summary>
+	/// Коэффициент замедения
+	/// </summary>
+	public float coefSlow;
+
+	/// <summary>
+	/// Время замедления
+	/// </summary>
+	public float timeSlow;
+
+
+	Vector3 Direction;
 
     float RemainTime;
 
@@ -37,15 +48,17 @@ public class Projectile : MonoBehaviour
         Direction = (point - tower).normalized;
         RemainTime = (Vector3.Distance(tower, point) / stats.Velocity);
         Radius = stats.ExplosionRange;
-        //TODO: добавить поворот
-        transform.rotation = Quaternion.LookRotation(Vector3.back);
+		this.coefSlow = stats.coefSlow;
+		this.timeSlow = stats.timeSlow;
+		//TODO: добавить поворот
+		transform.rotation = Quaternion.LookRotation(Vector3.back);
     }
 
     void MakeDamage()
     {
         Vector2 pos = transform.position;
         // TODO: Вызов метода дамага гусей
-        GooseFabric.Instance.OnAttack(Radius, pos, Damage);
+        GooseFabric.Instance.OnAttack(Radius, pos, Damage, coefSlow, timeSlow);
         Debug.Log("Destroy ball");
         GameObject.Destroy(gameObject, DestroyTime);
         this.enabled = false;

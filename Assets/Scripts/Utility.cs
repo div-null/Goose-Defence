@@ -16,12 +16,15 @@ public enum TowerType
 /// </summary>
 public struct ProjectileStats
 {
-    public ProjectileStats(int Damage, float Range, float Speed)
+    public ProjectileStats(int Damage, float Range, float Speed, float coefSlow = 1, float timeSlow = 0)
     {
         this.Damage = Damage;
         ExplosionRange = Range;
         Velocity = Speed;
-    }
+		this.coefSlow = coefSlow;
+		this.timeSlow = timeSlow;
+
+	}
 
     /// <summary>
     /// Скорость снаряда
@@ -37,6 +40,15 @@ public struct ProjectileStats
     /// Скорость полёта снаряда
     /// </summary>
     public float Velocity;
+	/// <summary>
+	/// Коэффициент замедения
+	/// </summary>
+	public float coefSlow;
+
+	/// <summary>
+	/// Время замедления
+	/// </summary>
+	public float timeSlow;
 }
 
 
