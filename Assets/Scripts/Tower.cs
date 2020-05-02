@@ -66,7 +66,7 @@ public class Tower : MonoBehaviour
         }
     }
 
-    float selfHp;
+    float selfHp = 100f;
     /// <summary>
     /// Хп Башни, вызывает событие уничтожения уничтожение
     /// </summary>
@@ -107,6 +107,13 @@ public class Tower : MonoBehaviour
         HP = Hp;
         Damage = Dmg;
         AttackDelay = DmgDelay;
+        spawnPoint = transform.Find("SpawnPoint");
+    }
+    public void Initialize(TowerStats stats)
+    {
+        HP = stats.HP;
+        Damage = stats.Projectile.Damage;
+        AttackDelay = stats.AttackDelay;
         spawnPoint = transform.Find("SpawnPoint");
     }
 
@@ -166,11 +173,5 @@ public class Tower : MonoBehaviour
         StopCoroutine("Attack");
         this.enabled = false;
         GameObject.Destroy(this);
-    }
-
-    void Start()
-    {
-        // УБРАТЬ В ДАЛЬНЕЙШЕМ
-        MakeDamage();
     }
 }

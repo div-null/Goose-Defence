@@ -7,12 +7,12 @@ public class StartF : MonoBehaviour
     public List<GameObject> goose_prefabs;          //префабы гусей
     public Transform target;
    // GooseFabric fabric;
-    public GameObject tower;
+    ////public GameObject tower;
     // Start is called before the first frame update
     void Start()
     {
-        //    fabric = new GooseFabric();
-        //StartCoroutine(GooseFabric.Instance.SpawnGeese(1, 3, goose_prefabs);
+        TowerFabric.Instance.placeTower(0, Game.Instance.TowersTypes[0, 0], TowerType.Cabbage);
+        TowerFabric.Instance.placeTower(1, Game.Instance.TowersTypes[0, 0], TowerType.Cabbage);
     }
 
     // Update is called once per frame
@@ -20,7 +20,7 @@ public class StartF : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            tower.SetActive(true);
+            //tower.SetActive(true);
             //fabric.OnAttack(2,target.position,40);
         }
     }

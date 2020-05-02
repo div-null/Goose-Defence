@@ -39,7 +39,17 @@ public class Projectile : MonoBehaviour
         //TODO: добавить поворот
         transform.rotation = Quaternion.LookRotation(Vector3.back);
     }
+    public void Loauch(Vector3 tower, Vector3 point, ProjectileStats stats)
+    {
+        Damage = stats.Damage;
+        this.Velocity = stats.Velocity;
+        transform.position = tower;
+        Direction = (point - tower).normalized;
+        RemainTime = (Vector3.Distance(tower, point) / stats.Velocity);
 
+        //TODO: добавить поворот
+        transform.rotation = Quaternion.LookRotation(Vector3.back);
+    }
 
     void MakeDamage()
     {
@@ -51,10 +61,12 @@ public class Projectile : MonoBehaviour
         this.enabled = false;
     }
 
+    
     void FixedUpdate()
     {
         if (RemainTime > 0)
         {
+            transform.Rotate(0, 0, 10f * Time.deltaTime);                       //вращение снаряда        
             transform.position += Direction * Velocity * Time.deltaTime;
             RemainTime -= Time.deltaTime;
         }

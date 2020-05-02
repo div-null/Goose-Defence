@@ -13,6 +13,17 @@ public class Game : Singleton<Game>
     event EndGame WinGame;
 
     /// <summary>
+    /// Типы башен
+    /// </summary>
+    [SerializeField]
+    public TowerStats[,] TowersTypes;
+    /// <summary>
+    /// Типы снарядов
+    /// </summary>
+    [SerializeField]
+    public ProjectileStats[,] ProjectilesTypes;
+
+    /// <summary>
     /// Игра идёт
     /// </summary>
     public bool isGameStarted { get; protected set; } = false;
@@ -127,11 +138,7 @@ public class Game : Singleton<Game>
         yield return new WaitForSeconds(4f);
     }
 
-    [SerializeField]
-    TowerStats[,] TowersTypes;
-
-    [SerializeField]
-    ProjectileStats[,] ProjectilesTypes;
+    
 
 
     void Awake()

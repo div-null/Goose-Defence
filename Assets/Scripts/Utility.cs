@@ -35,17 +35,17 @@ public struct ProjectileStats
     /// <summary>
     /// Скорость снаряда
     /// </summary>
-    int Damage;
+    public int Damage;
 
     /// <summary>
     /// Радиус дамага
     /// </summary>
-    float ExplosionRange;
+    public float ExplosionRange;
 
     /// <summary>
     /// Скорость полёта снаряда
     /// </summary>
-    float Velocity;
+    public float Velocity;
 }
 
 
@@ -67,32 +67,32 @@ public struct TowerStats
     /// <summary>
     /// Статы Снаряда
     /// </summary>
-    ProjectileStats Projectile;
+    public ProjectileStats Projectile;
 
     /// <summary>
     /// Здоровье башни
     /// </summary>
-    int HP;
+    public int HP;
 
     /// <summary>
     /// Время между атаками
     /// </summary>
-    float AttackDelay;
+    public float AttackDelay;
 
     /// <summary>
     /// Дальность стрельбы
     /// </summary>
-    float Range;
+    public float Range;
 
     /// <summary>
     /// Время установки
     /// </summary>
-    float DeployTime;
+    public float DeployTime;
 
     /// <summary>
     /// Стоимость постройки башни
     /// </summary>
-    float Cost;
+    public float Cost;
 }
 
 /// <summary>

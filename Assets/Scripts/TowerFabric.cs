@@ -35,6 +35,7 @@ public class TowerFabric : Singleton<TowerFabric>
         // НЕ ДЕЛАЮ БАЩНЮ ДОЧЕРНЕЙ 
         GameObject tower = GameObject.Instantiate(TowerPrefabs[(int)type], place[order].transform.position, Quaternion.identity);
         Towers[order] = tower.AddComponent<Tower>();
+        Towers[order].Initialize(stats);
         Towers[order].MakeDamage();
         Towers[order].TowerDestroyed += deleteTower;
     }
