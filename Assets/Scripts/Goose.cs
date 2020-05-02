@@ -8,7 +8,7 @@ public enum GooseState
     walk,                           //идет
     run,                            //бежит
     atack,                          //атакует
-    back                            //убегает
+    death                            //умирает
 }
 
 public class Goose : MonoBehaviour
@@ -72,9 +72,32 @@ public class Goose : MonoBehaviour
 
     private void Start()
     {
-        state = GooseState.walk;
+        //state = GooseState.walk;
+        animator = GetComponent<Animator>();
     }
 
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Alpha0))
+        {
+            state = 0;
+            animator.SetInteger("GooseState", 0);
+        }
+        else if (Input.GetKey(KeyCode.Alpha1))
+        {
+            animator.SetInteger("GooseState", 1);
 
+        }
+        else if (Input.GetKey(KeyCode.Alpha3))
+        {
+            animator.SetInteger("GooseState", 3);
+
+        }
+        else if (Input.GetKey(KeyCode.Alpha4))
+        {
+            animator.SetInteger("GooseState", 3);
+            animator.SetInteger("GooseState", 4);
+        }
+    }
 }
