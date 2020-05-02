@@ -52,7 +52,7 @@ public class Goose : MonoBehaviour
 			typeTmp = typeTmp < 50 ? 1 : 2;
 		}
 		else {
-			typeTmp = 5;
+			typeTmp = 3;
 		}
 		typeGoose = typeTmp;	
 		

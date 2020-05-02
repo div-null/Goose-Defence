@@ -28,10 +28,10 @@ public class GooseFabric : Singleton<GooseFabric>
     {
         geese = new List<Goose>();
 
-		Camera camera = GameObject.Find("MainCamera").GetComponent<Camera>();
+		Camera camera = GameObject.Find("Main Camera").GetComponent<Camera>();
 		var depth = 0;
-		UpSpawnPoint.position = new Vector3(Screen.width, Screen.height, depth);
-		DownSpawnPoint.position = new Vector3(Screen.width, 0, depth);
+		UpSpawnPoint.position = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, depth));
+		DownSpawnPoint.position = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, depth));
 
 		float length = UpSpawnPoint.position.y - DownSpawnPoint.position.y;
         float step = length / 6;
@@ -83,19 +83,28 @@ public class GooseFabric : Singleton<GooseFabric>
 			float x = DownSpawnPoint.position.x;			
 			float z = Random.Range(-1f, 0f);
 			float y = UpSpawnPoint.position.y + z * length;
-
-			GameObject goose = GameObject.Instantiate(
-				goose_prefabs[gooseLvl-1],
-				new Vector3(x,y,z),
-				Quaternion.identity
-			);
+			
+			
 
 			//добавление гуся
-			Goose g = goose.AddComponent<Goose>();
-			int lineNum = calcLineNumber(y);
-			goose.GetComponent<Goose>().Initialize(gooseLvl);
+			Goose tmpGoose = new Goose();
+			tmpGoose.Initialize(gooseLvl);
 
-			geese.Add(g);
+			GameObject tmpGM = new GameObject(
+				"Goose")
+				;
+
+			tmpGM.transform.position = new Vector3(x, y, z);
+			tmpGM.transform.rotation = Quaternion.identity;
+			var tmpG = tmpGM.AddComponent<Goose>();
+			tmpG.Initialize(gooseLvl);
+
+			GameObject.Instantiate(goose_prefabs[tmpG.typeGoose], tmpG.transform, false);
+
+			
+
+
+			geese.Add(tmpG);
 			if(countGooseOnLvl == spawnedGooseCount)
 			{
 				spawnedGooseCount = 0;
