@@ -23,23 +23,12 @@ public class UI_manager : MonoBehaviour
 
     public void UI_TurnOnMenu()
     {
-        transitor.SetBool("Status", false);
-        UIInMenu.SetActive(true);
-        StartCoroutine("ReadHistory");
-        UIInGame.SetActive(false);
-        history.GetComponentInChildren<Text>().text = "";
-        canSkip = false;
-        isGameStarted = false;
-        transitor.SetBool("Status", true);
+        StartCoroutine(WaitForTransitionToMenu());
     }
 
     void UI_TurnOnGame()
     {
-        StartCoroutine("WairForTransition");
-        UIInMenu.SetActive(false);
-        infoPanel.SetActive(false);
-        buyPanel.SetActive(false);
-        UIInGame.SetActive(true);
+        StartCoroutine(WaitForTransitionToGame());
     }
 
     void UI_SetAmountOfGold(int amount)
@@ -50,7 +39,12 @@ public class UI_manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UI_TurnOnMenu();
+        UIInMenu.SetActive(true);
+        StartCoroutine("ReadHistory");
+        UIInGame.SetActive(false);
+        history.GetComponentInChildren<Text>().text = "";
+        canSkip = false;
+        isGameStarted = false;
         pressKeyToStart.GetComponent<Text>().text = "Нажмите на любую клавишу, чтобы пропустить историю";
     }
 
@@ -144,10 +138,26 @@ public class UI_manager : MonoBehaviour
         canSkip = true;
         pressKeyToStart.GetComponent<Text>().text = "Нажмите на любую клавишу, чтобы начать игру";
     }
-    IEnumerator WairForTransition()
+    IEnumerator WaitForTransitionToMenu()
     {
-        transitor.SetBool("Status", false);
-        yield return new WaitForSeconds(3f);
-        transitor.SetBool("Status", true);
+        transitor.SetTrigger("End");
+        yield return new WaitForSeconds(1.5f);
+        UIInMenu.SetActive(true);
+        StartCoroutine("ReadHistory");
+        UIInGame.SetActive(false);
+        history.GetComponentInChildren<Text>().text = "";
+        canSkip = false;
+        isGameStarted = false;
+        transitor.SetTrigger("Start");
+    }
+    IEnumerator WaitForTransitionToGame()
+    {
+        transitor.SetTrigger("End");
+        yield return new WaitForSeconds(1.5f);
+        UIInMenu.SetActive(false);
+        infoPanel.SetActive(false);
+        buyPanel.SetActive(false);
+        UIInGame.SetActive(true);
+        transitor.SetTrigger("Start");
     }
 }
