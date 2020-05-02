@@ -98,7 +98,7 @@ public class Game : Singleton<Game>
     {
         while (true)
         {
-            GooseFabric.Instance.spawnGeeseOfType(1, gooseCount);
+            GooseFabric.Instance.StartSpawning();
             yield return new WaitForSeconds(15);
             WarnLevel++;
         }

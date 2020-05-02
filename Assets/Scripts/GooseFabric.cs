@@ -26,20 +26,19 @@ public class GooseFabric : Singleton<GooseFabric>
 
     void Awake()
     {
-        fabric_activity = true;
         geese = new List<Goose>();
-        GooseTypes = new GooseTypeStats[3];
-        GooseTypes[0] = new GooseTypeStats(250, 100, 1);
-        GooseTypes[1] = new GooseTypeStats(400, 200, 1.2f);
-        GooseTypes[2] = new GooseTypeStats(600, 300, 1.4f);
 
-        float length = UpSpawnPoint.position.y - DownSpawnPoint.position.y;
+		Camera camera = GameObject.Find("Main Camera").GetComponent<Camera>();
+		var depth = 0;
+		UpSpawnPoint.position = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, depth));
+		DownSpawnPoint.position = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, depth));
+
+		float length = UpSpawnPoint.position.y - DownSpawnPoint.position.y;
         float step = length / 6;
         float start = UpSpawnPoint.position.y;
         Lines = new WalkLine[6];
         for (int i = 0; i < 6; i++)
             Lines[i] = new WalkLine(start - i * step, start - (i + 1) * step);
-
     }
 
     int calcLineNumber(float pos)
@@ -52,64 +51,77 @@ public class GooseFabric : Singleton<GooseFabric>
         return 5;
     }
 
-    public Goose FindGoose(Vector3 pos, float range)
+	//Изменение текущего уровня
+	public void ChangeGooseLvl(int gooseLvl)
+	{
+		this.gooseLvl = gooseLvl;
+	}
+
+	int gooseLvl = 1;
+
+	public void StartSpawning()
+	{
+		StartCoroutine("SpawnGeese");
+	}
+
+	public void Stopspawning()
+	{
+		StopCoroutine("SpawnGeese");
+	}
+
+	public IEnumerator SpawnGeese()
     {
-        float minDistance = range;
-        Goose temp = null;
-        foreach (var goose in geese)
-        {
-            float distance = (goose.transform.position - pos).magnitude;
-            if (distance < minDistance)
-            {
-                minDistance = distance;
-                temp = goose;
-            }
-        }
-        return temp;
-    }
+		int spawnedGooseCount = 0;
+		while (true)
+		{
+			spawnedGooseCount++;
+			int countGooseOnLvl = (gooseLvl / 25) / (int)Mathf.Sqrt(1 + (int)Mathf.Pow(gooseLvl / 25, 2)) * 50;
 
-    public IEnumerator SpawnGeese(int gooseLvl, int gooseCount)
-    {
-        GooseTypeStats stats = GooseTypes[gooseLvl - 1];
-        float upPosition = UpSpawnPoint.position.y;
-        float length = UpSpawnPoint.position.y - DownSpawnPoint.position.y;
-        float x = DownSpawnPoint.position.x;
-        for (int i = 0; i < gooseCount; i++)
-        {
-            float z = Random.Range(-1f, 0f);
-            float y = upPosition + z * length;
+			
 
-            GameObject goose = GameObject.Instantiate(
-                goose_prefabs[gooseLvl-1],
-                new Vector3(x,y,z),
-                Quaternion.identity
-            );
+			float length = Mathf.Abs(UpSpawnPoint.position.y - DownSpawnPoint.position.y);
+			float x = DownSpawnPoint.position.x;			
+			float z = Random.Range(-1f, 0f);
+			float y = UpSpawnPoint.position.y + z * length;
+			
+			
 
-            //добавление гуся
-            Goose g = goose.AddComponent<Goose>();
-            int lineNum = calcLineNumber(y);
-            goose.GetComponent<Goose>().Initialize(stats, lineNum);
-            geese.Add(g);
+			//добавление гуся
+			Goose tmpGoose = new Goose();
+			tmpGoose.Initialize(gooseLvl);
 
-            yield return new WaitForSeconds(0.3f);
-        }
-        
-    }
+			GameObject tmpGM = new GameObject(
+				"Goose")
+				;
 
-    public void spawnGeeseOfType(int gooseLvl, int gooseCount)
-    {
-        StartCoroutine(SpawnGeese(gooseLvl,gooseCount));
-    }
+			tmpGM.transform.position = new Vector3(x, y, z);
+			tmpGM.transform.rotation = Quaternion.identity;
+			var tmpG = tmpGM.AddComponent<Goose>();
+			tmpG.Initialize(gooseLvl);
+
+			GameObject.Instantiate(goose_prefabs[tmpG.typeGoose], tmpG.transform, false);
+
+			
 
 
+			geese.Add(tmpG);
+			if(countGooseOnLvl == spawnedGooseCount)
+			{
+				spawnedGooseCount = 0;
+				gooseLvl++;
+			}
+			yield return new WaitForSeconds(15f / countGooseOnLvl);
 
-    public void OnAttack(float radius, Vector2 target, int damage)
+		}
+	}
+
+    public void OnAttack(float radius, Vector2 target, int damage, float coefSlow = 1, float timeSlow = 0)
     {
         RaycastHit2D[] hits = Physics2D.CircleCastAll(target,radius,Vector2.down,5);                  //находим побитых гусей
-
+		
         foreach(var hit in hits)                                                    //увидели гуся
         {
-            hit.transform.gameObject.GetComponent<Goose>().OnDamage(damage);        //Бьём гуся
+            hit.transform.gameObject.GetComponent<Goose>().OnDamage(damage, coefSlow, timeSlow);        //Бьём гуся
         }
     }
      
