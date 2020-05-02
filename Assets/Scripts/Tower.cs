@@ -50,6 +50,7 @@ public class Tower : MonoBehaviour
     [SerializeField]
     int Damage = 200;
 
+    ProjectileStats projectileStats;
 
     /// <summary>
     /// Радиус действия башни
@@ -96,41 +97,15 @@ public class Tower : MonoBehaviour
         return Destroyed;
     }
 
-    /// <summary>
-    /// Создание башни, МГНОВЕННО начинает стрелять
-    /// </summary>
-    /// <param name="Hp">Здоровье</param>
-    /// <param name="Dmg">Урон за атаку</param>
-    /// <param name="DmgRate">Количество ударов в секудну</param>
-    public void Initialize(float Hp, int Dmg, float DmgDelay)
-    {
-        HP = Hp;
-        Damage = Dmg;
-        AttackDelay = DmgDelay;
-        spawnPoint = transform.Find("SpawnPoint");
-    }
-    public void Initialize(TowerStats stats)
+    public void Initialize(TowerStats stats, GameObject projectilePref)
     {
         HP = stats.HP;
         Damage = stats.Projectile.Damage;
         AttackDelay = stats.AttackDelay;
+        AttackRange = stats.Range;
+        projectileStats = stats.Projectile;
         spawnPoint = transform.Find("SpawnPoint");
-    }
-
-    Goose FindGoose()
-    {
-        float minDistance = AttackRange;
-        Goose temp = null;
-        foreach (var goose in GooseFabric.Instance.geese)
-        {
-            float distance = (goose.transform.position - transform.position).magnitude;
-            if (distance < minDistance)
-            {
-                minDistance = distance;
-                temp = goose;
-            }
-        }
-        return temp;
+        ProjectilePrefab = projectilePref;
     }
 
     public void MakeDamage()
@@ -145,12 +120,17 @@ public class Tower : MonoBehaviour
         isAvailable = false;
     }
 
+
+    private void Awake()
+    {
+        spawnPoint = transform.Find("spawn_point");
+    }
     public IEnumerator Attack()
     {
         while (true)
         {
-            Goose aim = FindGoose();
-
+            Goose aim = GooseFabric.Instance.FindGoose(transform.position, AttackRange);
+            // null или далеко
             if (aim == null)
             {
                 yield return new WaitForSeconds(0.1f);
@@ -159,8 +139,7 @@ public class Tower : MonoBehaviour
             // добавляю скрипт на префаб
             var projectile = GameObject.Instantiate(ProjectilePrefab);
             Projectile proj = projectile.GetComponent<Projectile>();
-            proj.Radius = 0.2f;
-            proj.Loauch(spawnPoint.position, aim.transform.position, ProjectileSpeed, Damage);
+            proj.Loauch(spawnPoint.position, aim.transform.position, projectileStats);
 
             yield return new WaitForSeconds(AttackDelay);
             // может быть не нужен

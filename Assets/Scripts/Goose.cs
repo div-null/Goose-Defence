@@ -8,7 +8,7 @@ public enum GooseState
     walk,                           //идет
     run,                            //бежит
     atack,                          //атакует
-    back                            //убегает
+    death                            //умирает
 }
 
 public class Goose : MonoBehaviour
@@ -83,6 +83,24 @@ public class Goose : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        var position = TowerFabric.Instance.FindNearTower(transform.position);
+        var direction = (position - transform.position);
+        if (direction != Vector3.zero)
+        {
+            state = GooseState.walk;
+            transform.position += direction.normalized * goose_speed * Time.deltaTime;
+        }
+        else
+            state = GooseState.atack;
+    }
+
+    //расчет характеристик в следствие эффектов
+    public void OnEffect()
+    {
+        
+    }
 	IEnumerator SlowDown(float coefSlow = 1, float timeSlow = 0)
 	{
 		speed_multiplier = (1 + gooseLvl / 25) * coefSlow;
@@ -93,9 +111,10 @@ public class Goose : MonoBehaviour
 		attack_speed = 2 - speed_multiplier / 2;
 	}
 
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
-        StartCoroutine("Attack");
+        if (state != GooseState.atack) 
+            StartCoroutine("Attack");
     }
 
     //Наносит урон гусю
@@ -107,15 +126,16 @@ public class Goose : MonoBehaviour
         if (cur_hp < 0)
         {
             cur_hp = 0;
-            state = GooseState.back;
+            state = GooseState.death;
             //Destroy(this.gameObject);
             GooseFabric.Instance.geese.Remove(this);
         }
     }
 
-	private void Start()
+    void Start()
     {
-        state = GooseState.walk;
+        //state = GooseState.walk;
+        animator = GetComponent<Animator>();
     }
 
 }

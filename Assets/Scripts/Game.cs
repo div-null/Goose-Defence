@@ -159,9 +159,9 @@ public class Game : Singleton<Game>
 
 
         //                                 Hp  Range Delay   Deploy Cost  Projectile
-        TowersTypes[0, 0] = new TowerStats(10000, 6, 15/12f, 4,     2500, ProjectilesTypes[0, 0]);
-        TowersTypes[1, 0] = new TowerStats(20000, 6, 15/15f, 8,     3000, ProjectilesTypes[1, 0]);
-        TowersTypes[2, 0] = new TowerStats(30000, 6, 15/18f, 12,    4500, ProjectilesTypes[2, 0]);
+        TowersTypes[0, 0] = new TowerStats(10000, 22, 15/12f, 4,     2500, ProjectilesTypes[0, 0]);
+        TowersTypes[1, 0] = new TowerStats(20000, 22, 15/15f, 8,     3000, ProjectilesTypes[1, 0]);
+        TowersTypes[2, 0] = new TowerStats(30000, 22, 15/18f, 12,    4500, ProjectilesTypes[2, 0]);
 
     }
 }

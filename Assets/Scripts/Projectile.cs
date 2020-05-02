@@ -28,17 +28,7 @@ public class Projectile : MonoBehaviour
     Vector3 Direction;
 
     float RemainTime;
-    public void Loauch(Vector3 tower, Vector3 point, float Velocity, int damage)
-    {
-        Damage = damage;
-        this.Velocity = Velocity;
-        transform.position = tower;
-        Direction = (point - tower).normalized;
-        RemainTime = (Vector3.Distance(tower, point) / Velocity);
 
-        //TODO: добавить поворот
-        transform.rotation = Quaternion.LookRotation(Vector3.back);
-    }
     public void Loauch(Vector3 tower, Vector3 point, ProjectileStats stats)
     {
         Damage = stats.Damage;
@@ -46,7 +36,7 @@ public class Projectile : MonoBehaviour
         transform.position = tower;
         Direction = (point - tower).normalized;
         RemainTime = (Vector3.Distance(tower, point) / stats.Velocity);
-
+        Radius = stats.ExplosionRange;
         //TODO: добавить поворот
         transform.rotation = Quaternion.LookRotation(Vector3.back);
     }
