@@ -32,6 +32,9 @@ public class Tower : MonoBehaviour
 	public TowerStatsList info = new TowerStatsList.TowerCabbageT1();
 	
 	public bool isAvailable { get; set; }
+
+    public int TowerOrder;
+
     public bool Destroyed
     {
         get
@@ -74,10 +77,10 @@ public class Tower : MonoBehaviour
         return Destroyed;
     }
 
-    public void Initialize(TowerStatsList info, GameObject projectilePref)
+    public void Initialize(TowerStatsList info, GameObject projectilePref, int order)
     {
         spawnPoints = new List<Transform>();
-
+        TowerOrder = order;
         this.info = info;
 		int tmpHP = info.MaxHP;
 		HP = (info.MaxHP);
