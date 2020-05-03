@@ -74,7 +74,12 @@ public class Goose : MonoBehaviour
 
 	}
 
-    IEnumerator Attack()
+    public void startAttack(Tower tower)
+    {
+        StartCoroutine(Attack(tower));
+    }
+
+    IEnumerator Attack(Tower tower)
     {
         state = GooseState.atack;
         //Установка анимации атаки
@@ -86,8 +91,12 @@ public class Goose : MonoBehaviour
 			int tmpGooseDamage = goose_damage + (int)(Random.Range(-0.1f * goose_damage, 0.1f * goose_damage));
 
             //TowerFabric.Instance.TryDamageTower(TowerNumber, goose_damage);
+
             //Воспроизведение анимации атаки
             animator.SetTrigger("Attack");
+
+            //Нанесение урона
+            tower.GetDamage(tmpGooseDamage);
             yield return new WaitForSeconds(attack_speed);
         }
     }
