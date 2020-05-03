@@ -91,6 +91,10 @@ public class GooseFabric : Singleton<GooseFabric>
 			tmpGM.transform.position = new Vector3(x, y, z);
 			tmpGM.transform.rotation = Quaternion.identity;
 			var tmpG = tmpGM.AddComponent<Goose>();
+            //Добавил Никита
+            var col = tmpGM.AddComponent<SphereCollider>();
+            tmpGM.GetComponent<SphereCollider>().radius = 1;
+            //
 			tmpG.Initialize(gooseLvl);
 
 			GameObject.Instantiate(goose_prefabs[tmpG.typeGoose], tmpG.transform, false);
