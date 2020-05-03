@@ -8,7 +8,7 @@ public class UI_manager : MonoBehaviour
     //"Папки с текстом либо с картинкой" main menu
     public GameObject background, history, pressKeyToStart;
     //"Папки с текстом либо с картинкой" game
-    public GameObject moneyStat, dangerStat;
+    public GameObject moneyStat, dangerStat, scoreStat;
     public GameObject infoPanel;
     public GameObject buyPanel;
     public GameObject UIInMenu, UIInGame;
@@ -27,6 +27,13 @@ public class UI_manager : MonoBehaviour
     Place place;
     int savedId;
     float price;
+
+    [Header("ResultsAtTheEndOfGame")]
+    public Text scoreText;
+    public Image resultImage;
+    public Sprite[] resultSprites = new Sprite[2];
+    public GameObject resultScreen;
+    public GameObject transitToEnd;
 
     public void UI_TurnOnMenu()
     {
@@ -58,14 +65,23 @@ public class UI_manager : MonoBehaviour
         else Accept.interactable = false;
     }
 
+    void WriteScore(int score)
+    {
+        score = (score == null) ? 0 : score;
+        scoreStat.GetComponent<Text>().text = "Счёт: " + score;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        Game.Instance.UpdateScore += WriteScore;
         Game.Instance.WinGame += PrintScore;
         Game.Instance.LooseGame += PrintScore;
         Game.Instance.UpdateGold += setAmountOfMoney;
+
         UIInMenu.SetActive(true);
         StartCoroutine("ReadHistory");
+        resultScreen.SetActive(false);
         UIInGame.SetActive(false);
         history.GetComponentInChildren<Text>().text = "";
         canSkip = false;
@@ -237,6 +253,7 @@ public class UI_manager : MonoBehaviour
         canSkip = true;
         pressKeyToStart.GetComponent<Text>().text = "Нажмите на любую клавишу, чтобы начать игру";
     }
+
     IEnumerator WaitForTransitionToMenu()
     {
         transitor.SetTrigger("End");
@@ -244,11 +261,13 @@ public class UI_manager : MonoBehaviour
         UIInMenu.SetActive(true);
         history.GetComponentInChildren<Text>().text = "";
         StartCoroutine(ReadHistory());
+        resultScreen.SetActive(false);
         UIInGame.SetActive(false);
         canSkip = false;
         isGameStarted = false;
         transitor.SetTrigger("Start");
     }
+
     IEnumerator WaitForTransitionToGame()
     {
         transitor.SetTrigger("End");
@@ -257,6 +276,7 @@ public class UI_manager : MonoBehaviour
         infoPanel.SetActive(false);
         buyPanel.SetActive(false);
         UIInGame.SetActive(true);
+        resultScreen.SetActive(false);
         transitor.SetTrigger("Start");
         //Начало игры
         TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerTomatoT1());
@@ -268,23 +288,24 @@ public class UI_manager : MonoBehaviour
         Game.Instance.startGame();
     }
 
-    [Header("ResultsAtTheEndOfGame")]
-    public Text scoreText;
-    public GameObject loseScreen, winScreen;
-    public GameObject transitToEnd;
-
     public void PrintScore(bool result, int score)
     {
         if (result)
             StartCoroutine(Result(result, score));
     }
 
+    public void PrintScore2()
+    {
+        StartCoroutine(Result(true, 110));
+    }
+
     IEnumerator Result(bool result, int score)
     {
         transitToEnd.SetActive(true);
         yield return new WaitForSeconds(1f);
-        loseScreen.SetActive(true);
+        resultScreen.SetActive(true);
         scoreText.text = "Счёт: " + score;
-
+        if (result) resultImage.sprite = resultSprites[0];
+        else resultImage.sprite = resultSprites[1];
     }
 }
