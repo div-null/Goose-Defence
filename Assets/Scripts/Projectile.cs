@@ -39,7 +39,6 @@ public class Projectile : MonoBehaviour
 	Vector3 Direction;
 
     float RemainTime;
-
     public void Loauch(Vector3 tower, Vector3 point, ProjectileStats stats)
     {
         Damage = stats.Damage;
@@ -58,8 +57,7 @@ public class Projectile : MonoBehaviour
     {
         Vector2 pos = transform.position;
         // TODO: Вызов метода дамага гусей
-        GooseFabric.Instance.OnAttack(Radius, pos, Damage, coefSlow, timeSlow);
-        Debug.Log("Destroy ball");
+        GooseFabric.Instance.OnAttack(Radius, pos, Damage);
         GameObject.Destroy(gameObject, DestroyTime);
         this.enabled = false;
     }

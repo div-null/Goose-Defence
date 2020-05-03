@@ -13,6 +13,7 @@ public class StartF : MonoBehaviour
     {
         TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerTomatoT1());
         TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerTomatoT1());
+        TowerFabric.Instance.placeTower(2, new TowerStatsList.TowerTomatoT1());
 
         Game.Instance.startGame();
     }
