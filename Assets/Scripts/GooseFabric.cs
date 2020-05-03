@@ -16,15 +16,16 @@ public class GooseFabric : Singleton<GooseFabric>
     /// Линии нумеруются сверху вниз
     /// </summary>
     [SerializeField]
-    WalkLine[] Lines;
     GooseTypeStats[] GooseTypes;
     public bool fabric_activity;                     //активность фабрики
     [SerializeField]
     public List<Goose> geese;                       //ГУУУУСИИИИ
-    [SerializeField]
-    public List<GameObject> goose_prefabs;
+	[SerializeField]
+	public List<GameObject> goose_prefabs;
+	[SerializeField]
+	public int gooseLvl = 1;
 
-    void Awake()
+	void Awake()
     {
         geese = new List<Goose>();
 
@@ -35,10 +36,7 @@ public class GooseFabric : Singleton<GooseFabric>
 
 		float length = UpSpawnPoint.y - DownSpawnPoint.y;
         float step = length / 6;
-        float start = UpSpawnPoint.y;
-        Lines = new WalkLine[6];
-        for (int i = 0; i < 6; i++)
-            Lines[i] = new WalkLine(start - i * step, start - (i + 1) * step);
+        float start = UpSpawnPoint.position.y;
     }
 
     public Goose FindGoose(Vector3 pos, float range)
@@ -57,23 +55,13 @@ public class GooseFabric : Singleton<GooseFabric>
         return temp;
     }
 
-    int calcLineNumber(float pos)
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            if (Lines[i].MinY < pos && Lines[i].MaxY > pos)
-                return i;
-        }
-        return 5;
-    }
-
 	//Изменение текущего уровня
 	public void ChangeGooseLvl(int gooseLvl)
 	{
 		this.gooseLvl = gooseLvl;
 	}
 
-	int gooseLvl = 1;
+
 
 	public void StartSpawning()
 	{
@@ -93,26 +81,18 @@ public class GooseFabric : Singleton<GooseFabric>
 			spawnedGooseCount++;
 			int countGooseOnLvl = (int)((gooseLvl / 25f) / Mathf.Sqrt(1 + Mathf.Pow(gooseLvl / 25f, 2)) * 50);
 
-			
-
-			float length = Mathf.Abs(UpSpawnPoint.y - DownSpawnPoint.y);
-			float x = DownSpawnPoint.x;			
+			float length = Mathf.Abs(UpSpawnPoint.position.y - DownSpawnPoint.position.y);
+			float x = DownSpawnPoint.position.x;			
 			float z = Random.Range(-1f, 0f);
-			float y = UpSpawnPoint.y + z * length;
-			
-			
+			float y = UpSpawnPoint.position.y + z * length;
 
 			GameObject tmpGM = new GameObject("Goose");
-
 			tmpGM.transform.position = new Vector3(x, y, z);
 			tmpGM.transform.rotation = Quaternion.identity;
 			var tmpG = tmpGM.AddComponent<Goose>();
 			tmpG.Initialize(gooseLvl);
 
 			GameObject.Instantiate(goose_prefabs[tmpG.typeGoose], tmpG.transform, false);
-
-			
-
 
 			geese.Add(tmpG);
 			if(countGooseOnLvl == spawnedGooseCount)
@@ -121,7 +101,6 @@ public class GooseFabric : Singleton<GooseFabric>
 				gooseLvl++;
 			}
 			yield return new WaitForSeconds(15f / countGooseOnLvl);
-
 		}
 	}
 
@@ -134,7 +113,6 @@ public class GooseFabric : Singleton<GooseFabric>
             var parent = hit.transform.parent;
             if (parent == null)
                 continue;
-
             var goose = parent.gameObject.GetComponent<Goose>();
             if (goose)
                 goose.OnDamage(damage, coefSlow, timeSlow);        //Бьём гуся

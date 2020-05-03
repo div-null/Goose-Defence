@@ -25,7 +25,18 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     public float DestroyTime;
 
-    Vector3 Direction;
+	/// <summary>
+	/// Коэффициент замедения
+	/// </summary>
+	public float coefSlow;
+
+	/// <summary>
+	/// Время замедления
+	/// </summary>
+	public float timeSlow;
+
+
+	Vector3 Direction;
 
     float RemainTime;
     public void Loauch(Vector3 tower, Vector3 point, ProjectileStats stats)
@@ -36,8 +47,10 @@ public class Projectile : MonoBehaviour
         Direction = (point - tower).normalized;
         RemainTime = (Vector3.Distance(tower, point) / stats.Velocity);
         Radius = stats.ExplosionRange;
-        //TODO: добавить поворот
-        transform.rotation = Quaternion.LookRotation(Vector3.back);
+		this.coefSlow = stats.coefSlow;
+		this.timeSlow = stats.timeSlow;
+		//TODO: добавить поворот
+		transform.rotation = Quaternion.LookRotation(Vector3.back);
     }
 
     void MakeDamage()

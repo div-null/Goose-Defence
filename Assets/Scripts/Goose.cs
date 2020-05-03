@@ -93,9 +93,9 @@ public class Goose : MonoBehaviour
         var direction = (position - transform.position);
         if (direction.magnitude > 0.3)
         {
-            Movement = direction.normalized * goose_speed;
+            Movement = direction.normalized * goose_speed * speed_multiplier;
             state = GooseState.walk;
-            transform.position += direction.normalized * goose_speed * Time.deltaTime;
+            transform.position += direction.normalized * goose_speed  * speed_multiplier * Time.deltaTime;
         }
         else
         {
@@ -125,7 +125,11 @@ public class Goose : MonoBehaviour
     public void OnDamage(int damage, float coefSlow = 1, float timeSlow = 0)
     {
 		if (timeSlow != 0)
+		{
+			StopCoroutine("SlowDown");
 			StartCoroutine(SlowDown(coefSlow, timeSlow));
+		}
+			
         cur_hp -= damage;
         if (cur_hp < 0)
         {
