@@ -346,7 +346,6 @@ public class UI_manager : Singleton<UI_manager>
 
     public void PrintScore(bool result, int score)
     {
-        if (result)
             StartCoroutine(Result(result, score));
     }
 

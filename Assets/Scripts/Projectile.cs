@@ -42,7 +42,8 @@ public class Projectile : MonoBehaviour
     float RemainTime;
     public void Loauch(Vector3 tower, Vector3 point, ProjectileStats stats)
     {
-        Damage = stats.Damage;
+		isStop = false;
+		Damage = stats.Damage;
         this.Velocity = stats.Velocity;
         transform.position = tower;
         Direction = (point - tower).normalized;
@@ -63,23 +64,29 @@ public class Projectile : MonoBehaviour
         StartCoroutine("Destroy");
         
     }
-
+	bool isStop;
     private void Start()
     {
         animator = GetComponent<Animator>();
     }
     void FixedUpdate()
     {
-        if (RemainTime > 0)
-        {
-           // transform.Rotate(0, 0, 10f * Time.deltaTime);                       //вращение снаряда     
-            Vector3 newpos = transform.position + Direction * Velocity * Time.deltaTime;
-            newpos.z = -3 + Mathf.Abs(newpos.y / 10);
-            transform.position = newpos;
-            RemainTime -= Time.deltaTime;
-        }
-        else
-            MakeDamage();
+		if (RemainTime > 0)
+		{
+			// transform.Rotate(0, 0, 10f * Time.deltaTime);                       //вращение снаряда     
+			Vector3 newpos = transform.position + Direction * Velocity * Time.deltaTime;
+			newpos.z = -3 + Mathf.Abs(newpos.y / 10);
+			transform.position = newpos;
+			RemainTime -= Time.deltaTime;
+		}
+		else
+		{
+			if (!isStop)
+			{
+				isStop = true;
+				MakeDamage();
+			}
+		}
     }
     IEnumerator Destroy()
     {

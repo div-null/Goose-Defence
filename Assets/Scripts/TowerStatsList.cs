@@ -10,7 +10,7 @@
 	public abstract float FreezeCoef { get; }
 	public abstract int PrefabId { get; }
 
-	const float SredDMG = 150f;
+	const float SredDMG = 250f;
 	const float SredMaxHP = 1500f;
 	const float SredSpeed = 4f;
 	const float SredAttackCountPer20Sec = 10f;
@@ -23,8 +23,8 @@
 	const float WallCoefDMG = 0f;
 
 	//Дальность атаки
-	const float T2CoefAttackFar = 1.8f;
-	const float T3CoefAttackFar = 3f;
+	const float T2CoefAttackFar = 1.7f;
+	const float T3CoefAttackFar = 2.4f;
 	const float WallCoefAttackFar = 0f;
 
 	//АОЕ радиус

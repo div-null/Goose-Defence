@@ -40,7 +40,7 @@ public class TowerFabric : Singleton<TowerFabric>
         {
             Towers.Add(null);
             Vector3 pos = place[i].transform.position;
-            pos.z = -3 + pos.y / 10f;
+            pos.z = -3 + pos.y / 10f+1.5f;
             var obj = GameObject.Instantiate(PlacePrefab, pos, Quaternion.identity);
             Places[i] = obj.GetComponent<Place>();
             Places[i].Initialize(i, true, pos);
@@ -62,7 +62,7 @@ public class TowerFabric : Singleton<TowerFabric>
 
         var blank1 = wall.AddComponent<Tower>();
         blank1.TowerDestroyed += destroyWall;
-        blank1.Initialize(new TowerStatsList.Colocol(), ProjectilePrefabs[0], 10);
+        blank1.Initialize(new TowerStatsList.Wall(), ProjectilePrefabs[0], 10);
         Towers.Add(blank1);
 
 
@@ -72,7 +72,7 @@ public class TowerFabric : Singleton<TowerFabric>
         colocol.transform.tag = "Tower";
 
         pos1 = colocol.transform.position;
-        pos1.z = -3 + Mathf.Abs(pos1.y / 10) - 0.1f;
+        pos1.z = -3 + Mathf.Abs(pos1.y / 10) + 0.1f;
         colocol.transform.position = pos1;
 
         var blank2 = colocol.AddComponent<Tower>();
@@ -86,7 +86,7 @@ public class TowerFabric : Singleton<TowerFabric>
 		colocol.transform.tag = "Tower";
 
 		pos1 = emptytower.transform.position;
-		pos1.z = -3 + Mathf.Abs(pos1.y / 10) - 0.1f;
+		pos1.z = -3 + Mathf.Abs(pos1.y / 10) + 4f;
 		emptytower.transform.position = pos1;
 
 		var blank3 = emptytower.AddComponent<Tower>();
@@ -154,16 +154,23 @@ public class TowerFabric : Singleton<TowerFabric>
         destroyTower(index);
     }
 
-    /// <summary>
-    /// УНИЧТОЖЕН КОЛОКОЛ
-    /// </summary>
-    /// <param name="tower"></param>
-    void destroyColocol(Tower tower)
+	IEnumerator GooseBossAway()
+	{
+		yield return new WaitForSeconds(4);
+		Game.Instance.LooseGame?.Invoke(false, Game.Instance.Score);
+	}
+
+	/// <summary>
+	/// УНИЧТОЖЕН КОЛОКОЛ
+	/// </summary>
+	/// <param name="tower"></param>
+	void destroyColocol(Tower tower)
     {
         Towers.Remove(tower);
         tower.RemoveTower();
-        Game.Instance.LooseGame?.Invoke(false, Game.Instance.Score);
-    }
+		GooseFabric.Instance.GoAwayAll();
+		StartCoroutine("GooseBossAway");
+	}
 
     /// <summary>
     /// УНИЧТОЖЕНА СТЕНА

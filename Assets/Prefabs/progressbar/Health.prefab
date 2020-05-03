@@ -310,4 +310,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progress: {fileID: 2170807494358458878}
-  procents: 0
+  procents: 2
