@@ -28,6 +28,15 @@ public class UI_manager : MonoBehaviour
     int savedId;
     float price;
 
+    [Header("Audio")]
+    public AudioSource ButtonCloseSound;
+    //public AudioSource ButtonSelect;
+
+    //public AudioSource ButtonBuy;
+    //public AudioSource ButtonUpgrade;
+   // public AudioSource Writing;
+
+
     [Header("ResultsAtTheEndOfGame")]
     public Text scoreText;
     public Image resultImage;
@@ -37,6 +46,7 @@ public class UI_manager : MonoBehaviour
 
     public void UI_TurnOnMenu()
     {
+        ButtonCloseSound.Play();
         StartCoroutine(WaitForTransitionToMenu());
     }
 
@@ -91,16 +101,19 @@ public class UI_manager : MonoBehaviour
 
     public void CloseWindow()
     {
+        ButtonCloseSound.Play();
         Application.Quit();
     }
 
     public void CloseInfoPanel()
     {
+        ButtonCloseSound.Play();
         infoPanel.SetActive(false);
     }
 
     public void CloseBuyPanel()
     {
+        ButtonCloseSound.Play();
         buyPanel.SetActive(false);
     }
 
