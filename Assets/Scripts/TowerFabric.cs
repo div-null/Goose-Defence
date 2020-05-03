@@ -73,7 +73,7 @@ public class TowerFabric : Singleton<TowerFabric>
         
 
         var component = tower.AddComponent<Tower>();
-        component.Initialize(stats, ProjectilePrefabs[stats.PrefabId / 3]);
+        component.Initialize(stats, ProjectilePrefabs[stats.PrefabId / 3], order);
         component.MakeDamage();
         component.TowerDestroyed += deleteTower;
 
