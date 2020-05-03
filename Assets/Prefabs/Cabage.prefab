@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 7937303626551509265}
   - component: {fileID: 1807024563339940474}
   - component: {fileID: 8614253712163451061}
-  - component: {fileID: 7005880095739918091}
   - component: {fileID: 7141097256405742970}
+  - component: {fileID: 4620446160944440224}
   m_Layer: 0
   m_Name: Cabage
   m_TagString: Untagged
@@ -100,7 +100,26 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0.07}
   serializedVersion: 2
   m_Radius: 1.56
---- !u!95 &7005880095739918091
+--- !u!114 &7141097256405742970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7401667174298765926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2021fb3d49091c24b8eaea7d5f3b15a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  Radius: 2
+  Damage: 50
+  Velocity: 10
+  DestroyTime: 1
+  coefSlow: 0
+  timeSlow: 0
+--- !u!95 &4620446160944440224
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -119,19 +138,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &7141097256405742970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7401667174298765926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2021fb3d49091c24b8eaea7d5f3b15a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Radius: 2
-  Damage: 50
-  Velocity: 10
-  DestroyTime: 1

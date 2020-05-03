@@ -10,11 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6510528200573006775}
   - component: {fileID: 2908243462898977747}
-  - component: {fileID: 6085840602543911546}
-  - component: {fileID: 7138903836259833877}
   - component: {fileID: 5670845172269726589}
+  - component: {fileID: 8683313581864372725}
   m_Layer: 0
-  m_Name: Goose
+  m_Name: WhiteGoose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,23 +83,26 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &6085840602543911546
-CircleCollider2D:
+--- !u!95 &5670845172269726589
+Animator:
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3327667129983530547}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 1
-  m_UsedByComposite: 0
-  m_Offset: {x: -2.3, y: 2.5}
-  serializedVersion: 2
-  m_Radius: 1.5
---- !u!58 &7138903836259833877
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 46483f2a585bd674e93cb88941ce7078, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!58 &8683313581864372725
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -113,25 +115,6 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.97}
+  m_Offset: {x: 0.16, y: -0.48}
   serializedVersion: 2
-  m_Radius: 3
---- !u!95 &5670845172269726589
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3327667129983530547}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2d5523db122547745a63bc24ebac9a55, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_Radius: 3.26

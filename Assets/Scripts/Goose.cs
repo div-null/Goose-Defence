@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.UIElements;
+//using UnityEditor.UIElements;
 using UnityEngine;
 
 public enum GooseState
@@ -71,37 +71,58 @@ public class Goose : MonoBehaviour
 		speed_multiplier = 1 + gooseLvl / 25;
 		//Тут надо попроавить:
 		attack_speed = 2-speed_multiplier/2;
+
 	}
 
-    IEnumerator Attack()
+    public void startAttack(Tower tower)
+    {
+        StartCoroutine(Attack(tower));
+    }
+
+    IEnumerator Attack(Tower tower)
     {
         state = GooseState.atack;
+        
+       
         while (true)
         {
 			//Небольшой разброс дамага
 			int tmpGooseDamage = goose_damage + (int)(Random.Range(-0.1f * goose_damage, 0.1f * goose_damage));
 
             //TowerFabric.Instance.TryDamageTower(TowerNumber, goose_damage);
-            // <- ВЫЗОВ АНИМАЦИИ
+
+            //Воспроизведение анимации атаки
+            animator.SetInteger("GooseState", 3);   
+
+            //Нанесение урона
+            tower.GetDamage(tmpGooseDamage);
             yield return new WaitForSeconds(attack_speed);
+            animator.SetInteger("GooseState", 0);       //attack
+                                                        // animator.SetTrigger("Attack");
         }
     }
 
     void FixedUpdate()
     {
-        var position = TowerFabric.Instance.FindNearTower(transform.position);
+        var position = TowerFabric.Instance.FindNearTower(transform.position) - new Vector3(0, 0,0.5f);
         var direction = (position - transform.position);
-        if (direction.magnitude > 0.3)
+        if (direction.magnitude > 0.1 && state !=GooseState.atack && state != GooseState.death)
         {
             Movement = direction.normalized * goose_speed * speed_multiplier;
-            Movement.z = -3+Mathf.Abs(Movement.y / 10);
+
+            Movement.z = -3f+Mathf.Abs(Movement.y / 10);
             state = GooseState.walk;
             transform.position += direction.normalized * goose_speed  * speed_multiplier * Time.deltaTime;
+            //воспроизведение анимации ходьбы
+            animator.SetInteger("GooseState", 1);
         }
         else
         {
             Movement = Vector3.zero;
-            state = GooseState.stay;
+            
+            //state = GooseState.stay;
+            //воспроизведение idle
+            animator.SetInteger("GooseState", 0);
         }
     }
 
@@ -115,12 +136,11 @@ public class Goose : MonoBehaviour
 		attack_speed = 2 - speed_multiplier / 2;
 	}
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision other)
     {
-        if (state != GooseState.atack) 
+        if (state != GooseState.atack)
             StartCoroutine("Attack");
     }
-
 
     //Наносит урон гусю
     public void OnDamage(int damage, float coefSlow = 1, float timeSlow = 0)
@@ -136,15 +156,22 @@ public class Goose : MonoBehaviour
         {
             cur_hp = 0;
             state = GooseState.death;
-            Destroy(this.gameObject);
-            GooseFabric.Instance.geese.Remove(this);
+            //воспроизведение анимации
+            StartCoroutine("OnDeath");
+           
         }
     }
-
+    IEnumerator OnDeath()
+    {
+        animator.SetInteger("GooseState", 4);   //death
+        yield return new WaitForSeconds(1.3f);
+        Destroy(this.gameObject);
+        GooseFabric.Instance.geese.Remove(this);
+    }
     void Start()
     {
         //state = GooseState.walk;
-        animator = GetComponent<Animator>();
+        animator = transform.GetComponentInChildren<Animator>();
     }
 
 }

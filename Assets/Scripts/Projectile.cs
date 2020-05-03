@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    public Animator animator;   
     /// <summary>
     /// Радиус дамага
     /// </summary>
@@ -58,20 +59,33 @@ public class Projectile : MonoBehaviour
         Vector2 pos = transform.position;
         // TODO: Вызов метода дамага гусей
         GooseFabric.Instance.OnAttack(Radius, pos, Damage);
-        GameObject.Destroy(gameObject, DestroyTime);
-        this.enabled = false;
+        StartCoroutine("Destroy");
+        
     }
 
-    
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
     void FixedUpdate()
     {
         if (RemainTime > 0)
         {
-            transform.Rotate(0, 0, 10f * Time.deltaTime);                       //вращение снаряда        
-            transform.position += Direction * Velocity * Time.deltaTime;
+            transform.Rotate(0, 0, 10f * Time.deltaTime);                       //вращение снаряда     
+            Vector3 newpos = transform.position + Direction * Velocity * Time.deltaTime;
+            newpos.z = -3 + Mathf.Abs(newpos.y / 10);
+            transform.position = newpos;
             RemainTime -= Time.deltaTime;
         }
         else
             MakeDamage();
+    }
+    IEnumerator Destroy()
+    {
+        animator.SetTrigger("Destroy");
+        yield return new WaitForSeconds(1f);
+        GameObject.Destroy(gameObject, DestroyTime);
+        this.enabled = false;
+
     }
 }
