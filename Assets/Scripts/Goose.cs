@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.UIElements;
+//using UnityEditor.UIElements;
 using UnityEngine;
 
 public enum GooseState
@@ -77,9 +77,8 @@ public class Goose : MonoBehaviour
     IEnumerator Attack()
     {
         state = GooseState.atack;
-        //Установка анимации атаки
-        animator.SetInteger("GooseState", 0);       //idle
-        animator.SetInteger("GooseState", 3);       //attack
+        
+       
         while (true)
         {
 			//Небольшой разброс дамага
@@ -87,8 +86,11 @@ public class Goose : MonoBehaviour
 
             //TowerFabric.Instance.TryDamageTower(TowerNumber, goose_damage);
             //Воспроизведение анимации атаки
-            animator.SetTrigger("Attack");
+            animator.SetInteger("GooseState", 3);       //attack
+                                                        // animator.SetTrigger("Attack");
             yield return new WaitForSeconds(attack_speed);
+            animator.SetInteger("GooseState", 0);       //attack
+                                                        // animator.SetTrigger("Attack");
         }
     }
 
@@ -96,7 +98,7 @@ public class Goose : MonoBehaviour
     {
         var position = TowerFabric.Instance.FindNearTower(transform.position);
         var direction = (position - transform.position);
-        if (direction.magnitude > 0.3)
+        if (direction.magnitude > 0.3 && state !=GooseState.atack)
         {
             Movement = direction.normalized * goose_speed * speed_multiplier;
             state = GooseState.walk;                                                                                        //состояние ходьбы
@@ -107,7 +109,7 @@ public class Goose : MonoBehaviour
         else
         {
             Movement = Vector3.zero;
-            state = GooseState.stay;
+            //state = GooseState.stay;
             //воспроизведение idle
             animator.SetInteger("GooseState", 0);
         }
