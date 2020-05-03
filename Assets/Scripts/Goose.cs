@@ -109,7 +109,7 @@ public class Goose : MonoBehaviour
         if (direction.magnitude > 0.3 && state !=GooseState.atack)
         {
             Movement = direction.normalized * goose_speed * speed_multiplier;
-            Movement.z = -3+Mathf.Abs(Movement.y / 10);
+            Movement.z = -3.5f+Mathf.Abs(Movement.y / 10);
             state = GooseState.walk;
             transform.position += direction.normalized * goose_speed  * speed_multiplier * Time.deltaTime;
             //воспроизведение анимации ходьбы

@@ -87,19 +87,24 @@ public class GooseFabric : Singleton<GooseFabric>
 			float z = Random.Range(-1f, 0f);
 			float y = UpSpawnPoint.y + z * length;
 
-			GameObject tmpGM = new GameObject("Goose");
+            GameObject tmpCol = new GameObject("Collider");
+            tmpCol.transform.position = new Vector3(x, y, z);
+            tmpCol.transform.rotation = Quaternion.identity;
+
+            GameObject tmpGM = new GameObject("Goose");
 			tmpGM.transform.position = new Vector3(x, y, z);
 			tmpGM.transform.rotation = Quaternion.identity;
 			var tmpG = tmpGM.AddComponent<Goose>();
             //Добавил Никита
-            var col = tmpGM.AddComponent<SphereCollider>();
-            tmpGM.GetComponent<SphereCollider>().radius = 1;
+            var col = tmpCol.AddComponent<SphereCollider>();
+            tmpCol.GetComponent<SphereCollider>().radius = 1;
+            tmpCol.GetComponent<SphereCollider>().isTrigger = true;
             //
 			tmpG.Initialize(gooseLvl);
 
 			GameObject.Instantiate(goose_prefabs[tmpG.typeGoose], tmpG.transform, false);
-
-			geese.Add(tmpG);
+            tmpCol.transform.SetParent(tmpGM.transform);
+            geese.Add(tmpG);
 			if(countGooseOnLvl == spawnedGooseCount)
 			{
 				spawnedGooseCount = 0;
