@@ -27,6 +27,7 @@ public class Tower : MonoBehaviour
     /// </summary>
     [SerializeField]
     GameObject ProjectilePrefab;
+
 	[SerializeField]
 	public TowerStatsList info = new TowerStatsList.TowerCabbageT1();
 	
