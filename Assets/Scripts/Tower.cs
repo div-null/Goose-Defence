@@ -149,11 +149,23 @@ public class Tower : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var goose = other.gameObject.GetComponentInParent<Goose>();
-        if (goose == null)
-            return;
+        //если  коснулся босс колокола
+        if (goose.typeGoose == 0 && gameObject.CompareTag("Bell"))
+        {
+            //то воспроизводим атаку
+            goose.StartCoroutine(goose.BellAttack(this));
+            goose.animator.SetBool("WithBell", true);
+            goose.animator.SetInteger("GooseState", 1);
+            goose.transform.localScale = new Vector3(-1,1,1);
+        }
+        else
+        {
+            if (goose == null)
+                return;
 
-        if (goose.state != GooseState.atack)
-            goose.startAttack(this);
+            if (goose.state != GooseState.atack)
+                goose.startAttack(this);
+        }
     }
 
     public void RemoveTower()
