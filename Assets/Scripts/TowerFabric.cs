@@ -49,12 +49,23 @@ public class TowerFabric : Singleton<TowerFabric>
         UpSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
         DownSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0));
 
+
         //////////////////////////
-        /// СПАВН ПСЕВДО СТЕНЫ
+        /// СПАВН стены
         var wall = new GameObject("wall");
-        wall.transform.position = new Vector3(-10000, 0, 0);
-        var blank = wall.AddComponent<Tower>();
-        Towers.Add(blank);
+        wall.transform.position = new Vector3(-10, 0, 0);
+        //var blank1 = wall.AddComponent<Tower>();
+        //blank1.Initialize(new TowerStatsList.Wall(), ProjectilePrefabs[9], 9);
+        //Towers.Add(blank1);
+
+
+        //////////////////////////
+        /// СПАВН колокола
+        var colocol = new GameObject("Colocol");
+        colocol.transform.position = new Vector3(-10, 0, 0);
+        //var blank2 = colocol.AddComponent<Tower>();
+        //blank2.Initialize(new TowerStatsList.Colocol(), ProjectilePrefabs[10], 10);
+        //Towers.Add(blank2);
     }
 
     public TowerStatsList GetStatsByOrder(int order)

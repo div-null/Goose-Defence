@@ -62,8 +62,6 @@ public class Goose : MonoBehaviour
 		typeGoose = typeTmp;	
 		
 		max_hp = tmp * 250;
-		if (typeTmp == 4)
-			max_hp = tmp * 250 * 10;
 
 		cur_hp = max_hp;
 		goose_damage = (int)(max_hp / 2.5);
@@ -72,7 +70,14 @@ public class Goose : MonoBehaviour
 		//Тут надо попроавить:
 		attack_speed = 2-speed_multiplier/2;
 
+		if (typeTmp == 4)
+        {
+			max_hp = tmp * 250 * 30;
+            speed_multiplier= 1 + gooseLvl / 45;
+            attack_speed = 3 - speed_multiplier / 2;
+        }
 	}
+
 
     public void startAttack(Tower tower)
     {
@@ -152,7 +157,7 @@ public class Goose : MonoBehaviour
 		}
 			
         cur_hp -= damage;
-        if (cur_hp < 0)
+        if (cur_hp < 0 && state != GooseState.death)
         {
             cur_hp = 0;
             state = GooseState.death;
@@ -165,8 +170,8 @@ public class Goose : MonoBehaviour
     {
         animator.SetInteger("GooseState", 4);   //death
         yield return new WaitForSeconds(1.3f);
-        Destroy(this.gameObject);
         GooseFabric.Instance.geese.Remove(this);
+        Destroy(this.gameObject);
     }
     void Start()
     {

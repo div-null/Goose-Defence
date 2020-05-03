@@ -63,6 +63,39 @@ public class GooseFabric : Singleton<GooseFabric>
 	}
 
 
+    public void loanchGoose()
+    {
+        StartCoroutine(LoanchBoss());
+    }
+
+    IEnumerator LoanchBoss()
+    {
+        StopCoroutine("SpawnGeese");
+        yield return new WaitForSeconds(1.5f);
+
+        float length = Mathf.Abs(UpSpawnPoint.y - DownSpawnPoint.y);
+        float x = DownSpawnPoint.x;
+        float z = Random.Range(-1f, 0f);
+        float y = UpSpawnPoint.y + z * length;
+
+        GameObject tmpCol = new GameObject("Collider");
+        tmpCol.transform.position = new Vector3(x, y, z);
+        tmpCol.transform.rotation = Quaternion.identity;
+
+        GameObject tmpGM = new GameObject("Goose Boss");
+        tmpGM.transform.position = new Vector3(x, y, z);
+        tmpGM.transform.rotation = Quaternion.identity;
+        var tmpG = tmpGM.AddComponent<Goose>();
+
+        //Добавил Никита
+        var col = tmpCol.AddComponent<SphereCollider>();
+        tmpCol.GetComponent<SphereCollider>().radius = 1;
+        tmpCol.GetComponent<SphereCollider>().isTrigger = true;
+        //
+        tmpG.Initialize(40);
+        GameObject.Instantiate(goose_prefabs[tmpG.typeGoose], tmpG.transform, false);
+        tmpCol.transform.SetParent(tmpGM.transform);
+    }
 
 	public void StartSpawning()
 	{
@@ -95,6 +128,7 @@ public class GooseFabric : Singleton<GooseFabric>
 			tmpGM.transform.position = new Vector3(x, y, z);
 			tmpGM.transform.rotation = Quaternion.identity;
 			var tmpG = tmpGM.AddComponent<Goose>();
+
             //Добавил Никита
             var col = tmpCol.AddComponent<SphereCollider>();
             tmpCol.GetComponent<SphereCollider>().radius = 1;

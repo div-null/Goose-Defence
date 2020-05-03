@@ -90,6 +90,7 @@
 			case 7: return new TowerPeasT2();
 			case 8: return new TowerPeasT3();
 			case 9: return new Wall();
+			case 10: return new Colocol();
 
 			default:
 				return new Wall();
@@ -218,6 +219,19 @@
 		public override float Cost => 20000;
 		public override float FreezeCoef => 0;
 		public override int PrefabId => 9;
+	}
+
+	public class Colocol : TowerStatsList
+	{
+		public override string Name => "Стена";
+		public override string Discription => "Очень колючая и сухая.";
+		public override float AttackDelay => SredAttackSpeed * PeasAttackSpeedCoef * T3AttackSpeed;
+		public override ProjectileStats Projectile => new ProjectileStats(0, 0f, 0f, 0f, 0f);
+		public override int MaxHP => (int)(100);
+		public override float Range => 0;
+		public override float Cost => 0;
+		public override float FreezeCoef => 0;
+		public override int PrefabId => 10;
 	}
 
 }

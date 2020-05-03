@@ -48,7 +48,8 @@ public class Projectile : MonoBehaviour
         Direction = (point - tower).normalized;
         RemainTime = (Vector3.Distance(tower, point) / stats.Velocity);
         Radius = stats.ExplosionRange;
-		this.coefSlow = stats.coefSlow;
+
+        this.coefSlow = stats.coefSlow;
 		this.timeSlow = stats.timeSlow;
 		//TODO: добавить поворот
 		transform.rotation = Quaternion.LookRotation(Vector3.back);
@@ -58,7 +59,7 @@ public class Projectile : MonoBehaviour
     {
         Vector2 pos = transform.position;
         // TODO: Вызов метода дамага гусей
-        GooseFabric.Instance.OnAttack(Radius, pos, Damage);
+        GooseFabric.Instance.OnAttack(Radius, pos, Damage, coefSlow, timeSlow);
         StartCoroutine("Destroy");
         
     }
