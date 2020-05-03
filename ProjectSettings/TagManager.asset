@@ -9,6 +9,7 @@ TagManager:
   - Projectile
   - UI_tower
   - FirePoint
+  - Bell
   layers:
   - Default
   - TransparentFX

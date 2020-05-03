@@ -101,7 +101,19 @@ public class Goose : MonoBehaviour
                                                         // animator.SetTrigger("Attack");
         }
     }
+    public IEnumerator BellAttack(Tower tower)
+    {
+        state = GooseState.atack;
 
+            //Воспроизведение анимации атаки
+            animator.SetInteger("GooseState", 3);
+            yield return new WaitForSeconds(attack_speed);
+
+
+        animator.SetInteger("GooseState", 1);
+        animator.SetBool("WithBell", true);
+        transform.localScale = new Vector3(-1, 1, 1);
+    }
     void FixedUpdate()
     {
         var position = TowerFabric.Instance.FindNearTower(transform.position) - new Vector3(0, 0,0.5f);
