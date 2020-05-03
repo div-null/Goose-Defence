@@ -40,7 +40,7 @@ public class TowerFabric : Singleton<TowerFabric>
         {
             Towers.Add(null);
             Vector3 pos = place[i].transform.position;
-            pos.z = -3 + Mathf.Abs(pos.y / 10);
+            pos.z = -3 + pos.y / 10f;
             var obj = GameObject.Instantiate(PlacePrefab, pos, Quaternion.identity);
             Places[i] = obj.GetComponent<Place>();
             Places[i].Initialize(i, true, pos);
@@ -53,11 +53,11 @@ public class TowerFabric : Singleton<TowerFabric>
 
         //////////////////////////
         /// СПАВН стены
-        var wall = GameObject.Instantiate(TowerPrefabs[9], new Vector3(-1.98f, -3.14f, 0), Quaternion.identity);
+        var wall = GameObject.Instantiate(TowerPrefabs[9], new Vector3(-3.14f, 0.77f, 0), Quaternion.identity);
         wall.transform.tag = "Tower";
 
         Vector3 pos1 = wall.transform.position;
-        pos1.z = -3 + Mathf.Abs(pos1.y / 10);
+        pos1.z = Places[0].transform.position.z + 0.001f;
         wall.transform.position = pos1;
 
         var blank1 = wall.AddComponent<Tower>();

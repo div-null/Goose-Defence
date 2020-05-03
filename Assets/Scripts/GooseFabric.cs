@@ -121,12 +121,13 @@ public class GooseFabric : Singleton<GooseFabric>
 
 	public void StartSpawning()
 	{
+        geese = new List<Goose>();
 		StartCoroutine("SpawnGeese");
 	}
 
 	public void Stopspawning()
 	{
-		StopCoroutine("SpawnGeese");
+        StopAllCoroutines();
 	}
 
 	public IEnumerator SpawnGeese()

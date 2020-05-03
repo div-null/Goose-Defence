@@ -44,6 +44,7 @@ public class UI_manager : MonoBehaviour
     public GameObject resultScreen;
     public GameObject transitToEnd;
 
+
     public void UI_TurnOnMenu()
     {
         ButtonCloseSound.Play();
@@ -88,7 +89,13 @@ public class UI_manager : MonoBehaviour
         Game.Instance.WinGame += PrintScore;
         Game.Instance.LooseGame += PrintScore;
         Game.Instance.UpdateGold += setAmountOfMoney;
+        StartWriting();
+    }
 
+    public void StartWriting()
+    {
+        isGameStarted = false;
+        canSkip = true;
         UIInMenu.SetActive(true);
         StartCoroutine("ReadHistory");
         resultScreen.SetActive(false);
@@ -98,6 +105,7 @@ public class UI_manager : MonoBehaviour
         isGameStarted = false;
         pressKeyToStart.GetComponent<Text>().text = "Нажмите на любую клавишу, чтобы пропустить историю";
     }
+
 
     public void CloseWindow()
     {
@@ -319,6 +327,18 @@ public class UI_manager : MonoBehaviour
     public void PrintScore2()
     {
         StartCoroutine(Result(true, 110));
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
+    public void PlayAgain()
+    {
+        ClearLevel.Instance.Clear();
+        GooseFabric.Instance.Stopspawning();
+        StartWriting();
     }
 
     IEnumerator Result(bool result, int score)
