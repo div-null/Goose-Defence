@@ -50,7 +50,7 @@
 	//
 	const float TomatoDMGCoef = 0.8f;
 	const float CabbageDMGCoef = 0.6f;
-	const float PeasDMGCoef = 0.15f;
+	const float PeasDMGCoef = 0.05f;
 
 	const float TomatoHPCoef = 1f;
 	const float CabbageHPCoef = 0.6f;
