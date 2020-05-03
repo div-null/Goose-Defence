@@ -42,8 +42,8 @@ public class Tower : MonoBehaviour
             return HP > 0;
         }
     }
-
-    float selfHp = 100f;
+	[SerializeField]
+	float selfHp = 100f;
 	/// <summary>
 	/// Хп Башни, вызывает событие уничтожения уничтожение
 	/// </summary>

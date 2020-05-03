@@ -15,7 +15,7 @@ public class UI_manager : Singleton<UI_manager>
     public GameObject battlefield;
     //Если игра не запущена, значит мы в меню, если нет, то UI надо изменить
     bool isGameStarted = false, canSkip = false;
-    string historyStr = "Весь мир был поражён вирусом, из-за которого гуси стали неимоверно большыми, голодными, и практически поработили человечество с помощью звона колокольчиков. Единственное, что осталось у людей - это большой колокол и фермы, на которых они выращивают корм чтобы кормить гусей. Это последняя надежда человечества. С минуты на минуту гуси начнут своё последнее наступление, защитите колокол!";
+    string historyStr = "     Весь мир был поражён вирусом, из-за которого гуси стали неимоверно большими, голодными, и практически поработили человечество с помощью звона колокольчиков. Единственное, что осталось у людей - это большой колокол и фермы, на которых они выращивают корм чтобы кормить гусей ради своего спасения. Это место - последняя надежда человечества. С минуты на минуту гуси начнут своё последнее наступление, защитите колокол!";
     [Header("InfoAboutTower")]
     public Sprite[] towerPictures = new Sprite[9];
     public Image displayTower;
@@ -75,7 +75,7 @@ public class UI_manager : Singleton<UI_manager>
 
     public void setDangerLvl(int lvl)
     {
-        dangerStat.GetComponent<Text>().text = lvl + " уровень опасности";
+        dangerStat.GetComponent<Text>().text = lvl + " уровень угрозы";
     }
 
     void setStatus(int gold)
@@ -100,8 +100,11 @@ public class UI_manager : Singleton<UI_manager>
         Game.Instance.WinGame += PrintScore;
         Game.Instance.LooseGame += PrintScore;
         Game.Instance.UpdateGold += setAmountOfMoney;
-        StartWriting();
+		GooseFabric.Instance.UpdateGooseLvl += setDangerLvl;
+		StartWriting();
     }
+
+
 
     public void StartWriting()
     {
@@ -336,8 +339,8 @@ public class UI_manager : Singleton<UI_manager>
         //TowerFabric.Instance.placeTower(4, new TowerStatsList.TowerPeasT1());
 
         Game.Instance.startGame();
-        TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerPeasT3());
-        TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerPeasT3());
+        //TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerPeasT3());
+        //TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerPeasT3());
     }
 
     public void PrintScore(bool result, int score)

@@ -30,7 +30,7 @@ public class Game : Singleton<Game>
 
 
     [SerializeField]
-    public int baseMoney = 0;
+    public int baseMoney = 1000;
 
     /// <summary>
     /// Ожидание между получением денег

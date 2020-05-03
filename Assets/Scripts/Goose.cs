@@ -185,10 +185,12 @@ public class Goose : MonoBehaviour
     }
     IEnumerator OnDeath()
     {
-        GooseFabric.Instance.geese.Remove(this);
+		animator.speed = 1;
+		GooseFabric.Instance.geese.Remove(this);
         GooseDied?.Invoke(this);
         animator.SetInteger("GooseState", 4);   //death
-        yield return new WaitForSeconds(1.3f);
+		state = GooseState.death;
+        yield return new WaitForSeconds(0.9f / speed_multiplier);
         Destroy(this.gameObject);
     }
     void Start()
