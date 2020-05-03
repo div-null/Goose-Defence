@@ -223,8 +223,8 @@
 
 	public class Colocol : TowerStatsList
 	{
-		public override string Name => "Стена";
-		public override string Discription => "Очень колючая и сухая.";
+		public override string Name => "Колокол";
+		public override string Discription => "Блестящий и звонкий.";
 		public override float AttackDelay => SredAttackSpeed * PeasAttackSpeedCoef * T3AttackSpeed;
 		public override ProjectileStats Projectile => new ProjectileStats(0, 0f, 0f, 0f, 0f);
 		public override int MaxHP => (int)(100);

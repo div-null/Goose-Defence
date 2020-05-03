@@ -31,10 +31,6 @@ public class TowerFabric : Singleton<TowerFabric>
     [SerializeField]
     Vector3 DownSpawnPoint;
 
-    void Awake()
-    {
-
-    }
 
     public void spawnLocation()
     {
@@ -60,15 +56,17 @@ public class TowerFabric : Singleton<TowerFabric>
         var wall = GameObject.Instantiate(TowerPrefabs[9], new Vector3(-18, 0, 0), Quaternion.identity);
         wall.transform.tag = "Tower";
         var blank1 = wall.AddComponent<Tower>();
+        blank1.TowerDestroyed += destroyWall;
         blank1.Initialize(new TowerStatsList.Colocol(), ProjectilePrefabs[0], 10);
         Towers.Add(blank1);
 
 
         //////////////////////////
         /// СПАВН колокола
-        var colocol =GameObject.Instantiate(TowerPrefabs[10], new Vector3(-28, 0, 0), Quaternion.identity);
+        var colocol = GameObject.Instantiate(TowerPrefabs[10], new Vector3(-28, 0, 0), Quaternion.identity);
         colocol.transform.tag = "Tower";
         var blank2 = colocol.AddComponent<Tower>();
+        blank2.TowerDestroyed += destroyColocol;
         blank2.Initialize(new TowerStatsList.Colocol(), ProjectilePrefabs[0], 10);
         Towers.Add(blank2);
     }
@@ -122,12 +120,42 @@ public class TowerFabric : Singleton<TowerFabric>
         Places[order].isFree = true;
     }
 
+    /// <summary>
+    /// Обработчик уничтожения башни
+    /// </summary>
+    /// <param name="tower"></param>
+    void deleteTower(Tower tower)
+    {
+        int index = Towers.IndexOf(tower);
+        destroyTower(index);
+    }
 
+    /// <summary>
+    /// УНИЧТОЖЕН КОЛОКОЛ
+    /// </summary>
+    /// <param name="tower"></param>
+    void destroyColocol(Tower tower)
+    {
+        Towers.Remove(tower);
+        tower.RemoveTower();
+        Game.Instance.LooseGame?.Invoke(false, Game.Instance.Score);
+    }
+
+    /// <summary>
+    /// УНИЧТОЖЕНА СТЕНА
+    /// </summary>
+    /// <param name="tower"></param>
+    void destroyWall(Tower tower)
+    {
+        Towers.Remove(tower);
+        tower.RemoveTower();
+        GooseFabric.Instance.loanchBoss();
+        Debug.Log("Wall crushed");
+    }
     public TowerStatsList GetInfoByOrder(int order)
 	{
 		return Towers[order].info;
 	}
-
 
 	public Vector3 FindNearTower(Vector3 pos)
     {
@@ -146,24 +174,6 @@ public class TowerFabric : Singleton<TowerFabric>
             }
         }
         return (temp == Vector3.down * 1000) ? new Vector3(-10, 0, 0) : temp;
-    }
-
-    public void TryDamageTower(int order, int dmg)
-    {
-        if (Towers[order])
-            Towers[order].GetDamage(dmg);
-        else
-            Game.Instance.DamageWall(dmg);
-    }
-
-    /// <summary>
-    /// Обработчик уничтожения башни
-    /// </summary>
-    /// <param name="tower"></param>
-    void deleteTower(Tower tower)
-    {
-        int index = Towers.IndexOf(tower);
-        destroyTower(index);
     }
 
 }

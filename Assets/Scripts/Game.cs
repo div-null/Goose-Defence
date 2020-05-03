@@ -10,8 +10,8 @@ public class Game : Singleton<Game>
 {
 
     // События победы и поражения
-    public event EndGame LooseGame;
-    public event EndGame WinGame;
+    public EndGame LooseGame;
+    public EndGame WinGame;
 
     public event StatUpdate UpdateGold;
     public event StatUpdate UpdateScore;
@@ -28,20 +28,9 @@ public class Game : Singleton<Game>
     /// </summary>
     public bool isGameStarted { get; protected set; } = false;
 
-    /// <summary>
-    /// Хп стены
-    /// </summary>
-    [SerializeField]
-    int wallHp = 50000;
-
-    public int WallHp { get { return wallHp; } set {
-            wallHp = value;
-            if (wallHp <= 0)
-                LooseGame?.Invoke(false, Score);
-                } }
 
     [SerializeField]
-    public int baseMoney = 5000;
+    public int baseMoney = 0;
 
     /// <summary>
     /// Ожидание между получением денег
@@ -76,11 +65,6 @@ public class Game : Singleton<Game>
     public void decreaseMoney(int ammount)
     {
         Money -= ammount;
-    }
-
-    public void DamageWall(int dmg)
-    {
-        WallHp -= dmg;
     }
 
     /// <summary>
@@ -128,7 +112,6 @@ public class Game : Singleton<Game>
         isGameStarted = true;
         StartCoroutine("EarnMoney");
         StartCoroutine("SpawnGooses");
-        //ClearLevel.Instance.Clear();
     }
 
     IEnumerator EndGame()
