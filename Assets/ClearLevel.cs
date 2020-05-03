@@ -18,5 +18,10 @@ public class ClearLevel : Singleton<ClearLevel>
 
         foreach (var item in GameObject.FindGameObjectsWithTag("Projectile"))
             GameObject.Destroy(item);
-    }
+
+		GooseFabric.Instance.Clear();
+
+		Game.Instance.Clear();
+
+	}
 }

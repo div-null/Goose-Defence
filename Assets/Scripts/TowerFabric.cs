@@ -40,7 +40,7 @@ public class TowerFabric : Singleton<TowerFabric>
         {
             Towers.Add(null);
             Vector3 pos = place[i].transform.position;
-            pos.z = -3 + Mathf.Abs(pos.y / 10);
+            pos.z = -3 + pos.y / 10f;
             var obj = GameObject.Instantiate(PlacePrefab, pos, Quaternion.identity);
             Places[i] = obj.GetComponent<Place>();
             Places[i].Initialize(i, true, pos);
@@ -53,8 +53,13 @@ public class TowerFabric : Singleton<TowerFabric>
 
         //////////////////////////
         /// СПАВН стены
-        var wall = GameObject.Instantiate(TowerPrefabs[9], new Vector3(-18, 0, 0), Quaternion.identity);
+        var wall = GameObject.Instantiate(TowerPrefabs[9], new Vector3(-3.14f, 0.77f, 0), Quaternion.identity);
         wall.transform.tag = "Tower";
+
+        Vector3 pos1 = wall.transform.position;
+        pos1.z = Places[0].transform.position.z + 0.001f;
+        wall.transform.position = pos1;
+
         var blank1 = wall.AddComponent<Tower>();
         blank1.TowerDestroyed += destroyWall;
         blank1.Initialize(new TowerStatsList.Colocol(), ProjectilePrefabs[0], 10);
@@ -63,8 +68,13 @@ public class TowerFabric : Singleton<TowerFabric>
 
         //////////////////////////
         /// СПАВН колокола
-        var colocol = GameObject.Instantiate(TowerPrefabs[10], new Vector3(-28, 0, 0), Quaternion.identity);
+        var colocol = GameObject.Instantiate(TowerPrefabs[10], new Vector3(-20.21f, -1.38f, 0), Quaternion.identity);
         colocol.transform.tag = "Tower";
+
+        pos1 = colocol.transform.position;
+        pos1.z = -3 + Mathf.Abs(pos1.y / 10);
+        colocol.transform.position = pos1;
+
         var blank2 = colocol.AddComponent<Tower>();
         blank2.TowerDestroyed += destroyColocol;
         blank2.Initialize(new TowerStatsList.Colocol(), ProjectilePrefabs[0], 10);

@@ -50,6 +50,7 @@ public class UI_manager : Singleton<UI_manager>
     public GameObject resultScreen;
     public GameObject transitToEnd;
 
+
     public void UI_TurnOnMenu()
     {
         ButtonCloseSound.Play();
@@ -99,7 +100,13 @@ public class UI_manager : Singleton<UI_manager>
         Game.Instance.WinGame += PrintScore;
         Game.Instance.LooseGame += PrintScore;
         Game.Instance.UpdateGold += setAmountOfMoney;
+        StartWriting();
+    }
 
+    public void StartWriting()
+    {
+        isGameStarted = false;
+        canSkip = true;
         UIInMenu.SetActive(true);
         StartCoroutine("ReadHistory");
         resultScreen.SetActive(false);
@@ -109,6 +116,7 @@ public class UI_manager : Singleton<UI_manager>
         isGameStarted = false;
         pressKeyToStart.GetComponent<Text>().text = "Нажмите на любую клавишу, чтобы пропустить историю";
     }
+
 
     public void CloseWindow()
     {
@@ -328,8 +336,8 @@ public class UI_manager : Singleton<UI_manager>
         //TowerFabric.Instance.placeTower(4, new TowerStatsList.TowerPeasT1());
 
         Game.Instance.startGame();
-        TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerTomatoT1());
-        TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerTomatoT2());
+        TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerPeasT3());
+        TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerPeasT3());
     }
 
     public void PrintScore(bool result, int score)
@@ -341,6 +349,18 @@ public class UI_manager : Singleton<UI_manager>
     public void PrintScore2()
     {
         StartCoroutine(Result(true, 110));
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
+    public void PlayAgain()
+    {
+        ClearLevel.Instance.Clear();
+        GooseFabric.Instance.Stopspawning();
+        StartWriting();
     }
 
     IEnumerator Result(bool result, int score)

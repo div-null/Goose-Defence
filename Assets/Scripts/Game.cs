@@ -45,16 +45,21 @@ public class Game : Singleton<Game>
 
     [SerializeField]
     int money;
-    public int Money { get { return money; } protected set { money = value; } }
+    public int Money { get { return money; } protected set { money = value; UpdateGold?.Invoke(money); } }
 
     [SerializeField]
     int score;
-    public int Score { get { return score; } protected set { score = value; } }
+    public int Score { get { return score; } protected set { score = value; UpdateScore?.Invoke(score); } }
+
+	public void Clear()
+	{
+		Score = 0;
+		Money = baseMoney;
+	}
 
     public void increaseScore(int ammount)
     {
         Score += ammount;
-        UpdateScore?.Invoke(Score);
     }
 
     public void increaseMoney(int ammount)
@@ -101,7 +106,6 @@ public class Game : Singleton<Game>
         {
             yield return new WaitForSeconds(moneyBackDelay);
             Money += moneyPerDelay;
-            UpdateGold?.Invoke(Money);
         }
     }
 

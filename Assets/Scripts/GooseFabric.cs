@@ -105,10 +105,11 @@ public class GooseFabric : Singleton<GooseFabric>
         tmpGM.transform.position = new Vector3(x, y, z);
         tmpGM.transform.rotation = Quaternion.identity;
         var tmpG = tmpGM.AddComponent<Goose>();
+		tmpGM.transform.localScale = new Vector3(4, 4);
         tmpG.GooseDied += bossDead;
 
-        //Добавил Никита
-        var col = tmpCol.AddComponent<SphereCollider>();
+		//Добавил Никита
+		var col = tmpCol.AddComponent<SphereCollider>();
         tmpCol.GetComponent<SphereCollider>().radius = 1;
         tmpCol.GetComponent<SphereCollider>().isTrigger = true;
         //
@@ -118,14 +119,21 @@ public class GooseFabric : Singleton<GooseFabric>
         geese.Add(tmpG);
     }
 
-	public void StartSpawning()
+	public void Clear()
 	{
+		Stopspawning();
+		geese = new List<Goose>();
+		gooseLvl = 1;
+	}
+
+	public void StartSpawning()
+	{		
 		StartCoroutine("SpawnGeese");
 	}
 
 	public void Stopspawning()
 	{
-		StopCoroutine("SpawnGeese");
+        StopAllCoroutines();
 	}
 
 	public IEnumerator SpawnGeese()
@@ -151,7 +159,7 @@ public class GooseFabric : Singleton<GooseFabric>
 			tmpGM.transform.rotation = Quaternion.identity;
 			var tmpG = tmpGM.AddComponent<Goose>();
             tmpG.GooseDied += incScore;
-
+			tmpGM.transform.localScale = new Vector3((1f + gooseLvl / 25f), (1f + gooseLvl / 25f));
             //Добавил Никита
             var col = tmpCol.AddComponent<SphereCollider>();
             tmpCol.GetComponent<SphereCollider>().radius = 1;
@@ -165,10 +173,10 @@ public class GooseFabric : Singleton<GooseFabric>
 			if(countGooseOnLvl == spawnedGooseCount)
 			{
 				spawnedGooseCount = 0;
-                UI_manager.Instance.setDangerLvl(gooseLvl);
-                gooseLvl++;
-            }
-			yield return new WaitForSeconds(15f / countGooseOnLvl);
+				gooseLvl++;
+			}
+			if (gooseLvl == 30) StartCoroutine("LoanchBoss");
+			yield return new WaitForSeconds(20f / countGooseOnLvl);
 		}
 	}
 
