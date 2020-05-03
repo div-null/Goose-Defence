@@ -26,7 +26,6 @@ public class UI_manager : MonoBehaviour
     Tower tower;
     Place place;
     int savedId;
-
     float price;
 
     public void UI_TurnOnMenu()
@@ -152,6 +151,7 @@ public class UI_manager : MonoBehaviour
         radius.text = "Радиус атаки: " + tower.Projectile.ExplosionRange;
         speed.text = "Скорость снаряда: " + tower.Projectile.Velocity;
         reload.text = "Скорость перезарядки: " + tower.AttackDelay;
+        health.text = "Максимальное здоровье: " + tower.MaxHP;
         price = tower.Cost;
         cost.text = "Стоимость: " + price;
     }
@@ -162,6 +162,7 @@ public class UI_manager : MonoBehaviour
         upgradeRadius.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).Projectile.ExplosionRange - tower.Projectile.ExplosionRange);
         upgradeSpeed.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).Projectile.Velocity - tower.Projectile.Velocity);
         upgradeReload.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).AttackDelay - tower.AttackDelay);
+        upgradeHealth.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).MaxHP - tower.MaxHP);
     }
 
     // Update is called once per frame
@@ -208,24 +209,17 @@ public class UI_manager : MonoBehaviour
     {
         if (Accept.GetComponentInChildren<Text>().text == "Улучшить")
         {
-            ClickToUpdateTower();
+            Game.Instance.decreaseMoney((int)price);
+            TowerFabric.Instance.upgradeTower(tower.TowerOrder);
             infoPanel.SetActive(false);
         }
         else if (Accept.GetComponentInChildren<Text>().text == "Купить")
         {
-            ClickToBuildTower();
-            buyPanel.SetActive(false);
+            Game.Instance.decreaseMoney((int)price);
+            TowerFabric.Instance.placeTower(place.Order, TowerStatsList.GetStatsByPrefabId(savedId));
+            infoPanel.SetActive(false);
         }
-    }
-
-    void ClickToUpdateTower()
-    {
-        TowerFabric.Instance.upgradeTower(tower.TowerOrder);
-    }
-
-    void ClickToBuildTower()
-    {
-        TowerFabric.Instance.placeTower(place.Order, TowerStatsList.GetStatsByPrefabId(savedId));
+        moneyStat.GetComponentInChildren<Text>().text = Game.Instance.Money.ToString();
     }
 
     IEnumerator ReadHistory()
@@ -274,26 +268,23 @@ public class UI_manager : MonoBehaviour
         Game.Instance.startGame();
     }
 
+    [Header("ResultsAtTheEndOfGame")]
+    public Text scoreText;
     public GameObject loseScreen, winScreen;
     public GameObject transitToEnd;
 
     public void PrintScore(bool result, int score)
     {
         if (result)
-            StartCoroutine(Win(score));
+            StartCoroutine(Result(result, score));
     }
-    
-    IEnumerator Lose()
+
+    IEnumerator Result(bool result, int score)
     {
         transitToEnd.SetActive(true);
         yield return new WaitForSeconds(1f);
         loseScreen.SetActive(true);
-    }
-    
-    IEnumerator Win(int score)
-    {
-        transitToEnd.SetActive(true);
-        yield return new WaitForSeconds(1f);
-        winScreen.SetActive(true);
+        scoreText.text = "Счёт: " + score;
+
     }
 }
