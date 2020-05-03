@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.SocialPlatforms;
+using System;
 
 public delegate void TowerEvent(Tower tower);
 
@@ -17,17 +18,6 @@ public class Tower : MonoBehaviour
     public GameObject SpawnPos;
 
     /// <summary>
-    /// Уровень башни
-    /// </summary>
-    public TowerLevel Level;
-
-    /// <summary>
-    /// Скорость летящего снаряда
-    /// </summary>
-    [SerializeField]
-    public float ProjectileSpeed;
-
-    /// <summary>
     /// Точка спавна снарядов
     /// </summary>
     [SerializeField]
@@ -37,27 +27,10 @@ public class Tower : MonoBehaviour
     /// </summary>
     [SerializeField]
     GameObject ProjectilePrefab;
-
-    /// <summary>
-    /// Время перезарядки
-    /// </summary>
-    [SerializeField]
-    float AttackDelay = 2f;
-
-    /// <summary>
-    /// Урон снаряда
-    /// </summary>
-    [SerializeField]
-    int Damage = 200;
-
-
-    /// <summary>
-    /// Радиус действия башни
-    /// </summary>
-    [SerializeField]
-    public float AttackRange;
-
-    public bool isAvailable { get; set; }
+	[SerializeField]
+	public TowerStatsList info = new TowerStatsList.TowerCabbageT1();
+	
+	public bool isAvailable { get; set; }
     public bool Destroyed
     {
         get
@@ -67,10 +40,11 @@ public class Tower : MonoBehaviour
     }
 
     float selfHp = 100f;
-    /// <summary>
-    /// Хп Башни, вызывает событие уничтожения уничтожение
-    /// </summary>
-    float HP
+	/// <summary>
+	/// Хп Башни, вызывает событие уничтожения уничтожение
+	/// </summary>
+	[SerializeField]
+	float HP
     {
         get
         {
@@ -96,42 +70,19 @@ public class Tower : MonoBehaviour
         return Destroyed;
     }
 
-    /// <summary>
-    /// Создание башни, МГНОВЕННО начинает стрелять
-    /// </summary>
-    /// <param name="Hp">Здоровье</param>
-    /// <param name="Dmg">Урон за атаку</param>
-    /// <param name="DmgRate">Количество ударов в секудну</param>
-    public void Initialize(float Hp, int Dmg, float DmgDelay)
+    public void Initialize(TowerStatsList info, GameObject projectilePref)
     {
-        HP = Hp;
-        Damage = Dmg;
-        AttackDelay = DmgDelay;
+		this.info = info;
+		int tmpHP = info.MaxHP;
+		HP = (info.MaxHP);
         spawnPoint = transform.Find("SpawnPoint");
-    }
-    public void Initialize(TowerStats stats)
-    {
-        HP = stats.HP;
-        Damage = stats.Projectile.Damage;
-        AttackDelay = stats.AttackDelay;
-        spawnPoint = transform.Find("SpawnPoint");
+        ProjectilePrefab = projectilePref;
     }
 
-    Goose FindGoose()
-    {
-        float minDistance = AttackRange;
-        Goose temp = null;
-        foreach (var goose in GooseFabric.Instance.geese)
-        {
-            float distance = (goose.transform.position - transform.position).magnitude;
-            if (distance < minDistance)
-            {
-                minDistance = distance;
-                temp = goose;
-            }
-        }
-        return temp;
-    }
+	public TowerStatsList GetStatsByOrder(int order)
+	{
+		return info;
+	}
 
     public void MakeDamage()
     {
@@ -145,27 +96,43 @@ public class Tower : MonoBehaviour
         isAvailable = false;
     }
 
+
+    private void Start()
+    {
+        spawnPoint = transform.Find("spawn_point");
+    }
     public IEnumerator Attack()
     {
+
         while (true)
         {
-            Goose aim = FindGoose();
-
-            if (aim == null)
+            Goose aim = GooseFabric.Instance.FindGoose(transform.position, info.Range);
+            // null или далеко
+            if (aim == null || spawnPoint == null)
             {
                 yield return new WaitForSeconds(0.1f);
                 continue;
             }
             // добавляю скрипт на префаб
-            var projectile = GameObject.Instantiate(ProjectilePrefab);
+            var projectile = GameObject.Instantiate(ProjectilePrefab, spawnPoint.position, Quaternion.identity);
             Projectile proj = projectile.GetComponent<Projectile>();
-            proj.Radius = 0.2f;
-            proj.Loauch(spawnPoint.position, aim.transform.position, ProjectileSpeed, Damage);
 
-            yield return new WaitForSeconds(AttackDelay);
+            float distance = Vector3.Distance(spawnPoint.position, aim.transform.position);
+            float u1 = Math.Abs(info.Projectile.Velocity);
+            float u2 = Math.Abs(aim.goose_speed);
+			float angle = Mathf.Deg2Rad * (Vector3.Angle(spawnPoint.position - aim.transform.position, aim.Movement));
+			float time = Mathf.Abs((Mathf.Sqrt(2) * Mathf.Sqrt(2 * distance * distance * u1 * u1 + distance * distance * u2 * u2 * Mathf.Cos(2 * angle) - distance * distance * u2 * u2) - 2 * distance * u2 * Mathf.Cos(angle)) / (2 * (u1 * u1 - u2 * u2)));
+
+			Vector3 prediction = aim.Movement * time;
+			//Debug.Log($"Angle = {angle} Time = {time}");
+
+            proj.Loauch(spawnPoint.position, aim.transform.position + prediction, info.Projectile);
+
+            yield return new WaitForSeconds(info.AttackDelay);
             // может быть не нужен
             yield return new WaitForEndOfFrame();
         }
+
     }
 
     public void RemoveTower()

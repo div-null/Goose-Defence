@@ -7,30 +7,26 @@ using System.Collections;
 public enum TowerType
 {
     //Капуста
-    Cabbage = 0
+    Tomate =0,
+    Cabbage,
+    Peas
 }
 
-/// <summary>
-/// Уровень башни
-/// </summary>
-public enum TowerLevel
-{
-    T1 = 0,
-    T2,
-    T3
-}
 
 /// <summary>
 /// Статы снаряда
 /// </summary>
 public struct ProjectileStats
 {
-    public ProjectileStats(int Damage, float Range, float Speed)
+    public ProjectileStats(int Damage, float Range, float Speed, float coefSlow = 1, float timeSlow = 0)
     {
         this.Damage = Damage;
         ExplosionRange = Range;
         Velocity = Speed;
-    }
+		this.coefSlow = coefSlow;
+		this.timeSlow = timeSlow;
+
+	}
 
     /// <summary>
     /// Скорость снаряда
@@ -46,54 +42,19 @@ public struct ProjectileStats
     /// Скорость полёта снаряда
     /// </summary>
     public float Velocity;
+	/// <summary>
+	/// Коэффициент замедения
+	/// </summary>
+	public float coefSlow;
+
+	/// <summary>
+	/// Время замедления
+	/// </summary>
+	public float timeSlow;
 }
 
 
-/// <summary>
-/// Статы башни
-/// </summary>
-public struct TowerStats
-{
-    public TowerStats(int Hp, float range, float attackDelay, float deployTime, float cost, ProjectileStats projectile)
-    {
-        HP = Hp;
-        Range = range;
-        AttackDelay = attackDelay;
-        DeployTime = deployTime;
-        Projectile = projectile;
-        Cost = cost;
-    }
 
-    /// <summary>
-    /// Статы Снаряда
-    /// </summary>
-    public ProjectileStats Projectile;
-
-    /// <summary>
-    /// Здоровье башни
-    /// </summary>
-    public int HP;
-
-    /// <summary>
-    /// Время между атаками
-    /// </summary>
-    public float AttackDelay;
-
-    /// <summary>
-    /// Дальность стрельбы
-    /// </summary>
-    public float Range;
-
-    /// <summary>
-    /// Время установки
-    /// </summary>
-    public float DeployTime;
-
-    /// <summary>
-    /// Стоимость постройки башни
-    /// </summary>
-    public float Cost;
-}
 
 /// <summary>
 /// Статы гуся определённого ТИПА

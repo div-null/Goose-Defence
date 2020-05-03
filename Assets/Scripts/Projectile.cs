@@ -25,20 +25,20 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     public float DestroyTime;
 
-    Vector3 Direction;
+	/// <summary>
+	/// Коэффициент замедения
+	/// </summary>
+	public float coefSlow;
+
+	/// <summary>
+	/// Время замедления
+	/// </summary>
+	public float timeSlow;
+
+
+	Vector3 Direction;
 
     float RemainTime;
-    public void Loauch(Vector3 tower, Vector3 point, float Velocity, int damage)
-    {
-        Damage = damage;
-        this.Velocity = Velocity;
-        transform.position = tower;
-        Direction = (point - tower).normalized;
-        RemainTime = (Vector3.Distance(tower, point) / Velocity);
-
-        //TODO: добавить поворот
-        transform.rotation = Quaternion.LookRotation(Vector3.back);
-    }
     public void Loauch(Vector3 tower, Vector3 point, ProjectileStats stats)
     {
         Damage = stats.Damage;
@@ -46,9 +46,11 @@ public class Projectile : MonoBehaviour
         transform.position = tower;
         Direction = (point - tower).normalized;
         RemainTime = (Vector3.Distance(tower, point) / stats.Velocity);
-
-        //TODO: добавить поворот
-        transform.rotation = Quaternion.LookRotation(Vector3.back);
+        Radius = stats.ExplosionRange;
+		this.coefSlow = stats.coefSlow;
+		this.timeSlow = stats.timeSlow;
+		//TODO: добавить поворот
+		transform.rotation = Quaternion.LookRotation(Vector3.back);
     }
 
     void MakeDamage()
@@ -56,7 +58,6 @@ public class Projectile : MonoBehaviour
         Vector2 pos = transform.position;
         // TODO: Вызов метода дамага гусей
         GooseFabric.Instance.OnAttack(Radius, pos, Damage);
-        Debug.Log("Destroy ball");
         GameObject.Destroy(gameObject, DestroyTime);
         this.enabled = false;
     }

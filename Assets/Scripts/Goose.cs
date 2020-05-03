@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 public enum GooseState
@@ -19,86 +20,130 @@ public class Goose : MonoBehaviour
     /// </summary>
     static int[] GooseLvlHp = new int[3] { 250, 400, 650 };
 
-    public int max_hp = 250;                  //кол-во стартового (максимального) здоровья у гуся
-    int cur_hp = 250;                  //текущее значение показателя здоровья
+    public int max_hp;                  //кол-во стартового (максимального) здоровья у гуся
+    [SerializeField]
+    int cur_hp;                  //текущее значение показателя здоровья
 
-    public int goose_damage = 100;            //урон гуся
-    public float goose_speed = 10f;           //скорость гуся
-
-
-    public GooseState state;                  //состояние гуся
+	public int gooseLvl;
+    public int goose_damage;            //урон гуся
+    public float goose_speed = 3;           //скорость гуся
+	public float speed_multiplier;		//множитель ускорения
+	public float attack_speed;		//множитель ускорения
+	
+	public GooseState state;                //состояние гуся
     public Animator animator;                   //аниматор
+	public int typeGoose;
 
-    //инициализатор гуся (уровень слож-ти, спрайт, трансформ-спавн)
-    public void Initialize(int Dmg, float SpdMul, int maxHp)
+    public Vector3 Movement;
+
+	public void Initialize(int lvl)
+	{
+		gooseLvl = lvl;
+		state = GooseState.stay;
+
+		int tmp = (int)((gooseLvl / 25f) / Mathf.Sqrt(1 + Mathf.Pow(gooseLvl / 25f, 2)) * 50);
+		int typeTmp = gooseLvl / 10;
+		if (typeTmp==0)
+		{
+			typeTmp = Random.Range(1, 10) * (gooseLvl % 10);
+			typeTmp = typeTmp < 50 ? 0 : 1;
+		}
+		else if(typeTmp == 1) {
+			typeTmp = Random.Range(1, 10) * (gooseLvl % 10);
+			typeTmp = typeTmp < 50 ? 1 : 2;
+		}
+		else if(typeTmp == 2) {
+			typeTmp = Random.Range(1, 10) * (gooseLvl % 10);
+			typeTmp = typeTmp < 50 ? 2 : 3;
+		}
+		else {
+			typeTmp = 4;
+		}
+		typeGoose = typeTmp;	
+		
+		max_hp = tmp * 250;
+		if (typeTmp == 4)
+			max_hp = tmp * 250 * 10;
+
+		cur_hp = max_hp;
+		goose_damage = (int)(max_hp / 2.5);
+
+		speed_multiplier = 1 + gooseLvl / 25;
+		//Тут надо попроавить:
+		attack_speed = 2-speed_multiplier/2;
+	}
+
+    IEnumerator Attack()
     {
-        max_hp = maxHp;
-        cur_hp = max_hp;
-        goose_damage = Dmg;
-        goose_speed *= SpdMul;
-        state = GooseState.stay;
+        state = GooseState.atack;
+        while (true)
+        {
+			//Небольшой разброс дамага
+			int tmpGooseDamage = goose_damage + (int)(Random.Range(-0.1f * goose_damage, 0.1f * goose_damage));
+
+            //TowerFabric.Instance.TryDamageTower(TowerNumber, goose_damage);
+            // <- ВЫЗОВ АНИМАЦИИ
+            yield return new WaitForSeconds(attack_speed);
+        }
     }
-   
-    /// <summary>
-    /// Инициализация через статы(ХП, Дамаг, Множитель скорости)
-    /// </summary>
-    /// <param name="stats"></param>
-    public void Initialize(GooseTypeStats stats)
+
+    void FixedUpdate()
     {
-        max_hp = stats.Hp;
-        cur_hp = max_hp;
-        goose_damage = stats.Damage;
-        goose_speed *= stats.SpeedMultiplier;
+        var position = TowerFabric.Instance.FindNearTower(transform.position);
+        var direction = (position - transform.position);
+        if (direction.magnitude > 0.3)
+        {
+            Movement = direction.normalized * goose_speed * speed_multiplier;
+            state = GooseState.walk;
+            transform.position += direction.normalized * goose_speed  * speed_multiplier * Time.deltaTime;
+        }
+        else
+        {
+            Movement = Vector3.zero;
+            state = GooseState.stay;
+        }
     }
 
-    //расчет характеристик в следствие эффектов
-    public void OnEffect()
-    {
+	IEnumerator SlowDown(float coefSlow = 1, float timeSlow = 0)
+	{
+		speed_multiplier = (1 + gooseLvl / 25) * coefSlow;
+		attack_speed = 2 - speed_multiplier / 2;
+		yield return new WaitForSeconds(timeSlow);
+		speed_multiplier = 1 + gooseLvl / 25;
+		//Тут надо попроавить:
+		attack_speed = 2 - speed_multiplier / 2;
+	}
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (state != GooseState.atack) 
+            StartCoroutine("Attack");
     }
 
-    //расчет урона
-    public void OnDamage(int damage)
+
+    //Наносит урон гусю
+    public void OnDamage(int damage, float coefSlow = 1, float timeSlow = 0)
     {
+		if (timeSlow != 0)
+		{
+			StopCoroutine("SlowDown");
+			StartCoroutine(SlowDown(coefSlow, timeSlow));
+		}
+			
         cur_hp -= damage;
         if (cur_hp < 0)
         {
             cur_hp = 0;
+            state = GooseState.death;
             Destroy(this.gameObject);
             GooseFabric.Instance.geese.Remove(this);
-            //пополнение очков
         }
     }
 
-    private void Start()
+    void Start()
     {
         //state = GooseState.walk;
         animator = GetComponent<Animator>();
     }
 
-
-    private void Update()
-    {
-        
-        if (Input.GetKey(KeyCode.Alpha0))
-        {
-            state = 0;
-            animator.SetInteger("GooseState", 0);
-        }
-        else if (Input.GetKey(KeyCode.Alpha1))
-        {
-            animator.SetInteger("GooseState", 1);
-
-        }
-        else if (Input.GetKey(KeyCode.Alpha3))
-        {
-            animator.SetInteger("GooseState", 3);
-
-        }
-        else if (Input.GetKey(KeyCode.Alpha4))
-        {
-            animator.SetInteger("GooseState", 3);
-            animator.SetInteger("GooseState", 4);
-        }
-    }
 }
