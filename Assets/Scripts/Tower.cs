@@ -85,7 +85,7 @@ public class Tower : MonoBehaviour
         this.info = info;
 		int tmpHP = info.MaxHP;
 		HP = (info.MaxHP);
-        //spawnPoints = transform.Find("SpawnPoint");
+        
         ProjectilePrefab = projectilePref;
 
         // КОСТЫЛь

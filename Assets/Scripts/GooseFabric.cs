@@ -67,7 +67,21 @@ public class GooseFabric : Singleton<GooseFabric>
         Game.Instance.increaseScore(1);
     }
 
+    /// <summary>
+    /// Вызывается при смерте босса
+    /// </summary>
+    /// <param name="goose"></param>
+    void bossDead(Goose goose)
+    {
+        Game.Instance.WinGame?.Invoke(true, Game.Instance.Score);
+    }
+
     public void loanchGoose()
+    {
+        StartCoroutine(LoanchBoss());
+    }
+
+    public void loanchBoss()
     {
         StartCoroutine(LoanchBoss());
     }
@@ -91,7 +105,7 @@ public class GooseFabric : Singleton<GooseFabric>
         tmpGM.transform.position = new Vector3(x, y, z);
         tmpGM.transform.rotation = Quaternion.identity;
         var tmpG = tmpGM.AddComponent<Goose>();
-        tmpG.GooseDied += incScore;
+        tmpG.GooseDied += bossDead;
 
         //Добавил Никита
         var col = tmpCol.AddComponent<SphereCollider>();
@@ -101,6 +115,7 @@ public class GooseFabric : Singleton<GooseFabric>
         tmpG.Initialize(40);
         GameObject.Instantiate(goose_prefabs[tmpG.typeGoose], tmpG.transform, false);
         tmpCol.transform.SetParent(tmpGM.transform);
+        geese.Add(tmpG);
     }
 
 	public void StartSpawning()
