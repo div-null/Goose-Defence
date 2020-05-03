@@ -97,7 +97,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7756276895978935703}
   - component: {fileID: 7372457510099143096}
-  - component: {fileID: 6498502766331141955}
+  - component: {fileID: 4025213455193239339}
+  - component: {fileID: 6450069251968551177}
   m_Layer: 0
   m_Name: tomato_tower_3
   m_TagString: Tower
@@ -142,32 +143,35 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!61 &6498502766331141955
-BoxCollider2D:
+--- !u!65 &4025213455193239339
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4800261318170832692}
-  m_Enabled: 1
-  m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -1.58, y: 0.65}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 6.55, y: 8.91}
-    newSize: {x: 6.55, y: 8.91}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4.58, y: 2.31}
-  m_EdgeRadius: 0
+  m_Size: {x: 4.81, y: 2.13, z: 1}
+  m_Center: {x: -1.6, y: 0.76, z: 0}
+--- !u!54 &6450069251968551177
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4800261318170832692}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &4942531932851917592
 GameObject:
   m_ObjectHideFlags: 0

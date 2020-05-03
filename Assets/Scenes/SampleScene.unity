@@ -153,10 +153,16 @@ MonoBehaviour:
   PlacePrefab: {fileID: 7538580225902262152, guid: 15e13bc3781bdb547bb682fcc7846bfa,
     type: 3}
   ProjectilePrefabs:
-  - {fileID: 8340375830762378323, guid: 41206bd8cc810c147af5d8f6de5338b9, type: 3}
   - {fileID: 7401667174298765926, guid: 4df34fd4a2a49674d88b7a7482ad9fa6, type: 3}
+  - {fileID: 3006887808616964784, guid: 1acc95677bfecc04b84f0f65f5645fb0, type: 3}
   - {fileID: 8340375830762378323, guid: 41206bd8cc810c147af5d8f6de5338b9, type: 3}
   TowerPrefabs:
+  - {fileID: 669461411120966031, guid: 97e102daf244ca74486a622b1bb86567, type: 3}
+  - {fileID: 4469941967998075336, guid: 7f643d278824f2f4e919d5de8ecd94d3, type: 3}
+  - {fileID: 1380331066159683032, guid: 3e83afc468b32814dbf29a441e4c50b1, type: 3}
+  - {fileID: 2070529473118248857, guid: d0f0fbb1957ab734dac824a54f5a3e77, type: 3}
+  - {fileID: 5188126907318187149, guid: bc27d5af2eed8b349900938f859835f7, type: 3}
+  - {fileID: 3572741252219024381, guid: 42efd329ab86b904f8786f2ff23e79e0, type: 3}
   - {fileID: 4800261318170832692, guid: 1600bb202dafc944f9749fe7362cb04b, type: 3}
   - {fileID: 6548306200489150217, guid: 55c5937f3d5cd6a40a8b09c6c47a63c6, type: 3}
   - {fileID: 3176347508634957828, guid: 01d3dda4ae58bc846972ced6c73887b5, type: 3}

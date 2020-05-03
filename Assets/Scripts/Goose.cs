@@ -104,12 +104,13 @@ public class Goose : MonoBehaviour
 
     void FixedUpdate()
     {
-        var position = TowerFabric.Instance.FindNearTower(transform.position);
+        var position = TowerFabric.Instance.FindNearTower(transform.position) - new Vector3(0, 0,0.5f);
         var direction = (position - transform.position);
-        if (direction.magnitude > 0.3 && state !=GooseState.atack)
+        if (direction.magnitude > 0.1 && state !=GooseState.atack && state != GooseState.death)
         {
             Movement = direction.normalized * goose_speed * speed_multiplier;
-            Movement.z = -3.5f+Mathf.Abs(Movement.y / 10);
+
+            Movement.z = -3f+Mathf.Abs(Movement.y / 10);
             state = GooseState.walk;
             transform.position += direction.normalized * goose_speed  * speed_multiplier * Time.deltaTime;
             //воспроизведение анимации ходьбы
@@ -118,6 +119,7 @@ public class Goose : MonoBehaviour
         else
         {
             Movement = Vector3.zero;
+            
             //state = GooseState.stay;
             //воспроизведение idle
             animator.SetInteger("GooseState", 0);
@@ -155,15 +157,17 @@ public class Goose : MonoBehaviour
             cur_hp = 0;
             state = GooseState.death;
             //воспроизведение анимации
-            animator.SetInteger("GooseState", 0);   //idle
-            animator.SetInteger("GooseState", 3);   //attack
-            animator.SetInteger("GooseState", 4);   //death
-            //<-ЗАДЕРЖКА
-            Destroy(this.gameObject);
-            GooseFabric.Instance.geese.Remove(this);
+            StartCoroutine("OnDeath");
+           
         }
     }
-
+    IEnumerator OnDeath()
+    {
+        animator.SetInteger("GooseState", 4);   //death
+        yield return new WaitForSeconds(1.3f);
+        Destroy(this.gameObject);
+        GooseFabric.Instance.geese.Remove(this);
+    }
     void Start()
     {
         //state = GooseState.walk;

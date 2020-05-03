@@ -61,7 +61,10 @@ public class Tower : MonoBehaviour
                 selfHp = value;
         }
     }
-
+    private void Start()
+    {
+        Anim = GetComponent<Animator>();
+    }
     public bool GetDamage(float dmg)
     {
         if (HP <= 0)
@@ -115,6 +118,8 @@ public class Tower : MonoBehaviour
 
             foreach (var spawnPoint in spawnPoints)
             {
+                Anim.SetTrigger("Shoot");
+                yield return new WaitForSeconds(0.05f);
                 // добавляю скрипт на префаб
                 var projectile = GameObject.Instantiate(ProjectilePrefab, spawnPoint.position, Quaternion.identity);
                 Projectile proj = projectile.GetComponent<Projectile>();

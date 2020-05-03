@@ -70,10 +70,11 @@ public class TowerFabric : Singleton<TowerFabric>
         // + new Vector3(0,2f)
         Vector3 pos = Places[order].spawnPoint.position;
         GameObject tower = GameObject.Instantiate(TowerPrefabs[stats.PrefabId], pos, Quaternion.identity);
+        
 
         var component = tower.AddComponent<Tower>();
         component.Initialize(stats, ProjectilePrefabs[stats.PrefabId / 3]);
-        //component.MakeDamage();
+        component.MakeDamage();
         component.TowerDestroyed += deleteTower;
 
         Towers[order] = component;
