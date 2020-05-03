@@ -21,7 +21,7 @@ public class Tower : MonoBehaviour
     /// Точка спавна снарядов
     /// </summary>
     [SerializeField]
-    Transform spawnPoint;
+    List<Transform> spawnPoints;
     /// <summary>
     /// Префаб снаряда
     /// </summary>
@@ -72,17 +72,21 @@ public class Tower : MonoBehaviour
 
     public void Initialize(TowerStatsList info, GameObject projectilePref)
     {
-		this.info = info;
+        spawnPoints = new List<Transform>();
+
+        this.info = info;
 		int tmpHP = info.MaxHP;
 		HP = (info.MaxHP);
-        spawnPoint = transform.Find("SpawnPoint");
+        //spawnPoints = transform.Find("SpawnPoint");
         ProjectilePrefab = projectilePref;
-    }
 
-	public TowerStatsList GetStatsByOrder(int order)
-	{
-		return info;
-	}
+        // КОСТЫЛь
+        Tower tower = GetComponentInChildren<Tower>();
+
+        foreach (var child in tower.GetComponentsInChildren<Transform>())
+            if (child.tag == "FirePoint")
+                spawnPoints.Add(child);
+    }
 
     public void MakeDamage()
     {
@@ -96,11 +100,6 @@ public class Tower : MonoBehaviour
         isAvailable = false;
     }
 
-
-    private void Start()
-    {
-        spawnPoint = transform.Find("spawn_point");
-    }
     public IEnumerator Attack()
     {
 
@@ -108,26 +107,29 @@ public class Tower : MonoBehaviour
         {
             Goose aim = GooseFabric.Instance.FindGoose(transform.position, info.Range);
             // null или далеко
-            if (aim == null || spawnPoint == null)
+            if (aim == null || spawnPoints == null)
             {
                 yield return new WaitForSeconds(0.1f);
                 continue;
             }
-            // добавляю скрипт на префаб
-            var projectile = GameObject.Instantiate(ProjectilePrefab, spawnPoint.position, Quaternion.identity);
-            Projectile proj = projectile.GetComponent<Projectile>();
 
-            float distance = Vector3.Distance(spawnPoint.position, aim.transform.position);
-            float u1 = Math.Abs(info.Projectile.Velocity);
-            float u2 = Math.Abs(aim.goose_speed);
-			float angle = Mathf.Deg2Rad * (Vector3.Angle(spawnPoint.position - aim.transform.position, aim.Movement));
-			float time = Mathf.Abs((Mathf.Sqrt(2) * Mathf.Sqrt(2 * distance * distance * u1 * u1 + distance * distance * u2 * u2 * Mathf.Cos(2 * angle) - distance * distance * u2 * u2) - 2 * distance * u2 * Mathf.Cos(angle)) / (2 * (u1 * u1 - u2 * u2)));
+            foreach (var spawnPoint in spawnPoints)
+            {
+                // добавляю скрипт на префаб
+                var projectile = GameObject.Instantiate(ProjectilePrefab, spawnPoint.position, Quaternion.identity);
+                Projectile proj = projectile.GetComponent<Projectile>();
 
-			Vector3 prediction = aim.Movement * time;
-			//Debug.Log($"Angle = {angle} Time = {time}");
+                float distance = Vector3.Distance(spawnPoint.position, aim.transform.position);
+                float u1 = Math.Abs(info.Projectile.Velocity);
+                float u2 = Math.Abs(aim.goose_speed);
+			    float angle = Mathf.Deg2Rad * (Vector3.Angle(spawnPoint.position - aim.transform.position, aim.Movement));
+			    float time = Mathf.Abs((Mathf.Sqrt(2) * Mathf.Sqrt(2 * distance * distance * u1 * u1 + distance * distance * u2 * u2 * Mathf.Cos(2 * angle) - distance * distance * u2 * u2) - 2 * distance * u2 * Mathf.Cos(angle)) / (2 * (u1 * u1 - u2 * u2)));
 
-            proj.Loauch(spawnPoint.position, aim.transform.position + prediction, info.Projectile);
+			    Vector3 prediction = aim.Movement * time;
+                //Debug.Log($"Angle = {angle} Time = {time}");
 
+                proj.Loauch(spawnPoint.position, aim.transform.position + prediction, info.Projectile);
+            }
             yield return new WaitForSeconds(info.AttackDelay);
             // может быть не нужен
             yield return new WaitForEndOfFrame();
@@ -137,9 +139,13 @@ public class Tower : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var goose = other.gameObject.GetComponent<Goose>();
+        if (goose == null)
+            return;
+
         if (goose.state != GooseState.atack)
-            goose.StartCoroutine("Attack");
+            goose.startAttack(this);
     }
+
     public void RemoveTower()
     {
         StopCoroutine("Attack");

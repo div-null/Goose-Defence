@@ -74,7 +74,12 @@ public class Goose : MonoBehaviour
 
 	}
 
-    IEnumerator Attack()
+    public void startAttack(Tower tower)
+    {
+        StartCoroutine(Attack(tower));
+    }
+
+    IEnumerator Attack(Tower tower)
     {
         state = GooseState.atack;
         
@@ -85,9 +90,12 @@ public class Goose : MonoBehaviour
 			int tmpGooseDamage = goose_damage + (int)(Random.Range(-0.1f * goose_damage, 0.1f * goose_damage));
 
             //TowerFabric.Instance.TryDamageTower(TowerNumber, goose_damage);
+
             //Воспроизведение анимации атаки
-            animator.SetInteger("GooseState", 3);       //attack
-                                                        // animator.SetTrigger("Attack");
+            animator.SetInteger("GooseState", 3);   
+
+            //Нанесение урона
+            tower.GetDamage(tmpGooseDamage);
             yield return new WaitForSeconds(attack_speed);
             animator.SetInteger("GooseState", 0);       //attack
                                                         // animator.SetTrigger("Attack");
@@ -101,7 +109,8 @@ public class Goose : MonoBehaviour
         if (direction.magnitude > 0.3 && state !=GooseState.atack)
         {
             Movement = direction.normalized * goose_speed * speed_multiplier;
-            state = GooseState.walk;                                                                                        //состояние ходьбы
+            Movement.z = -3+Mathf.Abs(Movement.y / 10);
+            state = GooseState.walk;
             transform.position += direction.normalized * goose_speed  * speed_multiplier * Time.deltaTime;
             //воспроизведение анимации ходьбы
             animator.SetInteger("GooseState", 1);

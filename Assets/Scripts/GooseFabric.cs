@@ -111,7 +111,7 @@ public class GooseFabric : Singleton<GooseFabric>
 
     public void OnAttack(float radius, Vector2 target, int damage, float coefSlow = 1, float timeSlow = 0)
     {
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(target,radius,Vector2.down,5);                  //находим побитых гусей
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(target, radius, Vector2.down, 5);                  //находим побитых гусей
 		
         foreach(var hit in hits)                                                    //увидели гуся
         {

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,23 +11,43 @@ public class TowerFabric : Singleton<TowerFabric>
     /// <summary>
     /// Количество не пустых мест
     /// </summary>
-    public int TowerCount { get { return freePlace.Count(place => place); } }
+    public int TowerCount { get { return Places.Count(place => place.isFree); } }
+
+    public GameObject PlacePrefab;
 
     public GameObject[] ProjectilePrefabs;
     public GameObject[] TowerPrefabs;
     public List<Tower> Towers;
-    public bool[] freePlace;
+
     public GameObject[] place;
+    public Place[] Places;
+
+
+    public int TowerSelectedOrder;
+
+    [SerializeField]
+    Vector3 UpSpawnPoint;
+
+    [SerializeField]
+    Vector3 DownSpawnPoint;
 
     void Awake()
     {
         Towers = new List<Tower>();
-        freePlace = new bool[MaxTowerCount];
+        Places = new Place[MaxTowerCount];
         for (int i = 0; i < MaxTowerCount; i++)
         {
             Towers.Add(null);
-            freePlace[i] = true;
+            Vector3 pos = place[i].transform.position;
+            pos.z = -3+Mathf.Abs(pos.y / 10);
+            var obj = GameObject.Instantiate(PlacePrefab, pos, Quaternion.identity);
+            Places[i] = obj.GetComponent<Place>();
+            Places[i].Initialize(i, true, pos);
         }
+
+        Camera camera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        UpSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+        DownSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0));
 
         //////////////////////////
         /// СПАВН ПСЕВДО СТЕНЫ
@@ -36,16 +57,27 @@ public class TowerFabric : Singleton<TowerFabric>
         Towers.Add(blank);
     }
 
+    public TowerStatsList GetStatsByOrder(int order)
+    {
+        if (Towers[order] != null)
+            return Towers[order].info;
+        return null;
+    }
+
     public void placeTower(int order, TowerStatsList stats)
     {
         // НЕ ДЕЛАЮ БАЩНЮ ДОЧЕРНЕЙ 
         // + new Vector3(0,2f)
-        GameObject tower = GameObject.Instantiate(TowerPrefabs[stats.PrefabId % 3], place[order].transform.position, Quaternion.identity);
-        Towers[order] = tower.AddComponent<Tower>();
-        Towers[order].Initialize(stats, ProjectilePrefabs[stats.PrefabId / 3]);
-        Towers[order].MakeDamage();
-        Towers[order].TowerDestroyed += deleteTower;
-        freePlace[order] = false;
+        Vector3 pos = Places[order].spawnPoint.position;
+        GameObject tower = GameObject.Instantiate(TowerPrefabs[stats.PrefabId], pos, Quaternion.identity);
+
+        var component = tower.AddComponent<Tower>();
+        component.Initialize(stats, ProjectilePrefabs[stats.PrefabId / 3]);
+        //component.MakeDamage();
+        component.TowerDestroyed += deleteTower;
+
+        Towers[order] = component;
+        Places[order].isFree = false;
     }
 
 	public TowerStatsList GetInfoByOrder(int order)
@@ -99,6 +131,6 @@ public class TowerFabric : Singleton<TowerFabric>
     {
         Towers[order].RemoveTower();
         Towers[order] = null;
-        freePlace[order] = true;
+        Places[order].isFree = true;
     }
 }
