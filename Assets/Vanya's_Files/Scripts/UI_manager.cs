@@ -20,7 +20,7 @@ public class UI_manager : Singleton<UI_manager>
     public Sprite[] towerPictures = new Sprite[9];
     public Image displayTower;
     public Button Accept;
-    public Text infoAboutTower, damage, radius, speed, reload, cost, health, attackRange;
+    public Text title, infoAboutTower, damage, radius, speed, reload, cost, health, attackRange;
     public Text upgradeDamage, upgradeRadius, upgradeSpeed, upgradeReload, upgradeHealth, upgradeAttackRange;
     public Animator transitor;
     Tower tower;
@@ -209,7 +209,8 @@ public class UI_manager : Singleton<UI_manager>
 
     void ShowMainStats(TowerStatsList tower)
     {
-        infoAboutTower.text = tower.Name + "\n" + tower.Discription;
+        title.text = tower.Name;
+        infoAboutTower.text = tower.Discription;
         displayTower.sprite = towerPictures[tower.PrefabId];
         damage.text = "Урон: " + tower.Projectile.Damage;
         attackRange.text = "Радиус атаки: " + tower.Range;
@@ -217,7 +218,7 @@ public class UI_manager : Singleton<UI_manager>
         speed.text = "Скорость снаряда: " + tower.Projectile.Velocity;
         reload.text = "Перезарядка: " + tower.AttackDelay;
         health.text = "Здоровье: " + tower.MaxHP;
-        cost.text = "Стоимость: " + price;
+        cost.text = "Стоимость: " + tower.Cost;
     }
 
     void ShowUpgradeStats(TowerStatsList tower)
