@@ -165,8 +165,9 @@ public class GooseFabric : Singleton<GooseFabric>
 			if(countGooseOnLvl == spawnedGooseCount)
 			{
 				spawnedGooseCount = 0;
-				gooseLvl++;
-			}
+                UI_manager.Instance.setDangerLvl(gooseLvl);
+                gooseLvl++;
+            }
 			yield return new WaitForSeconds(15f / countGooseOnLvl);
 		}
 	}

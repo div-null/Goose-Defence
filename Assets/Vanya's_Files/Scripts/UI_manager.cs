@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_manager : MonoBehaviour
+public class UI_manager : Singleton<UI_manager>
 {
     //"Папки с текстом либо с картинкой" main menu
     public GameObject background, history, pressKeyToStart;
@@ -20,8 +20,8 @@ public class UI_manager : MonoBehaviour
     public Sprite[] towerPictures = new Sprite[9];
     public Image displayTower;
     public Button Accept;
-    public Text infoAboutTower, damage, radius, speed, reload, cost, health;
-    public Text upgradeDamage, upgradeRadius, upgradeSpeed, upgradeReload, upgradeHealth;
+    public Text infoAboutTower, damage, radius, speed, reload, cost, health, attackRange;
+    public Text upgradeDamage, upgradeRadius, upgradeSpeed, upgradeReload, upgradeHealth, upgradeAttackRange;
     public Animator transitor;
     Tower tower;
     Place place;
@@ -30,17 +30,23 @@ public class UI_manager : MonoBehaviour
 
     [Header("Audio")]
     public AudioSource ButtonCloseSound;
+    public AudioSource ButtonSelect;
+    public AudioSource ButtonBuy;
+    public AudioSource ButtonBuild;
+    public AudioSource Writing;
     //public AudioSource ButtonSelect;
 
     //public AudioSource ButtonBuy;
     //public AudioSource ButtonUpgrade;
-   // public AudioSource Writing;
+    // public AudioSource Writing;
 
 
     [Header("ResultsAtTheEndOfGame")]
     public Text scoreText;
     public Image resultImage;
+    public Image signImage;
     public Sprite[] resultSprites = new Sprite[2];
+    public Sprite[] resultSigns = new Sprite[2];
     public GameObject resultScreen;
     public GameObject transitToEnd;
 
@@ -64,6 +70,11 @@ public class UI_manager : MonoBehaviour
     {
         moneyStat.GetComponentInChildren<Text>().text = gold.ToString();
         setStatus(gold);
+    }
+
+    public void setDangerLvl(int lvl)
+    {
+        dangerStat.GetComponent<Text>().text = lvl + " уровень опасности";
     }
 
     void setStatus(int gold)
@@ -119,16 +130,19 @@ public class UI_manager : MonoBehaviour
 
     public void SelectFirstTypeOfTower()
     {
+        ButtonSelect.Play();
         WindowBuyTower(0);
     }
 
     public void SelectSecondTypeOfTower()
     {
+        ButtonSelect.Play();
         WindowBuyTower(3);
     }
 
     public void SelectThirdTypeOfTower()
     {
+        ButtonSelect.Play();
         WindowBuyTower(6);
     }
 
@@ -142,6 +156,7 @@ public class UI_manager : MonoBehaviour
         upgradeSpeed.gameObject.SetActive(false);
         upgradeReload.gameObject.SetActive(false);
         upgradeHealth.gameObject.SetActive(false);
+        upgradeAttackRange.gameObject.SetActive(false);
         ShowMainStats(TowerStatsList.GetStatsByPrefabId(id));
         Accept.GetComponentInChildren<Text>().text = "Купить";
         setStatus(Game.Instance.Money);
@@ -158,6 +173,7 @@ public class UI_manager : MonoBehaviour
             upgradeSpeed.gameObject.SetActive(false);
             upgradeReload.gameObject.SetActive(false);
             upgradeHealth.gameObject.SetActive(false);
+            upgradeAttackRange.gameObject.SetActive(false);
             ShowMainStats(tower.info);
             infoAboutTower.text = "Башня максимального уровня";
             Accept.GetComponentInChildren<Text>().text = "";
@@ -171,6 +187,7 @@ public class UI_manager : MonoBehaviour
             upgradeSpeed.gameObject.SetActive(true);
             upgradeReload.gameObject.SetActive(true);
             upgradeHealth.gameObject.SetActive(true);
+            upgradeAttackRange.gameObject.SetActive(true);
             ShowUpgradeStats(tower.info);
             price = TowerStatsList.GetStatsByPrefabId(tower.info.PrefabId + 1).Cost;
             cost.text = "Стоимость: " + price;
@@ -184,11 +201,11 @@ public class UI_manager : MonoBehaviour
         infoAboutTower.text = tower.Name + "\n" + tower.Discription;
         displayTower.sprite = towerPictures[tower.PrefabId];
         damage.text = "Урон: " + tower.Projectile.Damage;
-        radius.text = "Радиус атаки: " + tower.Projectile.ExplosionRange;
+        attackRange.text = "Радиус атаки: " + tower.Range;
+        radius.text = "Зона поражения: " + tower.Projectile.ExplosionRange;
         speed.text = "Скорость снаряда: " + tower.Projectile.Velocity;
         reload.text = "Перезарядка: " + tower.AttackDelay;
         health.text = "Здоровье: " + tower.MaxHP;
-        price = tower.Cost;
         cost.text = "Стоимость: " + price;
     }
 
@@ -196,9 +213,10 @@ public class UI_manager : MonoBehaviour
     {
         upgradeDamage.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).Projectile.Damage - tower.Projectile.Damage);
         upgradeRadius.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).Projectile.ExplosionRange - tower.Projectile.ExplosionRange);
+        upgradeAttackRange.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).Range - 11);
         upgradeSpeed.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).Projectile.Velocity - tower.Projectile.Velocity);
         upgradeReload.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).AttackDelay - tower.AttackDelay);
-        upgradeHealth.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).MaxHP);
+        upgradeHealth.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).MaxHP - tower.MaxHP);
     }
 
     // Update is called once per frame
@@ -240,7 +258,7 @@ public class UI_manager : MonoBehaviour
             }
         }
     }
-    
+
     public void ClickAccept()
     {
         if (Accept.GetComponentInChildren<Text>().text == "Улучшить")
@@ -248,12 +266,14 @@ public class UI_manager : MonoBehaviour
             Game.Instance.decreaseMoney((int)price);
             TowerFabric.Instance.upgradeTower(tower.TowerOrder);
             infoPanel.SetActive(false);
+            ButtonBuild.Play();
         }
         else if (Accept.GetComponentInChildren<Text>().text == "Купить")
         {
             Game.Instance.decreaseMoney((int)price);
             TowerFabric.Instance.placeTower(place.Order, TowerStatsList.GetStatsByPrefabId(savedId));
             infoPanel.SetActive(false);
+            ButtonBuy.Play();
         }
         moneyStat.GetComponentInChildren<Text>().text = Game.Instance.Money.ToString();
     }
@@ -261,6 +281,7 @@ public class UI_manager : MonoBehaviour
     IEnumerator ReadHistory()
     {
         float textSpeed = 0.05f;
+        Writing.Play();
         for (int i = 0; i < historyStr.Length; i++)
         {
             if (canSkip == false && Input.anyKey == true)
@@ -272,6 +293,7 @@ public class UI_manager : MonoBehaviour
         }
         canSkip = true;
         pressKeyToStart.GetComponent<Text>().text = "Нажмите на любую клавишу, чтобы начать игру";
+        Writing.Stop();
     }
 
     IEnumerator WaitForTransitionToMenu()
@@ -327,7 +349,15 @@ public class UI_manager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         resultScreen.SetActive(true);
         scoreText.text = "Счёт: " + score;
-        if (result) resultImage.sprite = resultSprites[0];
-        else resultImage.sprite = resultSprites[1];
+        if (result)
+        {
+            resultImage.sprite = resultSprites[0];
+            signImage.sprite = resultSigns[0];
+        }
+        else
+        {
+            resultImage.sprite = resultSprites[1];
+            signImage.sprite = resultSigns[1];
+        }
     }
 }
