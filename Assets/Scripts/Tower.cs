@@ -79,11 +79,6 @@ public class Tower : MonoBehaviour
         ProjectilePrefab = projectilePref;
     }
 
-	public TowerStatsList GetStatsByOrder(int order)
-	{
-		return info;
-	}
-
     public void MakeDamage()
     {
         StartCoroutine("Attack");
