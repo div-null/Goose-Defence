@@ -147,7 +147,7 @@ public class TowerFabric : Singleton<TowerFabric>
                 temp = towerPos;
             }
         }
-        return (temp == Vector3.down * 1000) ? Towers[6].transform.position : temp;
+        return (temp == Vector3.down * 1000) ? new Vector3(-10, 0, 0) : temp;
     }
 
     public void TryDamageTower(int order, int dmg)
