@@ -29,12 +29,12 @@ public class Goose : MonoBehaviour
 
 	public int gooseLvl;
     public int goose_damage;            //урон гуся
-    public float goose_speed = 3;           //скорость гуся
+    public float goose_speed = 1.5f;           //скорость гуся
 	public float speed_multiplier;		//множитель ускорения
 	public float attack_speed;		//множитель ускорения
 	
 	public GooseState state;                //состояние гуся
-    public Animator animator;                   //аниматор
+	public Animator animator;             //аниматор
 	public int typeGoose;
 
     public Vector3 Movement;
@@ -68,16 +68,16 @@ public class Goose : MonoBehaviour
 
 		cur_hp = max_hp;
 		goose_damage = (int)(max_hp / 2.5);
-
-		speed_multiplier = 1 + gooseLvl / 25;
+		//goose_speed = 3 * (1f + gooseLvl / 30);
+		speed_multiplier = 1f + gooseLvl / 25f;
 		//Тут надо попроавить:
-		attack_speed = 2-speed_multiplier/2;
+		attack_speed = 2f-speed_multiplier/2f;
 
 		if (typeTmp == 4)
         {
 			max_hp = tmp * 250 * 30;
-            speed_multiplier= 1 + gooseLvl / 45;
-            attack_speed = 3 - speed_multiplier / 2;
+            speed_multiplier= 1f + gooseLvl / 45;
+            attack_speed = 3f - speed_multiplier / 2f;
         }
 	}
 
@@ -135,7 +135,9 @@ public class Goose : MonoBehaviour
             transform.position += direction.normalized * goose_speed  * speed_multiplier * Time.deltaTime;
             //воспроизведение анимации ходьбы
             animator.SetInteger("GooseState", 1);
-        }
+			animator.speed = speed_multiplier;
+			if (typeGoose == 4) animator.speed = 0.5f;
+		}
         else
         {
             Movement = Vector3.zero;

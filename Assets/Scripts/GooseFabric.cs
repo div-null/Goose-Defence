@@ -92,9 +92,10 @@ public class GooseFabric : Singleton<GooseFabric>
         tmpGM.transform.rotation = Quaternion.identity;
         var tmpG = tmpGM.AddComponent<Goose>();
         tmpG.GooseDied += incScore;
+		tmpGM.transform.localScale = new Vector3(4, 4);
 
-        //Добавил Никита
-        var col = tmpCol.AddComponent<SphereCollider>();
+		//Добавил Никита
+		var col = tmpCol.AddComponent<SphereCollider>();
         tmpCol.GetComponent<SphereCollider>().radius = 1;
         tmpCol.GetComponent<SphereCollider>().isTrigger = true;
         //
@@ -136,7 +137,7 @@ public class GooseFabric : Singleton<GooseFabric>
 			tmpGM.transform.rotation = Quaternion.identity;
 			var tmpG = tmpGM.AddComponent<Goose>();
             tmpG.GooseDied += incScore;
-
+			tmpGM.transform.localScale = new Vector3((1f + gooseLvl / 25f), (1f + gooseLvl / 25f));
             //Добавил Никита
             var col = tmpCol.AddComponent<SphereCollider>();
             tmpCol.GetComponent<SphereCollider>().radius = 1;
@@ -152,7 +153,8 @@ public class GooseFabric : Singleton<GooseFabric>
 				spawnedGooseCount = 0;
 				gooseLvl++;
 			}
-			yield return new WaitForSeconds(15f / countGooseOnLvl);
+			if (gooseLvl == 30) StartCoroutine("LoanchBoss");
+			yield return new WaitForSeconds(2f / countGooseOnLvl);
 		}
 	}
 

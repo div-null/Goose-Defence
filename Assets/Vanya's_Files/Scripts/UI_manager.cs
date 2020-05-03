@@ -306,8 +306,8 @@ public class UI_manager : MonoBehaviour
         //TowerFabric.Instance.placeTower(4, new TowerStatsList.TowerPeasT1());
 
         Game.Instance.startGame();
-        TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerTomatoT1());
-        TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerTomatoT2());
+        TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerPeasT3());
+        TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerPeasT3());
     }
 
     public void PrintScore(bool result, int score)

@@ -8,12 +8,12 @@ public class CamPosition : MonoBehaviour
     Transform Anchor;
     void Start()
     {
-        Camera camera = GameObject.Find("Main Camera").GetComponent<Camera>();
-        Anchor = GameObject.Find("Anchor").transform;
-        Medial = camera.ScreenToWorldPoint(new Vector3(0, Screen.height/2, 0));
+        //Camera camera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        //Anchor = GameObject.Find("Anchor").transform;
+        //Medial = camera.ScreenToWorldPoint(new Vector3(0, Screen.height/2, 0));
 
-        var dist = Anchor.position - Medial;
-        camera.transform.position += dist;
+        //var dist = Anchor.position - Medial;
+        //camera.transform.position += dist;
     }
 
     // Update is called once per frame
