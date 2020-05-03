@@ -7,7 +7,9 @@ using System.Collections;
 public enum TowerType
 {
     //Капуста
-    Cabbage = 0
+    Tomate =0,
+    Cabbage,
+    Peas
 }
 
 

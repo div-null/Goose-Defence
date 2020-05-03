@@ -31,12 +31,13 @@ public class GooseFabric : Singleton<GooseFabric>
 
 		Camera camera = GameObject.Find("Main Camera").GetComponent<Camera>();
 		var depth = 0;
+
 		UpSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, depth));
 		DownSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, depth));
 
 		float length = UpSpawnPoint.y - DownSpawnPoint.y;
         float step = length / 6;
-        float start = UpSpawnPoint.position.y;
+        float start = UpSpawnPoint.y;
     }
 
     public Goose FindGoose(Vector3 pos, float range)
@@ -81,10 +82,10 @@ public class GooseFabric : Singleton<GooseFabric>
 			spawnedGooseCount++;
 			int countGooseOnLvl = (int)((gooseLvl / 25f) / Mathf.Sqrt(1 + Mathf.Pow(gooseLvl / 25f, 2)) * 50);
 
-			float length = Mathf.Abs(UpSpawnPoint.position.y - DownSpawnPoint.position.y);
-			float x = DownSpawnPoint.position.x;			
+			float length = Mathf.Abs(UpSpawnPoint.y - DownSpawnPoint.y);
+			float x = DownSpawnPoint.x;			
 			float z = Random.Range(-1f, 0f);
-			float y = UpSpawnPoint.position.y + z * length;
+			float y = UpSpawnPoint.y + z * length;
 
 			GameObject tmpGM = new GameObject("Goose");
 			tmpGM.transform.position = new Vector3(x, y, z);
