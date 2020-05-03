@@ -12,14 +12,19 @@ public class UI_manager : MonoBehaviour
     public GameObject infoPanel;
     public GameObject buyPanel;
     public GameObject UIInMenu, UIInGame;
+    public GameObject battlefield;
     //Если игра не запущена, значит мы в меню, если нет, то UI надо изменить
     bool isGameStarted = false, canSkip = false;
     string historyStr = "Весь мир был поражён вирусом, из-за которого гуси стали неимоверно большыми, голодными, и практически поработили человечество с помощью звона колокольчиков. Единственное, что осталось у людей - это большой колокол и фермы, на которых они выращивают корм чтобы кормить гусей. Это последняя надежда человечества. С минуты на минуту гуси начнут своё последнее наступление, защитите колокол!";
     [Header("InfoAboutTower")]
+    public Sprite[] towerPictures = new Sprite[9];
+    public Image displayTower;
     public Button Accept;
-    public Text infoAboutTower, damage, radius, speed, reload, cost;
-    public Text upgradeDamage, upgradeRadius, upgradeSpeed, upgradeReload;
+    public Text infoAboutTower, damage, radius, speed, reload, cost, health;
+    public Text upgradeDamage, upgradeRadius, upgradeSpeed, upgradeReload, upgradeHealth;
     public Animator transitor;
+
+    float price;
 
     public void UI_TurnOnMenu()
     {
@@ -36,9 +41,27 @@ public class UI_manager : MonoBehaviour
         moneyStat.GetComponent<Text>().text = amount.ToString();
     }
 
+    void setAmountOfMoney(int gold)
+    {
+        moneyStat.GetComponentInChildren<Text>().text = gold.ToString();
+        setStatus(gold);
+    }
+
+    void setStatus(int gold)
+    {
+        if (Accept.GetComponentInChildren<Text>().text == "")
+            Accept.interactable = false;
+        else if (price <= gold)
+            Accept.interactable = true;
+        else Accept.interactable = false;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        Game.Instance.WinGame += PrintScore;
+        Game.Instance.LooseGame += PrintScore;
+        Game.Instance.UpdateGold += setAmountOfMoney;
         UIInMenu.SetActive(true);
         StartCoroutine("ReadHistory");
         UIInGame.SetActive(false);
@@ -65,20 +88,20 @@ public class UI_manager : MonoBehaviour
 
     public void SelectFirstTypeOfTower()
     {
-        BuyTower(0);
+        WindowBuyTower(0);
     }
 
     public void SelectSecondTypeOfTower()
     {
-        BuyTower(3);
+        WindowBuyTower(3);
     }
 
     public void SelectThirdTypeOfTower()
     {
-        BuyTower(6);
+        WindowBuyTower(6);
     }
 
-    public void BuyTower(int id)
+    public void WindowBuyTower(int id)
     {
         infoPanel.SetActive(true);
         //Прячем статы улучшения
@@ -87,14 +110,12 @@ public class UI_manager : MonoBehaviour
         upgradeSpeed.gameObject.SetActive(false);
         upgradeReload.gameObject.SetActive(false);
         ShowMainStats(TowerStatsList.GetStatsByPrefabId(id));
-        Accept.GetComponentInChildren<Text>().name = "Купить";
-        if (TowerStatsList.GetStatsByPrefabId(id).Cost < int.Parse(moneyStat.GetComponentInChildren<Text>().text))
-            Accept.enabled = false;
-        else Accept.enabled = true;
+        Accept.GetComponentInChildren<Text>().text = "Купить";
+        setStatus(Game.Instance.Money);
         buyPanel.SetActive(false);
     }
 
-    void UpgradeTower(Tower tower)
+    void WindowUpgradeTower(Tower tower)
     {
         if (tower.info.PrefabId % 3 == 2)
         {
@@ -105,31 +126,30 @@ public class UI_manager : MonoBehaviour
             upgradeReload.gameObject.SetActive(false);
             ShowMainStats(tower.info);
             infoAboutTower.text = "Башня максимального уровня";
-            Accept.enabled = false;
-            Accept.GetComponent<Text>().name = "";
+            Accept.GetComponentInChildren<Text>().text = "";
+            setStatus(Game.Instance.Money);
         }
         else
         {
             ShowMainStats(tower.info);
             ShowUpgradeStats(tower.info);
-            Accept.enabled = true;
-            //Т.к стоимость за покупку улучшения в след уровне тавера (или нет?)
-            cost.text = "Стоимость: " + TowerStatsList.GetStatsByPrefabId(tower.info.PrefabId + 1).Cost;
-            Accept.GetComponent<Text>().name = "Улучшить";
-            if (TowerStatsList.GetStatsByPrefabId(tower.info.PrefabId + 1).Cost < int.Parse(moneyStat.GetComponentInChildren<Text>().text))
-                Accept.enabled = false;
-            else Accept.enabled = true;
+            price = TowerStatsList.GetStatsByPrefabId(tower.info.PrefabId + 1).Cost;
+            cost.text = "Стоимость: " + price;
+            Accept.GetComponentInChildren<Text>().text = "Улучшить";
+            setStatus(Game.Instance.Money);
         }
     }
 
     void ShowMainStats(TowerStatsList tower)
     {
         infoAboutTower.text = tower.Name + "\n" + tower.Discription;
+        displayTower.sprite = towerPictures[tower.PrefabId];
         damage.text = "Урон: " + tower.Projectile.Damage;
         radius.text = "Радиус атаки: " + tower.Projectile.ExplosionRange;
         speed.text = "Скорость снаряда: " + tower.Projectile.Velocity;
         reload.text = "Скорость перезарядки: " + tower.AttackDelay;
-        cost.text = "Стоимость: " + tower.Cost;
+        price = tower.Cost;
+        cost.text = "Стоимость: " + price;
     }
 
     void ShowUpgradeStats(TowerStatsList tower)
@@ -141,7 +161,7 @@ public class UI_manager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (isGameStarted == false && canSkip == true && Input.anyKey == true)
         {
@@ -151,16 +171,28 @@ public class UI_manager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 rayPos = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
-            RaycastHit2D hit = Physics2D.Raycast(rayPos, Vector2.zero, 0f);
-            if (hit)
+            foreach (var hit in Physics2D.RaycastAll(rayPos, Vector2.zero))
             {
-                if (hit.transform.tag == "Tower")
+                if (hit.transform.tag == "UI_tower" || hit.transform.tag == "Tower" || hit.transform.tag == "Place")
                 {
-                    Tower tower = hit.transform.gameObject.GetComponent<Tower>();
-                    infoPanel.SetActive(true);
+                    if (hit.transform.tag == "UI_tower")
+                    {
+                        var parent = hit.transform.parent;
+                        Tower tower = parent.transform.gameObject.GetComponent<Tower>();
+                        WindowUpgradeTower(tower);
+                        infoPanel.SetActive(true);
+                    }
+                    if (hit.transform.tag == "Tower")
+                    {
+                        Tower tower = hit.transform.gameObject.GetComponent<Tower>();
+                        WindowUpgradeTower(tower);
+                        infoPanel.SetActive(true);
+                    }
+
+                    if (hit.transform.tag == "Place")
+                        buyPanel.SetActive(true);
+                    break;
                 }
-                else if (hit.transform.tag == "Place")
-                    buyPanel.SetActive(true);
             }
         }
     }
@@ -201,5 +233,34 @@ public class UI_manager : MonoBehaviour
         buyPanel.SetActive(false);
         UIInGame.SetActive(true);
         transitor.SetTrigger("Start");
+        //Начало игры
+        TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerTomatoT1());
+        TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerTomatoT1());
+        TowerFabric.Instance.placeTower(2, new TowerStatsList.TowerTomatoT1());
+
+        Game.Instance.startGame();
+    }
+
+    public GameObject loseScreen, winScreen;
+    public GameObject transitToEnd;
+
+    public void PrintScore(bool result, int score)
+    {
+        if (result)
+            StartCoroutine(Win(score));
+    }
+    
+    IEnumerator Lose()
+    {
+        transitToEnd.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        loseScreen.SetActive(true);
+    }
+    
+    IEnumerator Win(int score)
+    {
+        transitToEnd.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        winScreen.SetActive(true);
     }
 }

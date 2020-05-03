@@ -3,16 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-delegate void EndGame(bool result, int score);
+public delegate void EndGame(bool result, int score);
+public delegate void StatUpdate(int score);
 
 public class Game : Singleton<Game>
 {
 
     // События победы и поражения
-    event EndGame LooseGame;
-    event EndGame WinGame;
+    public event EndGame LooseGame;
+    public event EndGame WinGame;
 
-    
+    public event StatUpdate UpdateGold;
+
+
     /// <summary>
     /// Типы снарядов
     /// </summary>
@@ -103,7 +106,7 @@ public class Game : Singleton<Game>
         StartCoroutine("BeginGame");
     }
 
-    public void finishGame()
+    public void finishGame(bool result, int score)
     {
         StartCoroutine("EndGame");
     }
@@ -118,6 +121,7 @@ public class Game : Singleton<Game>
         {
             yield return new WaitForSeconds(moneyBackDelay);
             Money += moneyPerDelay;
+            UpdateGold?.Invoke(Money);
         }
     }
 
@@ -139,7 +143,8 @@ public class Game : Singleton<Game>
 
     void Awake()
     {
-
+        LooseGame += finishGame;
+        WinGame += finishGame;
 
     }
 }
