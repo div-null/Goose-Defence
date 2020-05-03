@@ -123,10 +123,12 @@ public class Game : Singleton<Game>
 
     IEnumerator BeginGame()
     {
+        TowerFabric.Instance.spawnLocation();
         yield return new WaitForSeconds(3f);
         isGameStarted = true;
         StartCoroutine("EarnMoney");
         StartCoroutine("SpawnGooses");
+        //ClearLevel.Instance.Clear();
     }
 
     IEnumerator EndGame()

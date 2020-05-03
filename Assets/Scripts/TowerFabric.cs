@@ -33,13 +33,18 @@ public class TowerFabric : Singleton<TowerFabric>
 
     void Awake()
     {
+
+    }
+
+    public void spawnLocation()
+    {
         Towers = new List<Tower>();
         Places = new Place[MaxTowerCount];
         for (int i = 0; i < MaxTowerCount; i++)
         {
             Towers.Add(null);
             Vector3 pos = place[i].transform.position;
-            pos.z = -3+Mathf.Abs(pos.y / 10);
+            pos.z = -3 + Mathf.Abs(pos.y / 10);
             var obj = GameObject.Instantiate(PlacePrefab, pos, Quaternion.identity);
             Places[i] = obj.GetComponent<Place>();
             Places[i].Initialize(i, true, pos);
@@ -53,6 +58,7 @@ public class TowerFabric : Singleton<TowerFabric>
         //////////////////////////
         /// СПАВН стены
         var wall = new GameObject("wall");
+        wall.transform.tag = "Tower";
         wall.transform.position = new Vector3(-10, 0, 0);
         //var blank1 = wall.AddComponent<Tower>();
         //blank1.Initialize(new TowerStatsList.Wall(), ProjectilePrefabs[9], 9);
@@ -62,11 +68,13 @@ public class TowerFabric : Singleton<TowerFabric>
         //////////////////////////
         /// СПАВН колокола
         var colocol = new GameObject("Colocol");
+        colocol.transform.tag = "Tower";
         colocol.transform.position = new Vector3(-10, 0, 0);
         //var blank2 = colocol.AddComponent<Tower>();
         //blank2.Initialize(new TowerStatsList.Colocol(), ProjectilePrefabs[10], 10);
         //Towers.Add(blank2);
     }
+
 
     public TowerStatsList GetStatsByOrder(int order)
     {

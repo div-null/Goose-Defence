@@ -87,6 +87,7 @@ public class GooseFabric : Singleton<GooseFabric>
         tmpCol.transform.rotation = Quaternion.identity;
 
         GameObject tmpGM = new GameObject("Goose Boss");
+        tmpGM.transform.tag = "Goose";
         tmpGM.transform.position = new Vector3(x, y, z);
         tmpGM.transform.rotation = Quaternion.identity;
         var tmpG = tmpGM.AddComponent<Goose>();
@@ -130,7 +131,8 @@ public class GooseFabric : Singleton<GooseFabric>
             tmpCol.transform.rotation = Quaternion.identity;
 
             GameObject tmpGM = new GameObject("Goose");
-			tmpGM.transform.position = new Vector3(x, y, z);
+            tmpGM.transform.tag = "Goose";
+            tmpGM.transform.position = new Vector3(x, y, z);
 			tmpGM.transform.rotation = Quaternion.identity;
 			var tmpG = tmpGM.AddComponent<Goose>();
             tmpG.GooseDied += incScore;
