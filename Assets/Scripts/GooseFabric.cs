@@ -6,7 +6,9 @@ using UnityEngine;
 
 public class GooseFabric : Singleton<GooseFabric>
 {
-    [SerializeField]
+	public event StatUpdate UpdateGooseLvl;
+
+	[SerializeField]
     Vector3 UpSpawnPoint;
 
     [SerializeField]
@@ -23,7 +25,10 @@ public class GooseFabric : Singleton<GooseFabric>
 	[SerializeField]
 	public List<GameObject> goose_prefabs;
 	[SerializeField]
-	public int gooseLvl = 1;
+	public int gooseLvl;
+
+	public int GooseLvl { get { return gooseLvl; } protected set { gooseLvl = value; UpdateGooseLvl?.Invoke(gooseLvl); } }
+
 
 	void Awake()
     {
@@ -59,7 +64,7 @@ public class GooseFabric : Singleton<GooseFabric>
 	//Изменение текущего уровня
 	public void ChangeGooseLvl(int gooseLvl)
 	{
-		this.gooseLvl = gooseLvl;
+		GooseLvl = gooseLvl;
 	}
 
     void incScore(Goose goose)
@@ -123,7 +128,7 @@ public class GooseFabric : Singleton<GooseFabric>
 	{
 		Stopspawning();
 		geese = new List<Goose>();
-		gooseLvl = 1;
+		GooseLvl = 1;
 	}
 
 	public void StartSpawning()
@@ -138,6 +143,7 @@ public class GooseFabric : Singleton<GooseFabric>
 
 	public IEnumerator SpawnGeese()
     {
+		GooseLvl = 1;
 		int spawnedGooseCount = 0;
 		while (true)
 		{
@@ -173,9 +179,13 @@ public class GooseFabric : Singleton<GooseFabric>
 			if(countGooseOnLvl == spawnedGooseCount)
 			{
 				spawnedGooseCount = 0;
-				gooseLvl++;
+				GooseLvl++;
 			}
-			if (gooseLvl == 30) StartCoroutine("LoanchBoss");
+			if (gooseLvl == 30)
+			{
+				StartCoroutine("LoanchBoss");
+				break;
+			}
 			yield return new WaitForSeconds(20f / countGooseOnLvl);
 		}
 	}
