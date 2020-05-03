@@ -47,7 +47,7 @@ public class GooseFabric : Singleton<GooseFabric>
         foreach (var goose in geese)
         {
             float distance = (goose.transform.position - pos).magnitude;
-            if (distance < minDistance)
+            if (distance < minDistance && goose.cur_hp > 0)
             {
                 minDistance = distance;
                 temp = goose;
@@ -166,7 +166,7 @@ public class GooseFabric : Singleton<GooseFabric>
             if (parent == null)
                 continue;
             var goose = parent.gameObject.GetComponent<Goose>();
-            if (goose)
+            if (goose && goose.cur_hp>0)
                 goose.OnDamage(damage, coefSlow, timeSlow);        //Бьём гуся
         }
     }
