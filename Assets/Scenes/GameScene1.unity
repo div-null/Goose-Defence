@@ -231,7 +231,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &66154039
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -483,7 +483,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &98761737
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1588,7 +1588,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &274468584
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3491,7 +3491,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &653112226
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5747,7 +5747,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1134860550
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9008,7 +9008,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1435463571
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9571,6 +9571,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 22933984fa7ffe04dabf3e72f7dff3e1, type: 3}
   displayTower: {fileID: 1181560300}
   Accept: {fileID: 402590170}
+  title: {fileID: 1415551399}
   infoAboutTower: {fileID: 1998048089}
   damage: {fileID: 1436707422}
   radius: {fileID: 116254138}
