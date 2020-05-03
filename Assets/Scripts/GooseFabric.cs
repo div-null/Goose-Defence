@@ -166,7 +166,7 @@ public class GooseFabric : Singleton<GooseFabric>
             if (parent == null)
                 continue;
             var goose = parent.gameObject.GetComponent<Goose>();
-            if (goose)
+            if (goose && goose.cur_hp>0)
                 goose.OnDamage(damage, coefSlow, timeSlow);        //Бьём гуся
         }
     }

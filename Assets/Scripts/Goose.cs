@@ -25,7 +25,7 @@ public class Goose : MonoBehaviour
 
     public int max_hp;                  //кол-во стартового (максимального) здоровья у гуся
     [SerializeField]
-    int cur_hp;                  //текущее значение показателя здоровья
+    public int cur_hp;                  //текущее значение показателя здоровья
 
 	public int gooseLvl;
     public int goose_damage;            //урон гуся
