@@ -10,8 +10,8 @@
 	public abstract float FreezeCoef { get; }
 	public abstract int PrefabId { get; }
 
-	const float SredDMG = 9000f;
-	const float SredMaxHP = 10000f;
+	const float SredDMG = 150f;
+	const float SredMaxHP = 1500f;
 	const float SredSpeed = 4f;
 	const float SredAttackCountPer20Sec = 10f;
 	const float SredAttackFar = 20f;
@@ -214,7 +214,7 @@
 		public override string Discription => "Очень колючая и сухая.";
 		public override float AttackDelay => SredAttackSpeed * PeasAttackSpeedCoef * T3AttackSpeed;
 		public override ProjectileStats Projectile => new ProjectileStats(0, 0f, 0f, 0f, 0f);
-		public override int MaxHP => (int)(SredMaxHP * T3MaxHP);
+		public override int MaxHP => (int)(10000);
 		public override float Range => 0;
 		public override float Cost => 20000;
 		public override float FreezeCoef => 0;
@@ -227,7 +227,7 @@
 		public override string Discription => "Блестящий и звонкий.";
 		public override float AttackDelay => SredAttackSpeed * PeasAttackSpeedCoef * T3AttackSpeed;
 		public override ProjectileStats Projectile => new ProjectileStats(0, 0f, 0f, 0f, 0f);
-		public override int MaxHP => (int)(100);
+		public override int MaxHP => (int)(1000000);
 		public override float Range => 0;
 		public override float Cost => 0;
 		public override float FreezeCoef => 0;

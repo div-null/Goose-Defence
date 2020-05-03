@@ -72,14 +72,28 @@ public class TowerFabric : Singleton<TowerFabric>
         colocol.transform.tag = "Tower";
 
         pos1 = colocol.transform.position;
-        pos1.z = -3 + Mathf.Abs(pos1.y / 10);
+        pos1.z = -3 + Mathf.Abs(pos1.y / 10) - 0.1f;
         colocol.transform.position = pos1;
 
         var blank2 = colocol.AddComponent<Tower>();
         blank2.TowerDestroyed += destroyColocol;
         blank2.Initialize(new TowerStatsList.Colocol(), ProjectilePrefabs[0], 10);
         Towers.Add(blank2);
-    }
+
+		//////////////////////////
+		/// СПАВН пустой башни
+		var emptytower = GameObject.Instantiate(TowerPrefabs[10], new Vector3(1000f, -1.38f, 0), Quaternion.identity);
+		colocol.transform.tag = "Tower";
+
+		pos1 = emptytower.transform.position;
+		pos1.z = -3 + Mathf.Abs(pos1.y / 10) - 0.1f;
+		emptytower.transform.position = pos1;
+
+		var blank3 = emptytower.AddComponent<Tower>();
+		blank3.TowerDestroyed += destroyColocol;
+		blank3.Initialize(new TowerStatsList.Colocol(), ProjectilePrefabs[0], 10);
+		Towers.Add(blank3);
+	}
 
 
     public TowerStatsList GetStatsByOrder(int order)

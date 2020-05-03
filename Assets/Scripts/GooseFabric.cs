@@ -115,7 +115,7 @@ public class GooseFabric : Singleton<GooseFabric>
 
 		//Добавил Никита
 		var col = tmpCol.AddComponent<SphereCollider>();
-        tmpCol.GetComponent<SphereCollider>().radius = 1;
+        tmpCol.GetComponent<SphereCollider>().radius = 4;
         tmpCol.GetComponent<SphereCollider>().isTrigger = true;
         //
         tmpG.Initialize(40);
@@ -168,7 +168,7 @@ public class GooseFabric : Singleton<GooseFabric>
 			tmpGM.transform.localScale = new Vector3((1f + gooseLvl / 25f), (1f + gooseLvl / 25f));
             //Добавил Никита
             var col = tmpCol.AddComponent<SphereCollider>();
-            tmpCol.GetComponent<SphereCollider>().radius = 1;
+            tmpCol.GetComponent<SphereCollider>().radius = (1f + gooseLvl / 25f);
             tmpCol.GetComponent<SphereCollider>().isTrigger = true;
             //
 			tmpG.Initialize(gooseLvl);

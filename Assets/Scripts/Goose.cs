@@ -78,7 +78,9 @@ public class Goose : MonoBehaviour
 			max_hp = max_hp * 250 * 30;
             speed_multiplier= 1f + gooseLvl / 45;
             attack_speed = 3f - speed_multiplier / 2f;
-        }
+			goose_damage = 1000001;
+
+		}
 	}
 
 
@@ -94,6 +96,7 @@ public class Goose : MonoBehaviour
        
         while (true)
         {
+			if (tower == null) break;
 			//Небольшой разброс дамага
 			int tmpGooseDamage = goose_damage + (int)(Random.Range(-0.1f * goose_damage, 0.1f * goose_damage));
 
@@ -108,6 +111,7 @@ public class Goose : MonoBehaviour
             animator.SetInteger("GooseState", 0);       //attack
                                                         // animator.SetTrigger("Attack");
         }
+		state = GooseState.walk;
     }
     public IEnumerator BellAttack(Tower tower)
     {

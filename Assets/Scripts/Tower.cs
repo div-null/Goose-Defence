@@ -146,9 +146,10 @@ public class Tower : MonoBehaviour
         }
 
     }
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         var goose = other.gameObject.GetComponentInParent<Goose>();
+		if (goose == null) return;
         //если  коснулся босс колокола
         if (goose.typeGoose == 0 && gameObject.CompareTag("Bell"))
         {
