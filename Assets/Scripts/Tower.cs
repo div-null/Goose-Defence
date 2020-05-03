@@ -129,7 +129,12 @@ public class Tower : MonoBehaviour
         }
 
     }
-
+    private void OnTriggerEnter(Collider other)
+    {
+        var goose = other.gameObject.GetComponentInParent<Goose>();
+        if (goose.state != GooseState.atack)
+            goose.StartCoroutine("Attack");
+    }
     public void RemoveTower()
     {
         StopCoroutine("Attack");
