@@ -169,7 +169,7 @@ public class GooseFabric : Singleton<GooseFabric>
 				gooseLvl++;
 			}
 			if (gooseLvl == 30) StartCoroutine("LoanchBoss");
-			yield return new WaitForSeconds(2f / countGooseOnLvl);
+			yield return new WaitForSeconds(20f / countGooseOnLvl);
 		}
 	}
 
