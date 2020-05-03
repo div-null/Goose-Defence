@@ -79,6 +79,7 @@ public class Tower : MonoBehaviour
 
     public void Initialize(TowerStatsList info, GameObject projectilePref, int order)
     {
+        Anim = GetComponent<Animator>();
         spawnPoints = new List<Transform>();
         TowerOrder = order;
         this.info = info;
@@ -159,6 +160,6 @@ public class Tower : MonoBehaviour
     {
         StopCoroutine("Attack");
         this.enabled = false;
-        GameObject.Destroy(this);
+        GameObject.Destroy(gameObject);
     }
 }

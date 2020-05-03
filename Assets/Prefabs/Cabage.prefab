@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2021fb3d49091c24b8eaea7d5f3b15a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  animator: {fileID: 4620446160944440224}
   Radius: 2
   Damage: 50
   Velocity: 10

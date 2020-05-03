@@ -23,6 +23,9 @@ public class UI_manager : MonoBehaviour
     public Text infoAboutTower, damage, radius, speed, reload, cost, health;
     public Text upgradeDamage, upgradeRadius, upgradeSpeed, upgradeReload, upgradeHealth;
     public Animator transitor;
+    Tower tower;
+    Place place;
+    int savedId;
 
     float price;
 
@@ -103,6 +106,7 @@ public class UI_manager : MonoBehaviour
 
     public void WindowBuyTower(int id)
     {
+        savedId = id;
         infoPanel.SetActive(true);
         //Прячем статы улучшения
         upgradeDamage.gameObject.SetActive(false);
@@ -178,23 +182,50 @@ public class UI_manager : MonoBehaviour
                     if (hit.transform.tag == "UI_tower")
                     {
                         var parent = hit.transform.parent;
-                        Tower tower = parent.transform.gameObject.GetComponent<Tower>();
+                        tower = parent.transform.gameObject.GetComponent<Tower>();
                         WindowUpgradeTower(tower);
                         infoPanel.SetActive(true);
                     }
-                    if (hit.transform.tag == "Tower")
+                    else if (hit.transform.tag == "Tower")
                     {
-                        Tower tower = hit.transform.gameObject.GetComponent<Tower>();
+                        tower = hit.transform.gameObject.GetComponent<Tower>();
                         WindowUpgradeTower(tower);
                         infoPanel.SetActive(true);
                     }
-
-                    if (hit.transform.tag == "Place")
-                        buyPanel.SetActive(true);
+                    else if (hit.transform.tag == "Place")
+                    {
+                        place = hit.transform.gameObject.GetComponent<Place>();
+                        if (place.isFree)
+                            buyPanel.SetActive(true);
+                    }
                     break;
                 }
             }
         }
+    }
+    
+    public void ClickAccept()
+    {
+        if (Accept.GetComponentInChildren<Text>().text == "Улучшить")
+        {
+            ClickToUpdateTower();
+            infoPanel.SetActive(false);
+        }
+        else if (Accept.GetComponentInChildren<Text>().text == "Купить")
+        {
+            ClickToBuildTower();
+            buyPanel.SetActive(false);
+        }
+    }
+
+    void ClickToUpdateTower()
+    {
+        TowerFabric.Instance.upgradeTower(tower.TowerOrder);
+    }
+
+    void ClickToBuildTower()
+    {
+        TowerFabric.Instance.placeTower(place.Order, TowerStatsList.GetStatsByPrefabId(savedId));
     }
 
     IEnumerator ReadHistory()
@@ -235,10 +266,10 @@ public class UI_manager : MonoBehaviour
         transitor.SetTrigger("Start");
         //Начало игры
         TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerTomatoT1());
-        TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerTomatoT2());
-        TowerFabric.Instance.placeTower(2, new TowerStatsList.TowerTomatoT3());
-        TowerFabric.Instance.placeTower(3, new TowerStatsList.TowerCabbageT1());
-        TowerFabric.Instance.placeTower(4, new TowerStatsList.TowerPeasT1());
+        //TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerTomatoT2());
+        //TowerFabric.Instance.placeTower(2, new TowerStatsList.TowerTomatoT3());
+        //TowerFabric.Instance.placeTower(3, new TowerStatsList.TowerCabbageT1());
+        //TowerFabric.Instance.placeTower(4, new TowerStatsList.TowerPeasT1());
 
         Game.Instance.startGame();
     }
