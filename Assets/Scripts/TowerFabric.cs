@@ -57,22 +57,20 @@ public class TowerFabric : Singleton<TowerFabric>
 
         //////////////////////////
         /// СПАВН стены
-        var wall = new GameObject("wall");
+        var wall = GameObject.Instantiate(TowerPrefabs[9], new Vector3(-18, 0, 0), Quaternion.identity);
         wall.transform.tag = "Tower";
-        wall.transform.position = new Vector3(-10, 0, 0);
-        //var blank1 = wall.AddComponent<Tower>();
-        //blank1.Initialize(new TowerStatsList.Wall(), ProjectilePrefabs[9], 9);
-        //Towers.Add(blank1);
+        var blank1 = wall.AddComponent<Tower>();
+        blank1.Initialize(new TowerStatsList.Colocol(), ProjectilePrefabs[0], 10);
+        Towers.Add(blank1);
 
 
         //////////////////////////
         /// СПАВН колокола
-        var colocol = new GameObject("Colocol");
+        var colocol =GameObject.Instantiate(TowerPrefabs[10], new Vector3(-28, 0, 0), Quaternion.identity);
         colocol.transform.tag = "Tower";
-        colocol.transform.position = new Vector3(-10, 0, 0);
-        //var blank2 = colocol.AddComponent<Tower>();
-        //blank2.Initialize(new TowerStatsList.Colocol(), ProjectilePrefabs[10], 10);
-        //Towers.Add(blank2);
+        var blank2 = colocol.AddComponent<Tower>();
+        blank2.Initialize(new TowerStatsList.Colocol(), ProjectilePrefabs[0], 10);
+        Towers.Add(blank2);
     }
 
 
