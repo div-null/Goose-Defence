@@ -119,9 +119,15 @@ public class GooseFabric : Singleton<GooseFabric>
         geese.Add(tmpG);
     }
 
-	public void StartSpawning()
+	public void Clear()
 	{
-        geese = new List<Goose>();
+		Stopspawning();
+		geese = new List<Goose>();
+		gooseLvl = 1;
+	}
+
+	public void StartSpawning()
+	{		
 		StartCoroutine("SpawnGeese");
 	}
 
