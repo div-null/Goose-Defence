@@ -14,6 +14,7 @@ public class Game : Singleton<Game>
     public event EndGame WinGame;
 
     public event StatUpdate UpdateGold;
+    public event StatUpdate UpdateScore;
 
 
     /// <summary>
@@ -26,14 +27,6 @@ public class Game : Singleton<Game>
     /// Игра идёт
     /// </summary>
     public bool isGameStarted { get; protected set; } = false;
-
-    /// <summary>
-    /// УРОВЕНЬ УГРОЗЫ
-    /// </summary>
-    public int WarnLevel = 1;
-
-    //return Mathf.RoundToInt((WarnLevel / 25f) / Mathf.Sqrt(1 + WarnLevel*WarnLevel) * 10f);
-    int gooseCount { get { return WarnLevel+4; } }
 
     /// <summary>
     /// Хп стены
@@ -72,6 +65,7 @@ public class Game : Singleton<Game>
     public void increaseScore(int ammount)
     {
         Score += ammount;
+        UpdateScore?.Invoke(Score);
     }
 
     public void increaseMoney(int ammount)
@@ -95,19 +89,21 @@ public class Game : Singleton<Game>
     /// <returns></returns>
     IEnumerator SpawnGooses()
     {
-        
             GooseFabric.Instance.StartSpawning();
             yield return null;
-            WarnLevel++;
     }
 
     public void startGame()
     {
+        Score = 0;
+        Money = 0;
         StartCoroutine("BeginGame");
     }
 
     public void finishGame(bool result, int score)
     {
+        StopAllCoroutines();
+        GooseFabric.Instance.Stopspawning();
         StartCoroutine("EndGame");
     }
 

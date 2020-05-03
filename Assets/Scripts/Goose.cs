@@ -12,9 +12,12 @@ public enum GooseState
     death                            //умирает
 }
 
+
+
+public delegate void GooseAction(Goose goose);
 public class Goose : MonoBehaviour
 {
-
+    public event GooseAction GooseDied;
     /// <summary>
     /// Хп гуся в зависимости от lvl
     /// </summary>
@@ -168,6 +171,7 @@ public class Goose : MonoBehaviour
     }
     IEnumerator OnDeath()
     {
+        GooseDied?.Invoke(this);
         animator.SetInteger("GooseState", 4);   //death
         yield return new WaitForSeconds(1.3f);
         GooseFabric.Instance.geese.Remove(this);

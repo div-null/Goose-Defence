@@ -62,6 +62,10 @@ public class GooseFabric : Singleton<GooseFabric>
 		this.gooseLvl = gooseLvl;
 	}
 
+    void incScore(Goose goose)
+    {
+        Game.Instance.increaseScore(1);
+    }
 
     public void loanchGoose()
     {
@@ -86,6 +90,7 @@ public class GooseFabric : Singleton<GooseFabric>
         tmpGM.transform.position = new Vector3(x, y, z);
         tmpGM.transform.rotation = Quaternion.identity;
         var tmpG = tmpGM.AddComponent<Goose>();
+        tmpG.GooseDied += incScore;
 
         //Добавил Никита
         var col = tmpCol.AddComponent<SphereCollider>();
@@ -128,6 +133,7 @@ public class GooseFabric : Singleton<GooseFabric>
 			tmpGM.transform.position = new Vector3(x, y, z);
 			tmpGM.transform.rotation = Quaternion.identity;
 			var tmpG = tmpGM.AddComponent<Goose>();
+            tmpG.GooseDied += incScore;
 
             //Добавил Никита
             var col = tmpCol.AddComponent<SphereCollider>();
