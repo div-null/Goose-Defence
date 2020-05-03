@@ -64,7 +64,7 @@ public class Goose : MonoBehaviour
 		}
 		typeGoose = typeTmp;	
 		
-		max_hp = tmp * 250;
+		max_hp = (int)(gooseLvl / 5f + 1f)  * 250;
 
 		cur_hp = max_hp;
 		goose_damage = (int)(max_hp / 2.5);
@@ -75,7 +75,7 @@ public class Goose : MonoBehaviour
 
 		if (typeTmp == 4)
         {
-			max_hp = tmp * 250 * 30;
+			max_hp = max_hp * 250 * 30;
             speed_multiplier= 1f + gooseLvl / 45;
             attack_speed = 3f - speed_multiplier / 2f;
         }
