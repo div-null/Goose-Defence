@@ -131,7 +131,7 @@ public class Tower : MonoBehaviour
 			    float angle = Mathf.Deg2Rad * (Vector3.Angle(spawnPoint.position - aim.transform.position, aim.Movement));
 			    float time = Mathf.Abs((Mathf.Sqrt(2) * Mathf.Sqrt(2 * distance * distance * u1 * u1 + distance * distance * u2 * u2 * Mathf.Cos(2 * angle) - distance * distance * u2 * u2) - 2 * distance * u2 * Mathf.Cos(angle)) / (2 * (u1 * u1 - u2 * u2)));
 
-			    Vector3 prediction = aim.Movement * time;
+                Vector3 prediction = aim.Movement * time + new Vector3(-0.15f, 0.15f, 0);
                 //Debug.Log($"Angle = {angle} Time = {time}");
 
                 proj.Loauch(spawnPoint.position, aim.transform.position + prediction, info.Projectile);

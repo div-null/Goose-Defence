@@ -235,8 +235,10 @@ public class UI_manager : MonoBehaviour
         transitor.SetTrigger("Start");
         //Начало игры
         TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerTomatoT1());
-        TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerTomatoT1());
-        TowerFabric.Instance.placeTower(2, new TowerStatsList.TowerTomatoT1());
+        TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerTomatoT2());
+        TowerFabric.Instance.placeTower(2, new TowerStatsList.TowerTomatoT3());
+        TowerFabric.Instance.placeTower(3, new TowerStatsList.TowerCabbageT1());
+        TowerFabric.Instance.placeTower(4, new TowerStatsList.TowerPeasT1());
 
         Game.Instance.startGame();
     }

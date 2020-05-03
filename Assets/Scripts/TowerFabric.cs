@@ -81,7 +81,32 @@ public class TowerFabric : Singleton<TowerFabric>
         Places[order].isFree = false;
     }
 
-	public TowerStatsList GetInfoByOrder(int order)
+    /// <summary>
+    /// Обновляет башню на позиции
+    /// </summary>
+    /// <param name="order"></param>
+    public void upgradeTower(int order)
+    {
+        TowerStatsList stats = GetInfoByOrder(order);
+        var newPref = stats.PrefabId + 1;
+        var newStats = TowerStatsList.GetStatsByPrefabId(newPref);
+        destroyTower(order);
+        placeTower(order, newStats);
+    }
+
+    /// <summary>
+    /// УНИЧТОЖАЕТ ЗАДАННУЮ БАШНЮ
+    /// </summary>
+    /// <param name="order"></param>
+    public void destroyTower(int order)
+    {
+        Towers[order].RemoveTower();
+        Towers[order] = null;
+        Places[order].isFree = true;
+    }
+
+
+    public TowerStatsList GetInfoByOrder(int order)
 	{
 		return Towers[order].info;
 	}
@@ -124,14 +149,4 @@ public class TowerFabric : Singleton<TowerFabric>
         destroyTower(index);
     }
 
-    /// <summary>
-    /// УНИЧТОЖАЕТ ЗАДАННУЮ БАШНЮ
-    /// </summary>
-    /// <param name="order"></param>
-    public void destroyTower(int order)
-    {
-        Towers[order].RemoveTower();
-        Towers[order] = null;
-        Places[order].isFree = true;
-    }
 }
