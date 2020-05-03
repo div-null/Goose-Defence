@@ -28,6 +28,15 @@ public class UI_manager : MonoBehaviour
     int savedId;
     float price;
 
+    [Header("Audio")]
+    public AudioSource ButtonCloseSound;
+    //public AudioSource ButtonSelect;
+
+    //public AudioSource ButtonBuy;
+    //public AudioSource ButtonUpgrade;
+   // public AudioSource Writing;
+
+
     [Header("ResultsAtTheEndOfGame")]
     public Text scoreText;
     public Image resultImage;
@@ -37,6 +46,7 @@ public class UI_manager : MonoBehaviour
 
     public void UI_TurnOnMenu()
     {
+        ButtonCloseSound.Play();
         StartCoroutine(WaitForTransitionToMenu());
     }
 
@@ -91,16 +101,19 @@ public class UI_manager : MonoBehaviour
 
     public void CloseWindow()
     {
+        ButtonCloseSound.Play();
         Application.Quit();
     }
 
     public void CloseInfoPanel()
     {
+        ButtonCloseSound.Play();
         infoPanel.SetActive(false);
     }
 
     public void CloseBuyPanel()
     {
+        ButtonCloseSound.Play();
         buyPanel.SetActive(false);
     }
 
@@ -128,6 +141,7 @@ public class UI_manager : MonoBehaviour
         upgradeRadius.gameObject.SetActive(false);
         upgradeSpeed.gameObject.SetActive(false);
         upgradeReload.gameObject.SetActive(false);
+        upgradeHealth.gameObject.SetActive(false);
         ShowMainStats(TowerStatsList.GetStatsByPrefabId(id));
         Accept.GetComponentInChildren<Text>().text = "Купить";
         setStatus(Game.Instance.Money);
@@ -143,6 +157,7 @@ public class UI_manager : MonoBehaviour
             upgradeRadius.gameObject.SetActive(false);
             upgradeSpeed.gameObject.SetActive(false);
             upgradeReload.gameObject.SetActive(false);
+            upgradeHealth.gameObject.SetActive(false);
             ShowMainStats(tower.info);
             infoAboutTower.text = "Башня максимального уровня";
             Accept.GetComponentInChildren<Text>().text = "";
@@ -151,6 +166,11 @@ public class UI_manager : MonoBehaviour
         else
         {
             ShowMainStats(tower.info);
+            upgradeDamage.gameObject.SetActive(true);
+            upgradeRadius.gameObject.SetActive(true);
+            upgradeSpeed.gameObject.SetActive(true);
+            upgradeReload.gameObject.SetActive(true);
+            upgradeHealth.gameObject.SetActive(true);
             ShowUpgradeStats(tower.info);
             price = TowerStatsList.GetStatsByPrefabId(tower.info.PrefabId + 1).Cost;
             cost.text = "Стоимость: " + price;
@@ -166,8 +186,8 @@ public class UI_manager : MonoBehaviour
         damage.text = "Урон: " + tower.Projectile.Damage;
         radius.text = "Радиус атаки: " + tower.Projectile.ExplosionRange;
         speed.text = "Скорость снаряда: " + tower.Projectile.Velocity;
-        reload.text = "Скорость перезарядки: " + tower.AttackDelay;
-        health.text = "Максимальное здоровье: " + tower.MaxHP;
+        reload.text = "Перезарядка: " + tower.AttackDelay;
+        health.text = "Здоровье: " + tower.MaxHP;
         price = tower.Cost;
         cost.text = "Стоимость: " + price;
     }
@@ -178,7 +198,7 @@ public class UI_manager : MonoBehaviour
         upgradeRadius.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).Projectile.ExplosionRange - tower.Projectile.ExplosionRange);
         upgradeSpeed.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).Projectile.Velocity - tower.Projectile.Velocity);
         upgradeReload.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).AttackDelay - tower.AttackDelay);
-        upgradeHealth.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).MaxHP - tower.MaxHP);
+        upgradeHealth.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).MaxHP);
     }
 
     // Update is called once per frame
