@@ -10,6 +10,7 @@ TagManager:
   - UI_tower
   - FirePoint
   - Goose
+  - Bell
   layers:
   - Default
   - TransparentFX
