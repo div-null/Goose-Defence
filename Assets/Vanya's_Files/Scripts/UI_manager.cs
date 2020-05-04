@@ -35,6 +35,9 @@ public class UI_manager : Singleton<UI_manager>
     public AudioSource ButtonBuild;
     public AudioSource Writing;
 	public AudioSource BackGroundMusic;
+    public AudioSource resultMusic;
+    public AudioClip winSound;
+    public AudioClip looseSound;
     //public AudioSource ButtonSelect;
 
     //public AudioSource ButtonBuy;
@@ -396,11 +399,15 @@ public class UI_manager : Singleton<UI_manager>
         scoreText.text = "Счёт: " + score;
         if (result)
         {
+            resultMusic.clip = winSound;
+            resultMusic.Play();
             resultImage.sprite = resultSprites[0];
             signImage.sprite = resultSigns[0];
         }
         else
         {
+            resultMusic.clip = looseSound;
+            resultMusic.Play();
             resultImage.sprite = resultSprites[1];
             signImage.sprite = resultSigns[1];
         }
