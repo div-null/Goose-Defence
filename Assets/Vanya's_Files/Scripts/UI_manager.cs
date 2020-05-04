@@ -214,6 +214,7 @@ public class UI_manager : Singleton<UI_manager>
         speed.text = "Скорость снаряда: " + tower.Projectile.Velocity;
         reload.text = "Перезарядка: " + tower.AttackDelay;
         health.text = "Здоровье: " + tower.MaxHP;
+        price = tower.Cost;
         cost.text = "Стоимость: " + price;
     }
 
