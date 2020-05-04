@@ -176,6 +176,7 @@ public class UI_manager : Singleton<UI_manager>
             backGroundMusicButton.GetComponent<Image>().sprite = musicOff;
             isBackSound = false;
 		}
+        ButtonSelect.Play();
 	}
 
 	public void BackGroundSoundOnOff(bool value)
@@ -384,13 +385,9 @@ public class UI_manager : Singleton<UI_manager>
             StartCoroutine(Result(result, score));
     }
 
-    public void PrintScore2()
-    {
-        StartCoroutine(Result(true, 110));
-    }
-
     public void ExitGame()
     {
+        ButtonCloseSound.Play();
         Application.Quit();
     }
 
@@ -398,6 +395,7 @@ public class UI_manager : Singleton<UI_manager>
     {
         ClearLevel.Instance.Clear();
         GooseFabric.Instance.Stopspawning();
+        ButtonSelect.Play();
         StartWriting();
     }
 
