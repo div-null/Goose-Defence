@@ -36,12 +36,12 @@ public class Game : Singleton<Game>
     /// Ожидание между получением денег
     /// </summary>
     [SerializeField]
-    float moneyBackDelay = 5f;
+    float moneyBackDelay = 1f;
 
     /// <summary>
     /// Количество денег получаемое за ожидание
     /// </summary>
-    int moneyPerDelay = 450;
+    int moneyPerDelay = 50;
 
     [SerializeField]
     int money;
@@ -85,7 +85,7 @@ public class Game : Singleton<Game>
     public void startGame()
     {
         Score = 0;
-        Money = 0;
+        Money = baseMoney;
         StartCoroutine("BeginGame");
     }
 
@@ -105,7 +105,8 @@ public class Game : Singleton<Game>
         while (true)
         {
             yield return new WaitForSeconds(moneyBackDelay);
-            Money += moneyPerDelay;
+			
+			Money += (int)(moneyPerDelay * (GooseFabric.Instance.GooseLvl / 10f + 1));
         }
     }
 
