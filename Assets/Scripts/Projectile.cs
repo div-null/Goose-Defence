@@ -49,7 +49,7 @@ public class Projectile : MonoBehaviour
         Direction = (point - tower).normalized;
         RemainTime = (Vector3.Distance(tower, point) / stats.Velocity);
         Radius = stats.ExplosionRange;
-
+        
         this.coefSlow = stats.coefSlow;
 		this.timeSlow = stats.timeSlow;
 		//TODO: добавить поворот

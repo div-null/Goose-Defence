@@ -110,7 +110,7 @@ public class Tower : MonoBehaviour
         StopCoroutine("Attack");
         isAvailable = false;
     }
-
+    AudioSource bangSound;
     public IEnumerator Attack()
     {
 
@@ -140,7 +140,8 @@ public class Tower : MonoBehaviour
 
                 Vector3 prediction = aim.Movement * time + new Vector3(-0.15f, 0.15f, 0);
                 //Debug.Log($"Angle = {angle} Time = {time}");
-
+                bangSound = GetComponent<AudioSource>();
+                bangSound.Play();
                 proj.Loauch(spawnPoint.position, aim.transform.position + prediction, info.Projectile);
             }
             yield return new WaitForSeconds(info.AttackDelay);

@@ -20,6 +20,7 @@ public class UI_manager : Singleton<UI_manager>
     public Sprite[] towerPictures = new Sprite[9];
     public Image displayTower;
     public Button Accept;
+    public Sprite musicOn, musicOff;
     public Text title, infoAboutTower, damage, radius, speed, reload, cost, health, attackRange;
     public Text upgradeDamage, upgradeRadius, upgradeSpeed, upgradeReload, upgradeHealth, upgradeAttackRange;
     public Animator transitor;
@@ -27,7 +28,7 @@ public class UI_manager : Singleton<UI_manager>
     Place place;
     int savedId;
     float price;
-
+    public GameObject backGroundMusicButton;
     [Header("Audio")]
     public AudioSource ButtonCloseSound;
     public AudioSource ButtonSelect;
@@ -35,6 +36,9 @@ public class UI_manager : Singleton<UI_manager>
     public AudioSource ButtonBuild;
     public AudioSource Writing;
 	public AudioSource BackGroundMusic;
+    public AudioSource resultMusic;
+    public AudioClip winSound;
+    public AudioClip looseSound;
     //public AudioSource ButtonSelect;
 
     //public AudioSource ButtonBuy;
@@ -50,7 +54,6 @@ public class UI_manager : Singleton<UI_manager>
     public Sprite[] resultSigns = new Sprite[2];
     public GameObject resultScreen;
     public GameObject transitToEnd;
-
 
     public void UI_TurnOnMenu()
     {
@@ -164,15 +167,28 @@ public class UI_manager : Singleton<UI_manager>
 		if (!isBackSound)
 		{
 			BackGroundMusic.Play();
-			isBackSound = true;
+            backGroundMusicButton.GetComponent<Image>().sprite = musicOn;
+            isBackSound = true;
 		}
 		else
 		{
 			BackGroundMusic.Stop();
-			isBackSound = false;
+            backGroundMusicButton.GetComponent<Image>().sprite = musicOff;
+            isBackSound = false;
 		}
 	}
-	public void BackGroundSoundOnOff(bool value) { isBackSound = value; if (value) BackGroundMusic.Play();  else BackGroundMusic.Stop(); }
+
+	public void BackGroundSoundOnOff(bool value)
+    { isBackSound = value;
+        if (value)
+        {
+            BackGroundMusic.Play();
+        }
+        else
+        {
+            BackGroundMusic.Stop();
+        }
+    }
 
 
 	public void WindowBuyTower(int id)
@@ -396,11 +412,15 @@ public class UI_manager : Singleton<UI_manager>
         scoreText.text = "Счёт: " + score;
         if (result)
         {
+            resultMusic.clip = winSound;
+            resultMusic.Play();
             resultImage.sprite = resultSprites[0];
             signImage.sprite = resultSigns[0];
         }
         else
         {
+            resultMusic.clip = looseSound;
+            resultMusic.Play();
             resultImage.sprite = resultSprites[1];
             signImage.sprite = resultSigns[1];
         }

@@ -96,8 +96,8 @@ public class Goose : MonoBehaviour
        
         while (true)
         {
-			if (tower == null || tower.HP <= 0)
-                break;
+            GetComponentInChildren<AudioSource>().Play();
+            if (tower == null) break;
 			//Небольшой разброс дамага
 			int tmpGooseDamage = goose_damage + (int)(Random.Range(-0.1f * goose_damage, 0.1f * goose_damage));
 
@@ -181,10 +181,11 @@ public class Goose : MonoBehaviour
 			StopCoroutine("SlowDown");
 			StartCoroutine(SlowDown(coefSlow, timeSlow));
 		}
-			
+        //AudioSource eatingSound = gameObject.GetComponentInChildren<AudioSource>();
         cur_hp -= damage;
         if (cur_hp <= 0 && state != GooseState.death)
         {
+            //eatingSound.Play();
             cur_hp = 0;
             state = GooseState.death;
             //воспроизведение анимации
