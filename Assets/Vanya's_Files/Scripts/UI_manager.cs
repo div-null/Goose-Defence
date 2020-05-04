@@ -15,12 +15,12 @@ public class UI_manager : Singleton<UI_manager>
     public GameObject battlefield;
     //Если игра не запущена, значит мы в меню, если нет, то UI надо изменить
     bool isGameStarted = false, canSkip = false;
-    string historyStr = "Весь мир был поражён вирусом, из-за которого гуси стали неимоверно большыми, голодными, и практически поработили человечество с помощью звона колокольчиков. Единственное, что осталось у людей - это большой колокол и фермы, на которых они выращивают корм чтобы кормить гусей. Это последняя надежда человечества. С минуты на минуту гуси начнут своё последнее наступление, защитите колокол!";
+    string historyStr = "     Весь мир был поражён вирусом, из-за которого гуси стали неимоверно большими, голодными, и практически поработили человечество с помощью звона колокольчиков. Единственное, что осталось у людей - это большой колокол и фермы, на которых они выращивают корм чтобы кормить гусей ради своего спасения. Это место - последняя надежда человечества. С минуты на минуту гуси начнут своё последнее наступление, защитите колокол!";
     [Header("InfoAboutTower")]
     public Sprite[] towerPictures = new Sprite[9];
     public Image displayTower;
     public Button Accept;
-    public Text infoAboutTower, damage, radius, speed, reload, cost, health, attackRange;
+    public Text title, infoAboutTower, damage, radius, speed, reload, cost, health, attackRange;
     public Text upgradeDamage, upgradeRadius, upgradeSpeed, upgradeReload, upgradeHealth, upgradeAttackRange;
     public Animator transitor;
     Tower tower;
@@ -34,6 +34,7 @@ public class UI_manager : Singleton<UI_manager>
     public AudioSource ButtonBuy;
     public AudioSource ButtonBuild;
     public AudioSource Writing;
+	public AudioSource BackGroundMusic;
     //public AudioSource ButtonSelect;
 
     //public AudioSource ButtonBuy;
@@ -75,7 +76,7 @@ public class UI_manager : Singleton<UI_manager>
 
     public void setDangerLvl(int lvl)
     {
-        dangerStat.GetComponent<Text>().text = lvl + " уровень опасности";
+        dangerStat.GetComponent<Text>().text = lvl + " уровень угрозы";
     }
 
     void setStatus(int gold)
@@ -100,8 +101,11 @@ public class UI_manager : Singleton<UI_manager>
         Game.Instance.WinGame += PrintScore;
         Game.Instance.LooseGame += PrintScore;
         Game.Instance.UpdateGold += setAmountOfMoney;
-        StartWriting();
+		GooseFabric.Instance.UpdateGooseLvl += setDangerLvl;
+		StartWriting();
     }
+
+
 
     public void StartWriting()
     {
@@ -154,7 +158,24 @@ public class UI_manager : Singleton<UI_manager>
         WindowBuyTower(6);
     }
 
-    public void WindowBuyTower(int id)
+	bool isBackSound = true;
+	public void BackGroundSoundOnOff()
+	{
+		if (!isBackSound)
+		{
+			BackGroundMusic.Play();
+			isBackSound = true;
+		}
+		else
+		{
+			BackGroundMusic.Stop();
+			isBackSound = false;
+		}
+	}
+	public void BackGroundSoundOnOff(bool value) { isBackSound = value; if (value) BackGroundMusic.Play();  else BackGroundMusic.Stop(); }
+
+
+	public void WindowBuyTower(int id)
     {
         savedId = id;
         infoPanel.SetActive(true);
@@ -206,7 +227,8 @@ public class UI_manager : Singleton<UI_manager>
 
     void ShowMainStats(TowerStatsList tower)
     {
-        infoAboutTower.text = tower.Name + "\n" + tower.Discription;
+        title.text = tower.Name;
+        infoAboutTower.text = tower.Discription;
         displayTower.sprite = towerPictures[tower.PrefabId];
         damage.text = "Урон: " + tower.Projectile.Damage;
         attackRange.text = "Радиус атаки: " + tower.Range;
@@ -337,13 +359,12 @@ public class UI_manager : Singleton<UI_manager>
         //TowerFabric.Instance.placeTower(4, new TowerStatsList.TowerPeasT1());
 
         Game.Instance.startGame();
-        TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerPeasT3());
-        TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerPeasT3());
+        //TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerPeasT3());
+        //TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerPeasT3());
     }
 
     public void PrintScore(bool result, int score)
     {
-        if (result)
             StartCoroutine(Result(result, score));
     }
 
@@ -366,7 +387,10 @@ public class UI_manager : Singleton<UI_manager>
 
     IEnumerator Result(bool result, int score)
     {
-        transitToEnd.SetActive(true);
+		yield return new WaitForSeconds(4f);
+		BackGroundSoundOnOff(false);
+
+		transitToEnd.SetActive(true);
         yield return new WaitForSeconds(1f);
         resultScreen.SetActive(true);
         scoreText.text = "Счёт: " + score;

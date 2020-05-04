@@ -30,7 +30,7 @@ public class Game : Singleton<Game>
 
 
     [SerializeField]
-    public int baseMoney = 0;
+    public int baseMoney = 1000;
 
     /// <summary>
     /// Ожидание между получением денег
@@ -123,7 +123,7 @@ public class Game : Singleton<Game>
         isGameStarted = false;
         StopCoroutine("EarnMoney");
         StopCoroutine("SpawnGooses");
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(0);
     }
 
     void Awake()
