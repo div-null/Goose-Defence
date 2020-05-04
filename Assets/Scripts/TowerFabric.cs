@@ -53,7 +53,7 @@ public class TowerFabric : Singleton<TowerFabric>
 
         //////////////////////////
         /// СПАВН стены
-        var wall = GameObject.Instantiate(TowerPrefabs[9], new Vector3(-3.14f, 0.77f, 0), Quaternion.identity);
+        var wall = GameObject.Instantiate(TowerPrefabs[9], new Vector3(-13.4f, 0.77f, 0), Quaternion.identity);
         wall.transform.tag = "Tower";
 
         Vector3 pos1 = wall.transform.position;

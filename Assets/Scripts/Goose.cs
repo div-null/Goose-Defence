@@ -136,11 +136,15 @@ public class Goose : MonoBehaviour
 
             Movement.z = -3f+Mathf.Abs(Movement.y / 10);
             state = GooseState.walk;
-            transform.position += direction.normalized * goose_speed  * speed_multiplier * Time.deltaTime;
-            //воспроизведение анимации ходьбы
-            animator.SetInteger("GooseState", 1);
+			animator.SetInteger("GooseState", 1);
 			animator.speed = speed_multiplier;
-			if (typeGoose == 4) animator.speed = 0.5f;
+			if (typeGoose == 4)
+			{
+				animator.speed = 0.5f;
+				Movement.z = -3f + Mathf.Abs(Movement.y / 10) - 4;
+			}
+			transform.position += direction.normalized * goose_speed  * speed_multiplier * Time.deltaTime;
+            //воспроизведение анимации ходьбы        
 		}
         else
         {

@@ -34,6 +34,7 @@ public class UI_manager : Singleton<UI_manager>
     public AudioSource ButtonBuy;
     public AudioSource ButtonBuild;
     public AudioSource Writing;
+	public AudioSource BackGroundMusic;
     //public AudioSource ButtonSelect;
 
     //public AudioSource ButtonBuy;
@@ -157,7 +158,24 @@ public class UI_manager : Singleton<UI_manager>
         WindowBuyTower(6);
     }
 
-    public void WindowBuyTower(int id)
+	bool isBackSound = true;
+	public void BackGroundSoundOnOff()
+	{
+		if (!isBackSound)
+		{
+			BackGroundMusic.Play();
+			isBackSound = true;
+		}
+		else
+		{
+			BackGroundMusic.Stop();
+			isBackSound = false;
+		}
+	}
+	public void BackGroundSoundOnOff(bool value) { isBackSound = value; if (value) BackGroundMusic.Play();  else BackGroundMusic.Stop(); }
+
+
+	public void WindowBuyTower(int id)
     {
         savedId = id;
         infoPanel.SetActive(true);
@@ -368,7 +386,10 @@ public class UI_manager : Singleton<UI_manager>
 
     IEnumerator Result(bool result, int score)
     {
-        transitToEnd.SetActive(true);
+		yield return new WaitForSeconds(4f);
+		BackGroundSoundOnOff(false);
+
+		transitToEnd.SetActive(true);
         yield return new WaitForSeconds(1f);
         resultScreen.SetActive(true);
         scoreText.text = "Счёт: " + score;

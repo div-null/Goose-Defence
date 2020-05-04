@@ -123,7 +123,7 @@ public class Game : Singleton<Game>
         isGameStarted = false;
         StopCoroutine("EarnMoney");
         StopCoroutine("SpawnGooses");
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(0);
     }
 
     void Awake()

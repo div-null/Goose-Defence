@@ -134,12 +134,12 @@ public class GooseFabric : Singleton<GooseFabric>
 
 	public void GoAwayAll()
 	{
+		GameObject.Find("Goose Boss");
+		GameObject.Find("Goose Boss").GetComponentInChildren<Animator>().SetTrigger("WithBell");
 		foreach (var item in geese)
 		{
 			item.transform.rotation = Quaternion.Euler(0, 180, 0);
-		}
-		GameObject.Find("Goose Boss");
-		GameObject.Find("Goose Boss").GetComponentInChildren<Animator>().SetTrigger("WithBell");
+		}		
 	} 
 
 	public void Clear()
