@@ -461,7 +461,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 98761736}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.009, y: 11.597, z: -0.35}
+  m_LocalPosition: {x: 0.009, y: 11.68, z: -0.35}
   m_LocalScale: {x: 1.9183724, y: 1.9183724, z: 1.9183724}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3139,8 +3139,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 626ababa1cbce18428bfef2185420934, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.21
-  m_Pitch: 1.9
+  m_Volume: 0.5
+  m_Pitch: 2.25
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -3470,7 +3470,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 653112225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -20.21, y: -1.38, z: 0}
+  m_LocalPosition: {x: -20.21, y: -1.38, z: -0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -4586,7 +4586,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 21b38f6cab9ae4f478da5dad3776406e, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.21
+  m_Volume: 0.5
   m_Pitch: 2.75
   Loop: 0
   Mute: 0
@@ -5324,7 +5324,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 5291c7ffbbcd8d24693f4a914a8728fe, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.21
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -5575,7 +5575,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1106022329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5726,7 +5726,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1134860549}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.004, y: -0.186, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.3367727, y: 1.3367727, z: 1.3367727}
   m_Children: []
   m_Father: {fileID: 0}
@@ -6153,7 +6153,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u0425\u0440\u043E\u043D\u0438\u043A\u0438 \u0432\u043E\u0441\u0441\u0442\u0430\u0432\u0448\u0438\u0445"
+  m_Text: "\u0425\u0440\u043E\u043D\u0438\u043A\u0438 \u0441\u043E\u043F\u0440\u043E\u0442\u0438\u0432\u043B\u0435\u043D\u0438\u044F"
 --- !u!222 &1160076214
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6471,13 +6471,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1181560298}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.95686275}
-  m_EffectDistance: {x: 2, y: -2}
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
 --- !u!1 &1204226447
 GameObject:
@@ -8147,7 +8147,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 93, y: -63}
+  m_AnchoredPosition: {x: 87.125, y: -80.20001}
   m_SizeDelta: {x: 47, y: 40.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1348060175
@@ -8987,7 +8987,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1435463570}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -24, y: -0.06, z: -0.28}
+  m_LocalPosition: {x: -24.1, y: -0.06, z: -0.28}
   m_LocalScale: {x: 1.3335457, y: 1.3335457, z: 1.3335457}
   m_Children: []
   m_Father: {fileID: 0}
@@ -9250,7 +9250,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 351d75a07986c5647b8339989b78c297, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.17
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -9481,13 +9481,13 @@ MonoBehaviour:
   battlefield: {fileID: 1998157752}
   towerPictures:
   - {fileID: 21300000, guid: 68c514ffd07f6cc4eb7c51e4236e2359, type: 3}
-  - {fileID: 21300000, guid: 46e5a8e6199e3f94a8e8d8b1027b0d52, type: 3}
+  - {fileID: 21300000, guid: 580f788810bdaf442aa3df51e5109c36, type: 3}
   - {fileID: 21300000, guid: c5ec7144b035e0a418595006b24054f1, type: 3}
   - {fileID: 21300000, guid: f48942ec3aa6ee643968914a25c64394, type: 3}
-  - {fileID: 21300000, guid: 27f7426a52809794590d2485f5f96311, type: 3}
+  - {fileID: 21300000, guid: 63ea1cfec22c9a048b748492253ff79c, type: 3}
   - {fileID: 21300000, guid: fceea29c298029644b9ec7aef5514336, type: 3}
   - {fileID: 21300000, guid: 65a92338bb06b8b4dbaa0ad55b8324b7, type: 3}
-  - {fileID: 21300000, guid: 7f66b21131400c54aaba38a114665b36, type: 3}
+  - {fileID: 21300000, guid: bfe7ae0428d13394a8af2248e0eaeafe, type: 3}
   - {fileID: 21300000, guid: 22933984fa7ffe04dabf3e72f7dff3e1, type: 3}
   displayTower: {fileID: 1181560300}
   Accept: {fileID: 402590170}
@@ -10101,7 +10101,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 93, y: -186}
+  m_AnchoredPosition: {x: 90, y: -211}
   m_SizeDelta: {x: 35.25, y: 30.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1508403987
@@ -10243,7 +10243,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: ef11037976d23164fb78d11177762c64, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.15
+  m_Volume: 0.22
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -10375,7 +10375,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a9ed74c4e05718f45bda7971df1276e0, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.5
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -11542,7 +11542,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b993370811d30f346a2ab4839ef3f24d, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.21
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -12510,11 +12510,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Health
-      objectReference: {fileID: 0}
-    - target: {fileID: 2170807494927157297, guid: b2349307e51288244b1158ec279f71ed,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2170807494927157302, guid: b2349307e51288244b1158ec279f71ed,
         type: 3}

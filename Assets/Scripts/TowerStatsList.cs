@@ -10,7 +10,7 @@
 	public abstract float FreezeCoef { get; }
 	public abstract int PrefabId { get; }
 
-	const float SredDMG = 500f;
+	const float SredDMG = 600f;
 	const float SredMaxHP = 1500f;
 	const float SredSpeed = 4f;
 	const float SredAttackCountPer20Sec = 10f;

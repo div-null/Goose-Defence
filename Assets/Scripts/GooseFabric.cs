@@ -69,7 +69,7 @@ public class GooseFabric : Singleton<GooseFabric>
 
 	void incScore(Goose goose)
 	{
-		Game.Instance.increaseScore(1);
+		Game.Instance.increaseScore(goose.max_hp / 10);
 	}
 
 	/// <summary>

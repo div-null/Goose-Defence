@@ -68,7 +68,7 @@ public class TowerFabric : Singleton<TowerFabric>
 
         //////////////////////////
         /// СПАВН колокола
-        var colocol = GameObject.Instantiate(TowerPrefabs[10], new Vector3(-20.21f, -1.38f, 0), Quaternion.identity);
+        var colocol = GameObject.Instantiate(TowerPrefabs[10], new Vector3(-19.95f, -0.7f, 0), Quaternion.identity);
         colocol.transform.tag = "Tower";
 
         pos1 = colocol.transform.position;
