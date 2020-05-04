@@ -150,8 +150,10 @@ public class TowerFabric : Singleton<TowerFabric>
     /// <param name="tower"></param>
     void deleteTower(Tower tower)
     {
+
         int index = Towers.IndexOf(tower);
         destroyTower(index);
+
     }
 
 	IEnumerator GooseBossAway()
@@ -178,8 +180,13 @@ public class TowerFabric : Singleton<TowerFabric>
     /// <param name="tower"></param>
     void destroyWall(Tower tower)
     {
+        for (int i = 0; i < 3; i++)
+            Destroy(tower.gameObject.transform.Find("wall " + i.ToString())
+                 .gameObject.GetComponent<BoxCollider>());
+        
         Towers.Remove(tower);
-        tower.RemoveTower();
+        
+        //tower.RemoveTower();
         GooseFabric.Instance.loanchBoss();
         Debug.Log("Wall crushed");
     }
@@ -194,7 +201,7 @@ public class TowerFabric : Singleton<TowerFabric>
         float distance = 9999;
         foreach (var tower in Towers)
         {
-            if (tower == null)
+            if (tower == null || tower.HP <= 0)
                 continue;
             Vector3 towerPos = tower.transform.position;
             var dist = Vector3.Distance(towerPos, pos);

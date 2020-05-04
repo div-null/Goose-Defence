@@ -96,7 +96,8 @@ public class Goose : MonoBehaviour
        
         while (true)
         {
-			if (tower == null) break;
+			if (tower == null || tower.HP <= 0)
+                break;
 			//Небольшой разброс дамага
 			int tmpGooseDamage = goose_damage + (int)(Random.Range(-0.1f * goose_damage, 0.1f * goose_damage));
 
