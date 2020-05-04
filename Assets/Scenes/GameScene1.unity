@@ -7600,7 +7600,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1472330783}
-        m_MethodName: PrintScore2
+        m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9491,6 +9491,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 22933984fa7ffe04dabf3e72f7dff3e1, type: 3}
   displayTower: {fileID: 1181560300}
   Accept: {fileID: 402590170}
+  musicOn: {fileID: 21300000, guid: 1803d6a7981b5534194f515c6f2e0033, type: 3}
+  musicOff: {fileID: 21300000, guid: 3dffdb12202bb0d449df1786aed702ef, type: 3}
   title: {fileID: 1415551399}
   infoAboutTower: {fileID: 1998048089}
   damage: {fileID: 1436707422}
@@ -9507,6 +9509,7 @@ MonoBehaviour:
   upgradeHealth: {fileID: 1010353939}
   upgradeAttackRange: {fileID: 1723340624}
   transitor: {fileID: 1165610303}
+  backGroundMusicButton: {fileID: 1508403985}
   ButtonCloseSound: {fileID: 1464212454}
   ButtonSelect: {fileID: 1768563221}
   ButtonBuy: {fileID: 571236626}
@@ -10098,8 +10101,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 93, y: -188.70001}
-  m_SizeDelta: {x: 30, y: 30}
+  m_AnchoredPosition: {x: 93, y: -186}
+  m_SizeDelta: {x: 35.25, y: 30.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1508403987
 MonoBehaviour:
@@ -10119,18 +10122,18 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 21300000, guid: 1803d6a7981b5534194f515c6f2e0033, type: 3}
     m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
@@ -10174,7 +10177,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: dfa40c4206fe8df42aa4c276381164b5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1803d6a7981b5534194f515c6f2e0033, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
