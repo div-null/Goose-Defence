@@ -34,6 +34,9 @@ public class Tower : MonoBehaviour
 	public bool isAvailable { get; set; }
 
     public int TowerOrder;
+    //максимальное хм
+    public int maxHP;
+    
 
     public bool Destroyed
     {
@@ -48,7 +51,7 @@ public class Tower : MonoBehaviour
 	/// Хп Башни, вызывает событие уничтожения уничтожение
 	/// </summary>
 	[SerializeField]
-	float HP
+	public float HP
     {
         get
         {
@@ -83,7 +86,7 @@ public class Tower : MonoBehaviour
         spawnPoints = new List<Transform>();
         TowerOrder = order;
         this.info = info;
-		int tmpHP = info.MaxHP;
+	    maxHP = info.MaxHP;
 		HP = (info.MaxHP);
         
         ProjectilePrefab = projectilePref;
