@@ -106,7 +106,7 @@ public class Game : Singleton<Game>
         {
             yield return new WaitForSeconds(moneyBackDelay);
 			
-			Money += (int)(moneyPerDelay * (GooseFabric.Instance.GooseLvl / 10f + 1));
+			Money += (int)(moneyPerDelay * (GooseFabric.Instance.GooseLvl / 8f + 1));
         }
     }
 
