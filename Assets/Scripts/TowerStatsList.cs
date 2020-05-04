@@ -18,8 +18,8 @@
 	const float SredAttackSpeed = 2f;
 
 	//Дамаг
-	const float T2CoefDMG = 4.5f;
-	const float T3CoefDMG = 6.75f;
+	const float T2CoefDMG = 2f;
+	const float T3CoefDMG = 3f;
 	const float WallCoefDMG = 0f;
 
 	//Дальность атаки
@@ -28,8 +28,8 @@
 	const float WallCoefAttackFar = 0f;
 
 	//АОЕ радиус
-	const float T2CoefAttackAOE = 2f;
-	const float T3CoefAttackAOE = 3f;
+	const float T2CoefAttackAOE = 1.7f;
+	const float T3CoefAttackAOE = 2.4f;
 	const float WallCoefAttackAOE = 0f;
 
 	//Макс ХП
@@ -48,25 +48,25 @@
 	const float WallAttackSpeed = 0f;
 
 	//
-	const float TomatoDMGCoef = 0.8f;
-	const float CabbageDMGCoef = 0.6f;
-	const float PeasDMGCoef = 0.05f;
+	const float TomatoDMGCoef = 1f;
+	const float CabbageDMGCoef = 0.8f;
+	const float PeasDMGCoef = 0.3f;
 
 	const float TomatoHPCoef = 1f;
 	const float CabbageHPCoef = 0.6f;
 	const float PeasHPCoef = 0.15f;
 
-	const float TomatoFarCoef = 1.2f;
-	const float CabbageFarCoef = 0.7f;
-	const float PeasFarCoef = 0.9f;
+	const float TomatoFarCoef = 1.4f;
+	const float CabbageFarCoef = 1f;
+	const float PeasFarCoef = 1.1f;
 
 	const float TomatoSpeedCoef = 1.2f;
 	const float CabbageSpeedCoef = 0.8f;
 	const float PeasSpeedCoef = 0.7f;
 
-	const float TomatoAOECoef = 0.4f;
-	const float CabbageAOECoef = 5f;
-	const float PeasAOECoef = 2f;
+	const float TomatoAOECoef = 0.1f;
+	const float CabbageAOECoef = 1f;
+	const float PeasAOECoef = 1.5f;
 
 	const float TomatoAttackSpeedCoef = 1f;
 	const float CabbageAttackSpeedCoef = 2f;
@@ -214,7 +214,7 @@
 		public override string Discription => "Очень колючая и сухая.";
 		public override float AttackDelay => SredAttackSpeed * PeasAttackSpeedCoef * T3AttackSpeed;
 		public override ProjectileStats Projectile => new ProjectileStats(0, 0f, 0f, 0f, 0f);
-		public override int MaxHP => (int)(10000);
+		public override int MaxHP => (int)(WallMaxHP*SredMaxHP);
 		public override float Range => 0;
 		public override float Cost => 20000;
 		public override float FreezeCoef => 0;
