@@ -75,7 +75,7 @@ public class Goose : MonoBehaviour
 
 		if (typeTmp == 4)
         {
-			max_hp = max_hp * 250 * 30;
+			max_hp = 250000;
             speed_multiplier= 1f + gooseLvl / 45;
             attack_speed = 3f - speed_multiplier / 2f;
 			goose_damage = 1000001;
@@ -183,7 +183,7 @@ public class Goose : MonoBehaviour
 		}
         //AudioSource eatingSound = gameObject.GetComponentInChildren<AudioSource>();
         cur_hp -= damage;
-        if (cur_hp < 0 && state != GooseState.death)
+        if (cur_hp <= 0 && state != GooseState.death)
         {
             //eatingSound.Play();
             cur_hp = 0;

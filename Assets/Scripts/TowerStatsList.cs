@@ -10,7 +10,7 @@
 	public abstract float FreezeCoef { get; }
 	public abstract int PrefabId { get; }
 
-	const float SredDMG = 250f;
+	const float SredDMG = 500f;
 	const float SredMaxHP = 1500f;
 	const float SredSpeed = 4f;
 	const float SredAttackCountPer20Sec = 10f;
@@ -18,8 +18,8 @@
 	const float SredAttackSpeed = 2f;
 
 	//Дамаг
-	const float T2CoefDMG = 2f;
-	const float T3CoefDMG = 3f;
+	const float T2CoefDMG = 3f;
+	const float T3CoefDMG = 5f;
 	const float WallCoefDMG = 0f;
 
 	//Дальность атаки
@@ -35,7 +35,7 @@
 	//Макс ХП
 	const float T2MaxHP = 2f;
 	const float T3MaxHP = 3f;
-	const float WallMaxHP = 10f;
+	const float WallMaxHP = 20f;
 
 	//Скорость снаряда (секунды)
 	const float T2FlightSpeed = 1.5f;
@@ -56,13 +56,13 @@
 	const float CabbageHPCoef = 0.6f;
 	const float PeasHPCoef = 0.15f;
 
-	const float TomatoFarCoef = 1.4f;
+	const float TomatoFarCoef = 1.3f;
 	const float CabbageFarCoef = 1f;
-	const float PeasFarCoef = 1.1f;
+	const float PeasFarCoef = 1.7f;
 
 	const float TomatoSpeedCoef = 1.2f;
 	const float CabbageSpeedCoef = 0.8f;
-	const float PeasSpeedCoef = 0.7f;
+	const float PeasSpeedCoef = 1.5f;
 
 	const float TomatoAOECoef = 0.1f;
 	const float CabbageAOECoef = 1f;
@@ -73,8 +73,8 @@
 	const float PeasAttackSpeedCoef = 1.2f;
 
 	const float CostT1 = 1000f;
-	const float CostT2 = 3000f;
-	const float CostT3 = 5000f;
+	const float CostT2 = 2500f;
+	const float CostT3 = 4000f;
 	
 	public static TowerStatsList GetStatsByPrefabId(int PrefabId)
 	{
