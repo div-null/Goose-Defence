@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Place
+  - Tower
+  - Projectile
+  - UI_tower
+  - FirePoint
+  - Goose
+  - Bell
+  - Wall
   layers:
   - Default
   - TransparentFX
