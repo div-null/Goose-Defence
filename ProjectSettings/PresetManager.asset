@@ -18,7 +18,10 @@ PresetManager:
       m_ManagedTypePPtr: {fileID: 0}
       m_ManagedTypeFallback: 
     second:
-    - m_Preset: {fileID: 2655988077585873504, guid: 74857c4108fe9a643b88a87233ac4c43,
+    - m_Preset: {fileID: 2655988077585873504, guid: 07981bf35ff5dc84488564ff2b1bbc3a,
+        type: 2}
+      m_Filter: t:Texture l:Projectile
+    - m_Preset: {fileID: 2655988077585873504, guid: d3d6658e06d167d4e89163a4ada653b5,
         type: 2}
       m_Filter: 
   - first:
