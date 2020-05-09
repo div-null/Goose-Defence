@@ -22,6 +22,21 @@ public class TowerFabric : Singleton<TowerFabric>
     public GameObject[] place;
     public Place[] Places;
 
+    /// <summary>
+    /// Спрайты стены
+    /// </summary>
+    public List<Sprite> WallSprites;
+
+    /// <summary>
+    /// Хп стены
+    /// </summary>
+    public ProgressBar hpBar;
+
+    /// <summary>
+    /// Префаб полоски здоровья
+    /// </summary>
+    [SerializeField]
+    GameObject hpBarPrefab;
 
     public int TowerSelectedOrder;
 
@@ -62,10 +77,15 @@ public class TowerFabric : Singleton<TowerFabric>
 
         var blank1 = wall.AddComponent<Tower>();
         blank1.TowerDestroyed += destroyWall;
+        blank1.TowerDamaged += damagedWall;
         blank1.Initialize(new TowerStatsList.Wall(), ProjectilePrefabs[0], 10);
         Towers.Add(blank1);
 
-
+        //////////////////////////
+        /// СПАВН полоски здоровья
+        hpBar = GameObject.Instantiate(hpBarPrefab, new Vector3(-2f, 10f, -6f), Quaternion.identity)
+                            .GetComponent<ProgressBar>();
+        hpBar.Initialize(blank1.HP);
         //////////////////////////
         /// СПАВН колокола
         var colocol = GameObject.Instantiate(TowerPrefabs[10], new Vector3(-19.95f, -0.7f, 0), Quaternion.identity);
@@ -174,22 +194,44 @@ public class TowerFabric : Singleton<TowerFabric>
 		StartCoroutine("GooseBossAway");
 	}
 
+
+    void damagedWall(Tower wall)
+    {
+        //hpBar.transform.localScale = new Vector3(parent.HP / parent.maxHP * 4, 0.57f, 1);
+        //hpBar.transform.position -= new Vector3(parent.HP / parent.maxHP * 4, 0, 0);
+        hpBar.Hp = wall.HP;
+        if (wall.HP == wall.maxHP)
+        {
+            wall.gameObject.GetComponentInChildren<SpriteRenderer>().sprite = WallSprites[0];
+        }
+        else if (wall.HP < wall.maxHP / 2)
+        {
+            wall.gameObject.GetComponentInChildren<SpriteRenderer>().sprite = WallSprites[1];
+        }
+        if (wall.HP <= 0)
+        {
+            wall.gameObject.GetComponentInChildren<SpriteRenderer>().sprite = WallSprites[2];
+            hpBar.Destroy();
+        }
+    }
+
     /// <summary>
     /// УНИЧТОЖЕНА СТЕНА
     /// </summary>
-    /// <param name="tower"></param>
-    void destroyWall(Tower tower)
+    /// <param name="wall"></param>
+    void destroyWall(Tower wall)
     {
         for (int i = 0; i < 3; i++)
-            Destroy(tower.gameObject.transform.Find("wall " + i.ToString())
+            Destroy(wall.gameObject.transform.Find("wall " + i.ToString())
                  .gameObject.GetComponent<BoxCollider>());
         
-        Towers.Remove(tower);
+        Towers.Remove(wall);
         
         //tower.RemoveTower();
         GooseFabric.Instance.loanchBoss();
         Debug.Log("Wall crushed");
     }
+
     public TowerStatsList GetInfoByOrder(int order)
 	{
 		return Towers[order].info;

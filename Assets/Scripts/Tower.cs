@@ -9,8 +9,16 @@ public delegate void TowerEvent(Tower tower);
 
 public class Tower : MonoBehaviour
 {
+    /// <summary>
+    /// Возникает при уничтожении
+    /// </summary>
     public event TowerEvent TowerDestroyed;
-    
+
+    /// <summary>
+    /// Возникает при получаении урона
+    /// </summary>
+    public event TowerEvent TowerDamaged;
+
     [SerializeField]
     public Animator Anim;
 
@@ -45,6 +53,7 @@ public class Tower : MonoBehaviour
             return HP > 0;
         }
     }
+
 	[SerializeField]
 	float selfHp = 100f;
 	/// <summary>
@@ -59,19 +68,21 @@ public class Tower : MonoBehaviour
         }
         set
         {
-            if (value <= 0)
+            selfHp = value;
+            TowerDamaged?.Invoke(this);
+            if (selfHp <= 0)
             {
                 selfHp = 0;
                 TowerDestroyed?.Invoke(this);
             }
-            else
-                selfHp = value;
         }
     }
+
     private void Start()
     {
         Anim = GetComponent<Animator>();
     }
+
     public bool GetDamage(float dmg)
     {
         if (HP <= 0)

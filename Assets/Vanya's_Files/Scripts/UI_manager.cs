@@ -306,7 +306,7 @@ public class UI_manager : Singleton<UI_manager>
             }
         }
     }
-
+    
     public void ClickAccept()
     {
         if (Accept.GetComponentInChildren<Text>().text == "Улучшить")
