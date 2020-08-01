@@ -75,7 +75,7 @@
 	const float CostT1 = 1000f;
 	const float CostT2 = 2500f;
 	const float CostT3 = 4000f;
-	
+
 	public static TowerStatsList GetStatsByPrefabId(int PrefabId)
 	{
 		switch (PrefabId)
@@ -102,14 +102,14 @@
 		public override string Name => "Томатная башня";
 		public override string Discription => "Стреляет одиночными помидорами, кормит одного гуся.";
 		public override float AttackDelay => SredAttackSpeed * TomatoAttackSpeedCoef;
-		public override ProjectileStats Projectile => new ProjectileStats((int)(SredDMG * TomatoDMGCoef / (SredAttackSpeed * TomatoAttackSpeedCoef)) , TomatoAOECoef, SredSpeed * TomatoSpeedCoef);
-		public override int MaxHP => (int)( SredMaxHP * TomatoHPCoef );		
-		public override float Range => SredAttackFar* TomatoFarCoef;
+		public override ProjectileStats Projectile => new ProjectileStats((int)(SredDMG * TomatoDMGCoef / (SredAttackSpeed * TomatoAttackSpeedCoef)), TomatoAOECoef, SredSpeed * TomatoSpeedCoef);
+		public override int MaxHP => (int)(SredMaxHP * TomatoHPCoef);
+		public override float Range => SredAttackFar * TomatoFarCoef;
 		public override float Cost => CostT1;
 		public override float FreezeCoef => 0;
 		public override int PrefabId => 0;
 	}
-	public class TowerTomatoT2: TowerStatsList
+	public class TowerTomatoT2 : TowerStatsList
 	{
 		public override string Name => "Томатная башня Т2";
 		public override string Discription => "Стреляет одиночными помидорами, кормит одного гуся.";
@@ -214,7 +214,7 @@
 		public override string Discription => "Очень колючая и сухая.";
 		public override float AttackDelay => SredAttackSpeed * PeasAttackSpeedCoef * T3AttackSpeed;
 		public override ProjectileStats Projectile => new ProjectileStats(0, 0f, 0f, 0f, 0f);
-		public override int MaxHP => (int)(WallMaxHP*SredMaxHP);
+		public override int MaxHP => (int)(WallMaxHP * SredMaxHP);
 		public override float Range => 0;
 		public override float Cost => 20000;
 		public override float FreezeCoef => 0;

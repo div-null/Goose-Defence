@@ -1,182 +1,134 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
 using UnityEngine.SocialPlatforms;
-using System;
+using UnityEngine;
 
-public delegate void TowerEvent(Tower tower);
-
-public class Tower : MonoBehaviour
+public class Tower : Target
 {
-    public event TowerEvent TowerDestroyed;
-    
-    [SerializeField]
-    public Animator Anim;
 
-    [SerializeField]
-    public GameObject SpawnPos;
+	[SerializeField]
+	public Animator Anim;
 
-    /// <summary>
-    /// Точка спавна снарядов
-    /// </summary>
-    [SerializeField]
-    List<Transform> spawnPoints;
-    /// <summary>
-    /// Префаб снаряда
-    /// </summary>
-    [SerializeField]
-    GameObject ProjectilePrefab;
+	AudioSource bangSound;
+
+	[SerializeField]
+	public GameObject SpawnPos;
+
+	/// <summary>
+	/// Точка спавна снарядов
+	/// </summary>
+	[SerializeField]
+	List<Transform> spawnPoints;
+	/// <summary>
+	/// Префаб снаряда
+	/// </summary>
+	[SerializeField]
+	GameObject ProjectilePrefab;
 
 	[SerializeField]
 	public TowerStatsList info = new TowerStatsList.TowerCabbageT1();
-	
+
 	public bool isAvailable { get; set; }
 
-    public int TowerOrder;
-    //максимальное хм
-    public int maxHP;
-    
+	public int TowerOrder;
 
-    public bool Destroyed
-    {
-        get
-        {
-            return HP > 0;
-        }
-    }
-	[SerializeField]
-	float selfHp = 100f;
-	/// <summary>
-	/// Хп Башни, вызывает событие уничтожения уничтожение
-	/// </summary>
-	[SerializeField]
-	public float HP
-    {
-        get
-        {
-            return selfHp;
-        }
-        set
-        {
-            if (value <= 0)
-            {
-                selfHp = 0;
-                TowerDestroyed?.Invoke(this);
-            }
-            else
-                selfHp = value;
-        }
-    }
-    private void Start()
-    {
-        Anim = GetComponent<Animator>();
-    }
-    public bool GetDamage(float dmg)
-    {
-        if (HP <= 0)
-            return false;
-        HP -= dmg;
-        return Destroyed;
-    }
+	private void Start()
+	{
+		bangSound = GetComponent<AudioSource>();
+		Anim = GetComponent<Animator>();
+	}
 
-    public void Initialize(TowerStatsList info, GameObject projectilePref, int order)
-    {
-        Anim = GetComponent<Animator>();
-        spawnPoints = new List<Transform>();
-        TowerOrder = order;
-        this.info = info;
-	    maxHP = info.MaxHP;
-		HP = (info.MaxHP);
-        
-        ProjectilePrefab = projectilePref;
+	public void Initialize(TowerStatsList info, GameObject projectilePref, int order)
+	{
+		type = TargetType.Human;
+		Anim = GetComponent<Animator>();
+		spawnPoints = new List<Transform>();
+		TowerOrder = order;
+		this.info = info;
+		maxHP = info.MaxHP;
+		HP = info.MaxHP;
 
-        // КОСТЫЛь
-        Tower tower = GetComponentInChildren<Tower>();
+		ProjectilePrefab = projectilePref;
 
-        foreach (var child in tower.GetComponentsInChildren<Transform>())
-            if (child.tag == "FirePoint")
-                spawnPoints.Add(child);
-    }
+		// КОСТЫЛь
+		Tower tower = GetComponentInChildren<Tower>();
 
-    public void MakeDamage()
-    {
-        StartCoroutine("Attack");
-        isAvailable = true;
-    }
+		foreach (var child in tower.GetComponentsInChildren<Transform>())
+			if (child.tag == "FirePoint")
+				spawnPoints.Add(child);
+	}
 
-    public void StopDamage()
-    {
-        StopCoroutine("Attack");
-        isAvailable = false;
-    }
-    AudioSource bangSound;
-    public IEnumerator Attack()
-    {
+	public void MakeDamage()
+	{
+		isAvailable = true;
+		StartCoroutine("Attack");
+	}
 
-        while (true)
-        {
-            Goose aim = GooseFabric.Instance.FindGoose(transform.position, info.Range);
-            // null или далеко
-            if (aim == null || spawnPoints == null)
-            {
-                yield return new WaitForSeconds(0.1f);
-                continue;
-            }
+	public void StopDamage()
+	{
+		StopCoroutine("Attack");
+		isAvailable = false;
+	}
 
-            foreach (var spawnPoint in spawnPoints)
-            {
-                Anim.SetTrigger("Shoot");
-                yield return new WaitForSeconds(0.05f);
-                // добавляю скрипт на префаб
-                var projectile = GameObject.Instantiate(ProjectilePrefab, spawnPoint.position, Quaternion.identity);
-                Projectile proj = projectile.GetComponent<Projectile>();
+	public IEnumerator Attack()
+	{
+		while (isAvailable)
+		{
+			Goose aim = GooseFabric.Instance.FindGoose(transform.position, info.Range);
+			// null или далеко
+			if (aim == null || spawnPoints == null)
+			{
+				yield return new WaitForSeconds(0.1f);
+				continue;
+			}
 
-                float distance = Vector3.Distance(spawnPoint.position, aim.transform.position);
-                float u1 = Math.Abs(info.Projectile.Velocity);
-                float u2 = Math.Abs(aim.goose_speed);
-			    float angle = Mathf.Deg2Rad * (Vector3.Angle(spawnPoint.position - aim.transform.position, aim.Movement));
-			    float time = Mathf.Abs((Mathf.Sqrt(2) * Mathf.Sqrt(2 * distance * distance * u1 * u1 + distance * distance * u2 * u2 * Mathf.Cos(2 * angle) - distance * distance * u2 * u2) - 2 * distance * u2 * Mathf.Cos(angle)) / (2 * (u1 * u1 - u2 * u2)));
+			foreach (var spawnPoint in spawnPoints)
+			{
+				Anim.SetTrigger("Shoot");
+				yield return new WaitForSeconds(0.05f);
+				// добавляю скрипт на префаб
+				var projectile = GameObject.Instantiate(ProjectilePrefab, spawnPoint.position, Quaternion.identity);
+				Projectile proj = projectile.GetComponent<Projectile>();
 
-                Vector3 prediction = aim.Movement * time + new Vector3(-0.15f, 0.15f, 0);
-                //Debug.Log($"Angle = {angle} Time = {time}");
-                bangSound = GetComponent<AudioSource>();
-                bangSound.Play();
-                proj.Loauch(spawnPoint.position, aim.transform.position + prediction, info.Projectile);
-            }
-            yield return new WaitForSeconds(info.AttackDelay);
-            // может быть не нужен
-            yield return new WaitForEndOfFrame();
-        }
+				bangSound.Play();
+				proj.Loauch(spawnPoint.position, predictTargetPosition(spawnPoint.position, aim), info.Projectile);
+			}
+			yield return new WaitForSeconds(info.AttackDelay);
+			// может быть не нужен
+			yield return new WaitForEndOfFrame();
+		}
 
-    }
-    public void OnTriggerEnter(Collider other)
-    {
-        var goose = other.gameObject.GetComponentInParent<Goose>();
-		if (goose == null) return;
-        //если  коснулся босс колокола
-        if (goose.typeGoose == 0 && gameObject.CompareTag("Bell"))
-        {
-            //то воспроизводим атаку
-            goose.StartCoroutine(goose.BellAttack(this));
-            goose.animator.SetBool("WithBell", true);
-            goose.animator.SetInteger("GooseState", 1);
-            goose.transform.localScale = new Vector3(-1,1,1);
-        }
-        else
-        {
-            if (goose == null)
-                return;
+	}
 
-            if (goose.state != GooseState.atack)
-                goose.startAttack(this);
-        }
-    }
+	Vector3 predictTargetPosition(Vector3 from, Goose goose)
+	{
+		Vector3 target = goose.transform.position;
+		float distance = Vector3.Distance(from, target);
+		float u1 = Math.Abs(info.Projectile.Velocity);
+		float u2 = Math.Abs(goose.Speed);
+		float angle = Mathf.Deg2Rad * (Vector3.Angle(from - target, goose.Movement));
+		float time = Mathf.Abs((Mathf.Sqrt(2) * Mathf.Sqrt(2 * distance * distance * u1 * u1 + distance * distance * u2 * u2 * Mathf.Cos(2 * angle) - distance * distance * u2 * u2) - 2 * distance * u2 * Mathf.Cos(angle)) / (2 * (u1 * u1 - u2 * u2)));
 
-    public void RemoveTower()
-    {
-        StopCoroutine("Attack");
-        this.enabled = false;
-        GameObject.Destroy(gameObject);
-    }
+		Vector3 prediction = goose.Movement * time + new Vector3(-0.15f, 0.15f, 0);
+		return target + prediction;
+	}
+
+	public override void OnCollided(Collider collider)
+	{
+		var goose = collider.gameObject.GetComponentInParent<Goose>();
+		if (goose == null)
+			return;
+
+		if (goose.state != GooseState.atack)
+			goose.startAttack(this);
+	}
+
+	public override void DestroySelf()
+	{
+		HP = 0;
+		StopCoroutine("Attack");
+		base.DestroySelf();
+	}
 }

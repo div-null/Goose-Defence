@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -5589,8 +5589,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8203d83719231474c8b76db4ab1b42ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  redProgress: {fileID: 0}
   progress: {fileID: 1429705206}
-  procents: 0
+  hint: {fileID: 0}
+  currentHp: 0
+  maxHp: 0
 --- !u!1 &1119807068
 GameObject:
   m_ObjectHideFlags: 0
@@ -11052,6 +11055,13 @@ MonoBehaviour:
   - {fileID: 223535527}
   - {fileID: 515124411}
   Places: []
+  WallSprites:
+  - {fileID: 21300000, guid: d0faf9c3b1c4ba146be9dde0628cbc1d, type: 3}
+  - {fileID: 21300000, guid: 7329c6ae17f8db8489178a7f265b7ad6, type: 3}
+  - {fileID: 21300000, guid: 32dbb7acd55f0914ebff73a67eabc1ed, type: 3}
+  hpBar: {fileID: 252397107989796033, guid: 34facac7f35af1749b451689dc56cdbf, type: 3}
+  hpBarPrefab: {fileID: 252397107989796042, guid: 34facac7f35af1749b451689dc56cdbf,
+    type: 3}
   TowerSelectedOrder: 0
   UpSpawnPoint: {x: 0, y: 0, z: 0}
   DownSpawnPoint: {x: 0, y: 0, z: 0}
