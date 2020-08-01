@@ -4,15 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 public class MiniCollider : MonoBehaviour
 {
-	Tower parent;
+	Target parent;
 
-    void Start()
-    {
-		parent = transform.parent.GetComponent<Tower>();        
-    }
+	void Start()
+	{
+		parent = transform.parent.GetComponent<Target>();
+	}
 
 	private void OnTriggerEnter(Collider other)
 	{
-		parent.OnTriggerEnter(other);
+		parent.OnCollided(other);
 	}
 }
