@@ -110,13 +110,14 @@ public class Goose : Target
 			//TowerFabric.Instance.TryDamageTower(TowerNumber, goose_damage);
 
 			//Воспроизведение анимации атаки
-			animator.SetInteger("GooseState", 3);
+			animator.SetInteger("GooseState", (int)GooseState.atack);
 
 			yield return new WaitForSeconds(AttackSpeed / 2);
 			target.GetDamage(tmpGooseDamage);  //Нанесение урона в середине анимации
 			yield return new WaitForSeconds(AttackSpeed / 2);
 
-			animator.SetInteger("GooseState", 0);
+			animator.SetInteger("GooseState", (int)GooseState.stay);
+			
 		}
 		state = GooseState.walk;
 	}
@@ -126,14 +127,14 @@ public class Goose : Target
 		state = GooseState.atack;
 		//TODO: выяснить как сократить задержку
 		//Воспроизведение анимации атаки
-		animator.SetInteger("GooseState", 3);
+		animator.SetInteger("GooseState", (int)state);
 		yield return new WaitForSeconds(AttackSpeed / 2);
 		bell.GetDamage(Damage);
 		yield return new WaitForSeconds(AttackSpeed / 2);
 
-		animator.SetInteger("GooseState", 1);
-		animator.SetBool("WithBell", true);
 		state = GooseState.walk;
+		animator.SetInteger("GooseState", (int)state);
+		animator.SetBool("WithBell", true);
 	}
 
 	void findTarget(Target target)
@@ -165,9 +166,9 @@ public class Goose : Target
 			Movement = direction.normalized * Speed * SpeedMultiplier;
 
 			Movement.z = -3f + Mathf.Abs(Movement.y / 10);
-			state = GooseState.walk;
 			//воспроизведение анимации ходьбы        
-			animator.SetInteger("GooseState", 1);
+			state = GooseState.walk;
+			animator.SetInteger("GooseState", (int)state);
 			animator.speed = SpeedMultiplier;
 			if (typeGoose == GooseKind.Boss)
 			{
@@ -192,7 +193,7 @@ public class Goose : Target
 		AttackSpeed = 2 - SpeedMultiplier / 2;
 		yield return new WaitForSeconds(timeSlow);
 		SpeedMultiplier = 1 + Level / 25;
-		//Тут надо попроавить:
+		//Тут надо поправить:
 		AttackSpeed = 2 - SpeedMultiplier / 2;
 	}
 
@@ -221,8 +222,8 @@ public class Goose : Target
 		if ( aim != null )
 			aim.Destroyed -= findTarget;
 		GooseFabric.Instance.geese.Remove(this);
-		animator.SetInteger("GooseState", 4);   //death
 		state = GooseState.death;
+		animator.SetInteger("GooseState", (int)state);   //death
 		yield return new WaitForSeconds(0.9f / SpeedMultiplier);
 		Destroy(this.gameObject);
 	}

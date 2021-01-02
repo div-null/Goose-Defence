@@ -170,7 +170,7 @@ public class GooseFabric : Singleton<GooseFabric>
 			var gooseObject = placeGoose(spawnPosition, 4f);
 			gooseObject.name = "Goose Boss";
 			GooseBoss = gooseObject.AddComponent<Goose>();
-			GooseBoss.Destroyed += onGooseDead;
+			GooseBoss.Destroyed += onBossDead;
 
 			GooseBoss.Initialize(40);
 			GameObject.Instantiate(goose_prefabs[(int)GooseBoss.typeGoose], GooseBoss.transform, false);
@@ -193,7 +193,7 @@ public class GooseFabric : Singleton<GooseFabric>
 	/// Вызывается при смерте босса
 	/// </summary>
 	/// <param name="goose"></param>
-	void onBossDead(Goose goose)
+	void onBossDead(Target goose)
 	{
 		Game.Instance.WinGame?.Invoke(true, Game.Instance.Score);
 		onGooseDead(goose);
