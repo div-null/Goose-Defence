@@ -311,6 +311,11 @@ public class UI_manager : Singleton<UI_manager>
 	{
 		if (Accept.GetComponentInChildren<Text>().text == "Улучшить")
 		{
+			if ( tower == null || tower.isDestroyed )
+			{
+				CloseInfoPanel();
+				return;
+			}
 			Game.Instance.decreaseMoney((int)price);
 			TowerFabric.Instance.upgradeTower(tower.TowerOrder);
 			infoPanel.SetActive(false);
