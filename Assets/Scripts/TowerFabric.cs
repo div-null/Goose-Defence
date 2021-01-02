@@ -43,9 +43,12 @@ public class TowerFabric : Singleton<TowerFabric>
 	[SerializeField]
 	Vector3 DownSpawnPoint;
 
+	[SerializeField]
+	Transform Battlefield;
 
 	public void spawnLocation()
 	{
+		Battlefield = GameObject.Find("BattleField").transform;
 		Towers = new List<Tower>();
 		Targets = new List<Target>();
 		Places = new Place[MaxTowerCount];
@@ -54,7 +57,7 @@ public class TowerFabric : Singleton<TowerFabric>
 			Towers.Add(null);
 			Vector3 pos = place[i].transform.position;
 			pos.z = -3 + pos.y / 10f + 1.5f;
-			var obj = GameObject.Instantiate(PlacePrefab, pos, Quaternion.identity);
+			var obj = GameObject.Instantiate(PlacePrefab, pos, Quaternion.identity, Battlefield);
 			Places[i] = obj.GetComponent<Place>();
 			Places[i].Initialize(i, true, pos);
 		}
@@ -66,7 +69,7 @@ public class TowerFabric : Singleton<TowerFabric>
 
 		//////////////////////////
 		/// СПАВН стены
-		var wallObj = GameObject.Instantiate(TowerPrefabs[9], new Vector3(-13.4f, 0.77f, 0), Quaternion.identity);
+		var wallObj = GameObject.Instantiate(TowerPrefabs[9], new Vector3(-13.4f, 0.77f, 0), Quaternion.identity, Battlefield);
 		wallObj.transform.tag = "Tower";
 
 		Vector3 pos1 = wallObj.transform.position;
@@ -81,7 +84,7 @@ public class TowerFabric : Singleton<TowerFabric>
 
 		//////////////////////////
 		/// СПАВН колокола
-		var bellObj = GameObject.Instantiate(TowerPrefabs[10], new Vector3(-19.95f, -0.7f, 0), Quaternion.identity);
+		var bellObj = GameObject.Instantiate(TowerPrefabs[10], new Vector3(-19.95f, -0.7f, 0), Quaternion.identity, Battlefield);
 		bellObj.transform.tag = "Tower";
 
 		pos1 = bellObj.transform.position;
@@ -95,7 +98,7 @@ public class TowerFabric : Singleton<TowerFabric>
 
 		//////////////////////////
 		/// СПАВН пустой башни
-		var emptytower = GameObject.Instantiate(TowerPrefabs[10], new Vector3(1000f, -1.38f, 0), Quaternion.identity);
+		var emptytower = GameObject.Instantiate(TowerPrefabs[10], new Vector3(1000f, -1.38f, 0), Quaternion.identity, Battlefield);
 		bellObj.transform.tag = "Tower";
 
 		pos1 = emptytower.transform.position;
@@ -106,7 +109,6 @@ public class TowerFabric : Singleton<TowerFabric>
 		blank3.Initialize(new TowerStatsList.Colocol(), ProjectilePrefabs[0], 10);
 		Targets.Add(blank3);
 	}
-
 
 	public TowerStatsList GetStatsByOrder(int order)
 	{
@@ -120,7 +122,7 @@ public class TowerFabric : Singleton<TowerFabric>
 		// НЕ ДЕЛАЮ БАЩНЮ ДОЧЕРНЕЙ 
 		// + new Vector3(0,2f)
 		Vector3 pos = Places[order].spawnPoint.position;
-		GameObject tower = GameObject.Instantiate(TowerPrefabs[stats.PrefabId], pos, Quaternion.identity);
+		GameObject tower = GameObject.Instantiate(TowerPrefabs[stats.PrefabId], pos, Quaternion.identity, Battlefield);
 
 
 		var component = tower.AddComponent<Tower>();

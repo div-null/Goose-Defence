@@ -34,10 +34,14 @@ public class Tower : Target
 
 	public int TowerOrder;
 
+	[SerializeField]
+	private Transform Battlefield;
+
 	private void Start ()
 	{
 		bangSound = GetComponent<AudioSource>();
 		Anim = GetComponent<Animator>();
+		Battlefield = GameObject.Find("BattleField").transform;
 	}
 
 	public void Initialize (TowerStatsList info, GameObject projectilePref, int order)
@@ -94,7 +98,7 @@ public class Tower : Target
 					break;
 
 				// добавляю скрипт на префаб
-				var projectile = GameObject.Instantiate(ProjectilePrefab, spawnPoint.position, Quaternion.identity);
+				var projectile = GameObject.Instantiate(ProjectilePrefab, spawnPoint.position, Quaternion.identity, Battlefield);
 				Projectile proj = projectile.GetComponent<Projectile>();
 
 				bangSound.Play();
