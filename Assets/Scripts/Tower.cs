@@ -37,6 +37,8 @@ public class Tower : Target
 	[SerializeField]
 	private Transform Battlefield;
 
+	private Coroutine AttackRoutine;
+
 	private void Start ()
 	{
 		bangSound = GetComponent<AudioSource>();
@@ -67,12 +69,12 @@ public class Tower : Target
 	public void MakeDamage ()
 	{
 		isAvailable = true;
-		StartCoroutine("Attack");
+		AttackRoutine = StartCoroutine(Attack());
 	}
 
 	public void StopDamage ()
 	{
-		StopCoroutine("Attack");
+		this.StopRoutine(AttackRoutine);
 		isAvailable = false;
 	}
 
@@ -137,7 +139,7 @@ public class Tower : Target
 	public override void DestroySelf ()
 	{
 		HP = 0;
-		StopCoroutine("Attack");
+		this.StopRoutine(AttackRoutine);
 		base.DestroySelf();
 	}
 }

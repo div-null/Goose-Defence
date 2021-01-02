@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public delegate void EndGame(bool result, int score);
-public delegate void StatUpdate(int score);
+public delegate void EndGame (bool result, int score);
+public delegate void StatUpdate (int score);
 
 public class Game : Singleton<Game>
 {
@@ -55,23 +55,27 @@ public class Game : Singleton<Game>
 	int score;
 	public int Score { get { return score; } protected set { score = value; UpdateScore?.Invoke(score); } }
 
-	public void Clear()
+
+	Coroutine EarnMoneyRoutine;
+	Coroutine IncScoreRoutine;
+
+	public void Clear ()
 	{
 		Score = 0;
 		Money = baseMoney;
 	}
 
-	public void increaseScore(int ammount)
+	public void increaseScore (int ammount)
 	{
 		Score += ammount;
 	}
 
-	public void increaseMoney(int ammount)
+	public void increaseMoney (int ammount)
 	{
 		Money += ammount;
 	}
 
-	public void decreaseMoney(int ammount)
+	public void decreaseMoney (int ammount)
 	{
 		Money -= ammount;
 	}
@@ -80,20 +84,20 @@ public class Game : Singleton<Game>
 	/// КОРУТИНА СПАВНА ГУСЕЙ И УВЕЛИЧЕНИЯ СЛОЖНОСТИ
 	/// </summary>
 	/// <returns></returns>
-	IEnumerator SpawnGooses()
+	IEnumerator SpawnGooses ()
 	{
 		GooseFabric.Instance.StartSpawning();
 		yield return null;
 	}
 
-	public void startGame()
+	public void startGame ()
 	{
 		Score = 0;
 		Money = baseMoney;
 		StartCoroutine(BeginGame());
 	}
 
-	public void finishGame(bool result, int score)
+	public void finishGame (bool result, int score)
 	{
 		StopAllCoroutines();
 		GooseFabric.Instance.Stopspawning();
@@ -104,37 +108,35 @@ public class Game : Singleton<Game>
 	/// Регулярное получение денег
 	/// </summary>
 	/// <returns></returns>
-	IEnumerator EarnMoney()
+	IEnumerator EarnMoney ()
 	{
-		while (true)
+		while ( true )
 		{
 			yield return new WaitForSeconds(moneyBackDelay);
 
-			Money += (int)(moneyPerDelay * (GooseFabric.Instance.GooseLvl / 8f + 1));
+			Money += (int)( moneyPerDelay * ( GooseFabric.Instance.GooseLvl / 8f + 1 ) );
 		}
 	}
 
-	IEnumerator BeginGame()
+	IEnumerator BeginGame ()
 	{
 		TowerFabric.Instance.spawnLocation();
 		yield return new WaitForSeconds(3f);
 		isGameStarted = true;
-		StartCoroutine(EarnMoney());
-		StartCoroutine(SpawnGooses());
+		EarnMoneyRoutine = StartCoroutine(EarnMoney());
+		IncScoreRoutine = StartCoroutine(SpawnGooses());
 	}
 
-	IEnumerator EndGame()
+	IEnumerator EndGame ()
 	{
 		isGameStarted = false;
-		StopCoroutine("EarnMoney");
-		StopCoroutine("SpawnGooses");
+		this.StopRoutine(EarnMoneyRoutine, IncScoreRoutine);
 		yield return new WaitForSeconds(0);
 	}
 
-	void Awake()
+	void Awake ()
 	{
 		LooseGame += finishGame;
 		WinGame += finishGame;
-
 	}
 }

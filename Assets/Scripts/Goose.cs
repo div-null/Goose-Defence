@@ -36,15 +36,11 @@ public class Goose : Target
 
 	public Vector3 Movement;
 	Target aim;
-	AudioSource audio;
+	AudioSource audioSource;
+	Coroutine SlowdownRoutine;
 
-	void Start()
-	{
-		animator = transform.GetComponentInChildren<Animator>();
-		audio = GetComponentInChildren<AudioSource>();
-	}
 
-	public void Initialize(int lvl)
+	public void Initialize (int lvl)
 	{
 		Level = lvl;
 		state = GooseState.stay;
@@ -52,35 +48,35 @@ public class Goose : Target
 		//int tmp = (int)((gooseLvl / 25f) / Mathf.Sqrt(1 + Mathf.Pow(gooseLvl / 25f, 2)) * 50);
 
 		int gooseGrade = Level / 10;
-		int kindSpread = Random.Range(1, 10) * (Level % 10);
-		switch (gooseGrade)
+		int kindSpread = Random.Range(1, 10) * ( Level % 10 );
+		switch ( gooseGrade )
 		{
 			case 0:
-				typeGoose = kindSpread < 50 ? GooseKind.White : GooseKind.Gray;
-				break;
+			typeGoose = kindSpread < 50 ? GooseKind.White : GooseKind.Gray;
+			break;
 
 			case 1:
-				typeGoose = kindSpread < 50 ? GooseKind.Gray : GooseKind.Brown;
-				break;
+			typeGoose = kindSpread < 50 ? GooseKind.Gray : GooseKind.Brown;
+			break;
 
 			case 2:
-				typeGoose = kindSpread < 50 ? GooseKind.Brown : GooseKind.Black;
-				break;
+			typeGoose = kindSpread < 50 ? GooseKind.Brown : GooseKind.Black;
+			break;
 			default:
-				typeGoose = GooseKind.Boss;
-				break;
+			typeGoose = GooseKind.Boss;
+			break;
 		}
 
-		maxHP = (int)((Level / 5f + 1f) * 250f);
+		maxHP = (int)( ( Level / 5f + 1f ) * 250f );
 		HP = maxHP;
-		Damage = (int)(maxHP / 2.5);
+		Damage = (int)( maxHP / 2.5 );
 
 		SpeedMultiplier = 1f + Level / 25f;
 
 		//Тут надо попроавить:
 		AttackSpeed = 2f - SpeedMultiplier / 2f;
 
-		if (typeGoose == GooseKind.Boss)
+		if ( typeGoose == GooseKind.Boss )
 		{
 			maxHP = 150000;
 			HP = maxHP;
@@ -92,20 +88,21 @@ public class Goose : Target
 	}
 
 
-	public void startAttack(Target target)
+	public void startAttack (Target target)
 	{
 		StartCoroutine(Attack(target));
 	}
 
-	IEnumerator Attack(Target target)
+	IEnumerator Attack (Target target)
 	{
 		state = GooseState.atack;
-		while (true)
+		while ( true )
 		{
-			if (target == null || target.isDestroyed) break;
-			audio.Play();
+			if ( target == null || target.isDestroyed )
+				break;
+			audioSource.Play();
 			//Небольшой разброс дамага
-			int tmpGooseDamage = Damage + (int)(Random.Range(-0.1f * Damage, 0.1f * Damage));
+			int tmpGooseDamage = Damage + (int)( Random.Range(-0.1f * Damage, 0.1f * Damage) );
 
 			//TowerFabric.Instance.TryDamageTower(TowerNumber, goose_damage);
 
@@ -117,12 +114,12 @@ public class Goose : Target
 			yield return new WaitForSeconds(AttackSpeed / 2);
 
 			animator.SetInteger("GooseState", (int)GooseState.stay);
-			
+
 		}
 		state = GooseState.walk;
 	}
 
-	public IEnumerator TakeBell(BossBell bell)
+	public IEnumerator TakeBell (BossBell bell)
 	{
 		state = GooseState.atack;
 		//TODO: выяснить как сократить задержку
@@ -137,27 +134,33 @@ public class Goose : Target
 		animator.SetBool("WithBell", true);
 	}
 
-	void findTarget(Target target)
+	void findTarget (Target target)
 	{
 		// если ранее цель была установлена
-		if (aim != null)
+		if ( aim != null )
 			aim.Destroyed -= findTarget;
 
 		//нахожу новую цель
-		if (target == null || target.isDestroyed)
+		if ( target == null || target.isDestroyed )
 			aim = TowerFabric.Instance.findNearTarget(transform.position);
 		else
 			aim = target;
 		aim.Destroyed += findTarget;
 	}
 
-	void FixedUpdate()
+	void Start ()
+	{
+		animator = transform.GetComponentInChildren<Animator>();
+		audioSource = GetComponentInChildren<AudioSource>();
+	}
+
+	void FixedUpdate ()
 	{
 		if ( aim == null )
 			return;
 		var position = aim.transform.position - new Vector3(0, 0, 0.5f);
-		var direction = (position - transform.position);
-		if (direction.magnitude > 0.1 && state != GooseState.atack && state != GooseState.death)
+		var direction = ( position - transform.position );
+		if ( direction.magnitude > 0.1 && state != GooseState.atack && state != GooseState.death )
 		{
 			// поворот гуся
 
@@ -170,7 +173,7 @@ public class Goose : Target
 			state = GooseState.walk;
 			animator.SetInteger("GooseState", (int)state);
 			animator.speed = SpeedMultiplier;
-			if (typeGoose == GooseKind.Boss)
+			if ( typeGoose == GooseKind.Boss )
 			{
 				animator.speed = 0.5f;
 				Movement.z = -3f + Mathf.Abs(Movement.y / 10) - 4;
@@ -187,9 +190,9 @@ public class Goose : Target
 		}
 	}
 
-	IEnumerator SlowDown(float coefSlow = 1, float timeSlow = 0)
+	IEnumerator SlowDown (float coefSlow = 1, float timeSlow = 0)
 	{
-		SpeedMultiplier = (1 + Level / 25) * coefSlow;
+		SpeedMultiplier = ( 1 + Level / 25 ) * coefSlow;
 		AttackSpeed = 2 - SpeedMultiplier / 2;
 		yield return new WaitForSeconds(timeSlow);
 		SpeedMultiplier = 1 + Level / 25;
@@ -198,15 +201,15 @@ public class Goose : Target
 	}
 
 	//Наносит урон гусю
-	public bool GetDamage(float dmg, float coefSlow = 1, float timeSlow = 0)
+	public bool GetDamage (float dmg, float coefSlow = 1, float timeSlow = 0)
 	{
 		base.GetDamage(dmg);
-		if (timeSlow != 0)
+		if ( timeSlow != 0 )
 		{
-			StopCoroutine(SlowDown());
-			StartCoroutine(SlowDown(coefSlow, timeSlow));
+			this.StopRoutine(SlowdownRoutine);
+			SlowdownRoutine = StartCoroutine(SlowDown(coefSlow, timeSlow));
 		}
-		if (isDestroyed && state != GooseState.death)
+		if ( isDestroyed && state != GooseState.death )
 		{
 			state = GooseState.death;
 			StopAllCoroutines();
@@ -216,7 +219,7 @@ public class Goose : Target
 		return isDestroyed;
 	}
 
-	IEnumerator OnDeath()
+	IEnumerator OnDeath ()
 	{
 		animator.speed = 1;
 		if ( aim != null )

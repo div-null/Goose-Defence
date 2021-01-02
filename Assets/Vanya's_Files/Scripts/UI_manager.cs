@@ -114,7 +114,7 @@ public class UI_manager : Singleton<UI_manager>
 		isGameStarted = false;
 		canSkip = true;
 		UIInMenu.SetActive(true);
-		StartCoroutine("ReadHistory");
+		StartCoroutine(ReadHistory());
 		resultScreen.SetActive(false);
 		UIInGame.SetActive(false);
 		history.GetComponentInChildren<Text>().text = "";
