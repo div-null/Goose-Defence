@@ -34,13 +34,13 @@ public class Tower : Target
 
 	public int TowerOrder;
 
-	private void Start()
+	private void Start ()
 	{
 		bangSound = GetComponent<AudioSource>();
 		Anim = GetComponent<Animator>();
 	}
 
-	public void Initialize(TowerStatsList info, GameObject projectilePref, int order)
+	public void Initialize (TowerStatsList info, GameObject projectilePref, int order)
 	{
 		type = TargetType.Human;
 		Anim = GetComponent<Animator>();
@@ -55,77 +55,82 @@ public class Tower : Target
 		// КОСТЫЛь
 		Tower tower = GetComponentInChildren<Tower>();
 
-		foreach (var child in tower.GetComponentsInChildren<Transform>())
-			if (child.tag == "FirePoint")
+		foreach ( var child in tower.GetComponentsInChildren<Transform>() )
+			if ( child.tag == "FirePoint" )
 				spawnPoints.Add(child);
 	}
 
-	public void MakeDamage()
+	public void MakeDamage ()
 	{
 		isAvailable = true;
 		StartCoroutine("Attack");
 	}
 
-	public void StopDamage()
+	public void StopDamage ()
 	{
 		StopCoroutine("Attack");
 		isAvailable = false;
 	}
 
-	public IEnumerator Attack()
+	public IEnumerator Attack ()
 	{
-		while (isAvailable)
+		while ( isAvailable )
 		{
 			Goose aim = GooseFabric.Instance.FindGoose(transform.position, info.Range);
 			// null или далеко
-			if (aim == null || spawnPoints == null)
+			if ( aim == null || spawnPoints == null )
 			{
 				yield return new WaitForSeconds(0.1f);
 				continue;
 			}
 
-			foreach (var spawnPoint in spawnPoints)
+			Anim.SetTrigger("Shoot");
+			var shotNumber = spawnPoints.Count();
+			foreach ( var spawnPoint in spawnPoints )
 			{
-				Anim.SetTrigger("Shoot");
 				yield return new WaitForSeconds(0.05f);
+				aim = GooseFabric.Instance.FindGoose(transform.position, info.Range);
+				if ( aim == null )
+					break;
+
 				// добавляю скрипт на префаб
 				var projectile = GameObject.Instantiate(ProjectilePrefab, spawnPoint.position, Quaternion.identity);
 				Projectile proj = projectile.GetComponent<Projectile>();
 
 				bangSound.Play();
 				proj.Loauch(spawnPoint.position, predictTargetPosition(spawnPoint.position, aim), info.Projectile);
+				yield return new WaitForSeconds(info.AttackDelay / shotNumber);
 			}
-			yield return new WaitForSeconds(info.AttackDelay);
 			// может быть не нужен
 			yield return new WaitForEndOfFrame();
 		}
 
 	}
 
-	Vector3 predictTargetPosition(Vector3 from, Goose goose)
+	Vector3 predictTargetPosition (Vector3 from, Goose goose)
 	{
 		Vector3 target = goose.transform.position;
 		float distance = Vector3.Distance(from, target);
 		float u1 = Math.Abs(info.Projectile.Velocity);
 		float u2 = Math.Abs(goose.Speed);
-		float angle = Mathf.Deg2Rad * (Vector3.Angle(from - target, goose.Movement));
-		float time = Mathf.Abs((Mathf.Sqrt(2) * Mathf.Sqrt(2 * distance * distance * u1 * u1 + distance * distance * u2 * u2 * Mathf.Cos(2 * angle) - distance * distance * u2 * u2) - 2 * distance * u2 * Mathf.Cos(angle)) / (2 * (u1 * u1 - u2 * u2)));
+		float angle = Mathf.Deg2Rad * ( Vector3.Angle(from - target, goose.Movement) );
+		float time = Mathf.Abs(( Mathf.Sqrt(2) * Mathf.Sqrt(2 * distance * distance * u1 * u1 + distance * distance * u2 * u2 * Mathf.Cos(2 * angle) - distance * distance * u2 * u2) - 2 * distance * u2 * Mathf.Cos(angle) ) / ( 2 * ( u1 * u1 - u2 * u2 ) ));
 
 		Vector3 prediction = goose.Movement * time + new Vector3(-0.15f, 0.15f, 0);
 		return target + prediction;
 	}
 
-	public override void OnCollided(Collider collider)
+	public override void OnCollided (Collider collider)
 	{
 		var goose = collider.gameObject.GetComponentInParent<Goose>();
-		if (goose == null)
+		if ( goose == null )
 			return;
 
-		if (goose.state != GooseState.atack)
+		if ( goose.state != GooseState.atack )
 			goose.startAttack(this);
 	}
 
-	public override void DestroySelf()
+	public override void DestroySelf ()
 	{
 		HP = 0;
 		StopCoroutine("Attack");

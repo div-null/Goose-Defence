@@ -36,10 +36,12 @@ public class Goose : Target
 
 	public Vector3 Movement;
 	Target aim;
+	AudioSource audio;
 
 	void Start()
 	{
 		animator = transform.GetComponentInChildren<Animator>();
+		audio = GetComponentInChildren<AudioSource>();
 	}
 
 	public void Initialize(int lvl)
@@ -101,7 +103,7 @@ public class Goose : Target
 		while (true)
 		{
 			if (target == null || target.isDestroyed) break;
-			GetComponentInChildren<AudioSource>().Play();
+			audio.Play();
 			//Небольшой разброс дамага
 			int tmpGooseDamage = Damage + (int)(Random.Range(-0.1f * Damage, 0.1f * Damage));
 
@@ -129,7 +131,6 @@ public class Goose : Target
 		bell.GetDamage(Damage);
 		yield return new WaitForSeconds(AttackSpeed / 2);
 
-
 		animator.SetInteger("GooseState", 1);
 		animator.SetBool("WithBell", true);
 		state = GooseState.walk;
@@ -151,7 +152,8 @@ public class Goose : Target
 
 	void FixedUpdate()
 	{
-
+		if ( aim == null )
+			return;
 		var position = aim.transform.position - new Vector3(0, 0, 0.5f);
 		var direction = (position - transform.position);
 		if (direction.magnitude > 0.1 && state != GooseState.atack && state != GooseState.death)
@@ -216,6 +218,8 @@ public class Goose : Target
 	IEnumerator OnDeath()
 	{
 		animator.speed = 1;
+		if ( aim != null )
+			aim.Destroyed -= findTarget;
 		GooseFabric.Instance.geese.Remove(this);
 		animator.SetInteger("GooseState", 4);   //death
 		state = GooseState.death;
