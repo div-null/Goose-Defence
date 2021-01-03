@@ -15,49 +15,6 @@ public enum TowerType
 
 
 /// <summary>
-/// Статы снаряда
-/// </summary>
-[Serializable]
-public class ProjectileStats
-{
-	public ProjectileStats(int Damage, float Range, float Speed, float coefSlow = 1, float timeSlow = 0)
-	{
-		this.Damage = Damage;
-		ExplosionRange = Range;
-		Velocity = Speed;
-		this.coefSlow = coefSlow;
-		this.timeSlow = timeSlow;
-	}
-
-	/// <summary>
-	/// Скорость снаряда
-	/// </summary>
-	public int Damage;
-
-	/// <summary>
-	/// Радиус дамага
-	/// </summary>
-	public float ExplosionRange;
-
-	/// <summary>
-	/// Скорость полёта снаряда
-	/// </summary>
-	public float Velocity;
-	/// <summary>
-	/// Коэффициент замедения
-	/// </summary>
-	public float coefSlow;
-
-	/// <summary>
-	/// Время замедления
-	/// </summary>
-	public float timeSlow;
-}
-
-
-
-
-/// <summary>
 /// Статы гуся определённого ТИПА
 /// </summary>
 public struct GooseTypeStats
