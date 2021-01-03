@@ -9,6 +9,7 @@ using UnityEditor;
 public class TowerStats : ScriptableObject
 {
 	[Header("Summary information")]
+
 	[Tooltip("Tower name")]
 	[SerializeField]
 	string towerName;
@@ -28,10 +29,13 @@ public class TowerStats : ScriptableObject
 
 	[SerializeField]
 	TowerType towerType;
-
-
+	/// <summary>
+	/// Тип башни
+	/// </summary>
+	public TowerType Type => towerType;
 
 	[Header("Base stats")]
+
 	[SerializeField]
 	int maxHP;
 	/// <summary>
@@ -62,7 +66,7 @@ public class TowerStats : ScriptableObject
 	/// </summary>
 	public float AttackDelay => attackDelay;
 
-	[Range(10f, 40f)]
+	[Range(10f, 100f)]
 	[SerializeField]
 	float range;
 	/// <summary>
@@ -72,6 +76,7 @@ public class TowerStats : ScriptableObject
 
 
 	[Header("Projectile stats")]
+
 	[SerializeField]
 	ProjectileStats projectileStats;
 	/// <summary>
@@ -93,3 +98,5 @@ public class TowerStats : ScriptableObject
 		projectileStats = new ProjectileStats(800, 1, 4f);
 	}
 }
+
+

@@ -62,8 +62,8 @@ public class Projectile : MonoBehaviour
 		RemainTime = Vector3.Distance(tower, point) / stats.Velocity;
 		Radius = stats.ExplosionRange;
 
-		this.coefSlow = stats.coefSlow;
-		this.timeSlow = stats.timeSlow;
+		this.coefSlow = stats.SlowMultiplier;
+		this.timeSlow = stats.SlowTime;
 		//TODO: добавить поворот
 		transform.rotation = Quaternion.LookRotation(Vector3.back);
 	}
