@@ -5,37 +5,41 @@ using System.Linq;
 using UnityEngine.SocialPlatforms;
 using UnityEngine;
 
+
 public class Tower : Target
 {
 
 	[SerializeField]
 	public Animator Anim;
 
-	AudioSource bangSound;
-
 	[SerializeField]
 	public GameObject SpawnPos;
 
-	/// <summary>
-	/// Точка спавна снарядов
-	/// </summary>
-	[SerializeField]
-	List<Transform> spawnPoints;
-	/// <summary>
-	/// Префаб снаряда
-	/// </summary>
-	[SerializeField]
-	GameObject ProjectilePrefab;
-
-	[SerializeField]
-	public TowerStatsList info = new TowerStatsList.TowerCabbageT1();
+	public TowerStats Stats => stats;
 
 	public bool isAvailable { get; set; }
 
 	public int TowerOrder;
 
+	/// <summary>
+	/// Точка спавна снарядов
+	/// </summary>
+	[SerializeField]
+	private List<Transform> spawnPoints;
+
+	/// <summary>
+	/// Префаб снаряда
+	/// </summary>
+	[SerializeField]
+	private GameObject ProjectilePrefab;
+
+	[SerializeField]
+	private TowerStats stats;
+
 	[SerializeField]
 	private Transform Battlefield;
+
+	private AudioSource bangSound;
 
 	private Coroutine AttackRoutine;
 
@@ -46,19 +50,19 @@ public class Tower : Target
 		Battlefield = GameObject.Find("BattleField").transform;
 	}
 
-	public void Initialize (TowerStatsList info, GameObject projectilePref, int order)
+	public void Initialize (TowerStats stats, GameObject projectilePref, int order)
 	{
 		type = TargetType.Human;
 		Anim = GetComponent<Animator>();
 		spawnPoints = new List<Transform>();
 		TowerOrder = order;
-		this.info = info;
-		maxHP = info.MaxHP;
-		HP = info.MaxHP;
+		this.stats = stats;
+		maxHP = stats.MaxHP;
+		HP = stats.MaxHP;
 
 		ProjectilePrefab = projectilePref;
 
-		// КОСТЫЛь
+		// FIXME: КОСТЫЛЬ
 		Tower tower = GetComponentInChildren<Tower>();
 
 		foreach ( var child in tower.GetComponentsInChildren<Transform>() )
@@ -82,7 +86,7 @@ public class Tower : Target
 	{
 		while ( isAvailable )
 		{
-			Goose aim = GooseFabric.Instance.FindGoose(transform.position, info.Range);
+			Goose aim = GooseFabric.Instance.FindGoose(transform.position, Stats.Range);
 			// null или далеко
 			if ( aim == null || spawnPoints == null )
 			{
@@ -95,7 +99,7 @@ public class Tower : Target
 			foreach ( var spawnPoint in spawnPoints )
 			{
 				yield return new WaitForSeconds(0.05f);
-				aim = GooseFabric.Instance.FindGoose(transform.position, info.Range);
+				aim = GooseFabric.Instance.FindGoose(transform.position, Stats.Range);
 				if ( aim == null )
 					break;
 
@@ -104,8 +108,8 @@ public class Tower : Target
 				Projectile proj = projectile.GetComponent<Projectile>();
 
 				bangSound.Play();
-				proj.Loauch(spawnPoint.position, predictTargetPosition(spawnPoint.position, aim), info.Projectile);
-				yield return new WaitForSeconds(info.AttackDelay / shotNumber);
+				proj.Loauch(spawnPoint.position, predictTargetPosition(spawnPoint.position, aim), Stats.Projectile);
+				yield return new WaitForSeconds(Stats.AttackDelay / shotNumber);
 			}
 			// может быть не нужен
 			yield return new WaitForEndOfFrame();
@@ -117,7 +121,7 @@ public class Tower : Target
 	{
 		Vector3 target = goose.transform.position;
 		float distance = Vector3.Distance(from, target);
-		float u1 = Math.Abs(info.Projectile.Velocity);
+		float u1 = Math.Abs(Stats.Projectile.Velocity);
 		float u2 = Math.Abs(goose.Speed);
 		float angle = Mathf.Deg2Rad * ( Vector3.Angle(from - target, goose.Movement) );
 		float time = Mathf.Abs(( Mathf.Sqrt(2) * Mathf.Sqrt(2 * distance * distance * u1 * u1 + distance * distance * u2 * u2 * Mathf.Cos(2 * angle) - distance * distance * u2 * u2) - 2 * distance * u2 * Mathf.Cos(angle) ) / ( 2 * ( u1 * u1 - u2 * u2 ) ));

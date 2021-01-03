@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3cecadd537d4744f9199d2ecfc0eb1c, type: 3}
-  m_Name: PeasT1r
+  m_Name: PeasT1
   m_EditorClassIdentifier: 
   towerName: "\u0413\u043E\u0440\u043E\u0445\u043E\u0432\u0430\u044F \u0431\u0430\u0448\u043D\u044F"
   description: "\u0421\u0442\u0440\u0435\u043B\u044F\u0435\u0442 \u0431\u043E\u043B\u044C\u0448\u0438\u043C

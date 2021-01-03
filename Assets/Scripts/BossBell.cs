@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class BossBell : Target
 {
-
 	public void Initialize(int _maxHp)
 	{
 		type = TargetType.Human;

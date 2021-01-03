@@ -11106,6 +11106,18 @@ MonoBehaviour:
   - {fileID: 3176347508634957828, guid: 01d3dda4ae58bc846972ced6c73887b5, type: 3}
   - {fileID: 224248713741224542, guid: 39b18e91bd14b054a87d005be74614f8, type: 3}
   - {fileID: 5685062357706818667, guid: 13efed80bb0ea2d4d803752462589afd, type: 3}
+  TowerStatsList:
+  - {fileID: 11400000, guid: 00440a0752a7d264987acb2296f760c4, type: 2}
+  - {fileID: 11400000, guid: 3d2db4e286f07c144961126cb2657384, type: 2}
+  - {fileID: 11400000, guid: a9d6208357960fe4f9465a2e93ad2823, type: 2}
+  - {fileID: 11400000, guid: 3744ba0451b26e24abf5b062b16d5ac1, type: 2}
+  - {fileID: 11400000, guid: 8154afa60ff4eab42adf38a31326e45c, type: 2}
+  - {fileID: 11400000, guid: a86a4552869bbf948ae8b476517d4a15, type: 2}
+  - {fileID: 11400000, guid: 5c5f6ace568d81a42a0b96ea334b66e0, type: 2}
+  - {fileID: 11400000, guid: a91ba492e94b7df4899a30f6f7038109, type: 2}
+  - {fileID: 11400000, guid: 1edf17d9ac4b7d545bfdfce6684e9c66, type: 2}
+  ColocolStats: {fileID: 11400000, guid: 09f3e9d8b28aa2a4181ef51df0fd81e1, type: 2}
+  WallStats: {fileID: 11400000, guid: ac29e5fc9f2a8dc45a7c57cba3fdd2c4, type: 2}
   Towers: []
   place:
   - {fileID: 1858022188}

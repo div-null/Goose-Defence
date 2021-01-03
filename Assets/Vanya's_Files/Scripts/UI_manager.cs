@@ -26,8 +26,8 @@ public class UI_manager : Singleton<UI_manager>
 	public Animator transitor;
 	Tower tower;
 	Place place;
-	int savedId;
-	float price;
+	TowerType selectedType;
+	float selectedPrice;
 	public GameObject backGroundMusicButton;
 	[Header("Audio")]
 	public AudioSource ButtonCloseSound;
@@ -55,49 +55,50 @@ public class UI_manager : Singleton<UI_manager>
 	public GameObject resultScreen;
 	public GameObject transitToEnd;
 
-	public void UI_TurnOnMenu()
+	public void UI_TurnOnMenu ()
 	{
 		ButtonCloseSound.Play();
 		StartCoroutine(WaitForTransitionToMenu());
 	}
 
-	void UI_TurnOnGame()
+	void UI_TurnOnGame ()
 	{
 		StartCoroutine(WaitForTransitionToGame());
 	}
 
-	void UI_SetAmountOfGold(int amount)
+	void UI_SetAmountOfGold (int amount)
 	{
 		moneyStat.GetComponent<Text>().text = amount.ToString();
 	}
 
-	void setAmountOfMoney(int gold)
+	void setAmountOfMoney (int gold)
 	{
 		moneyStat.GetComponentInChildren<Text>().text = gold.ToString();
 		setStatus(gold);
 	}
 
-	public void setDangerLvl(int lvl)
+	public void setDangerLvl (int lvl)
 	{
 		dangerStat.GetComponent<Text>().text = lvl + " уровень угрозы";
 	}
 
-	void setStatus(int gold)
+	void setStatus (int gold)
 	{
-		if (Accept.GetComponentInChildren<Text>().text == "")
+		if ( Accept.GetComponentInChildren<Text>().text == "" )
 			Accept.interactable = false;
-		else if (price <= gold)
+		else if ( selectedPrice <= gold )
 			Accept.interactable = true;
-		else Accept.interactable = false;
+		else
+			Accept.interactable = false;
 	}
 
-	void WriteScore(int score)
+	void WriteScore (int score)
 	{
 		scoreStat.GetComponent<Text>().text = "Счёт: " + score;
 	}
 
 	// Start is called before the first frame update
-	void Start()
+	void Start ()
 	{
 		Game.Instance.UpdateScore += WriteScore;
 		Game.Instance.WinGame += PrintScore;
@@ -109,7 +110,7 @@ public class UI_manager : Singleton<UI_manager>
 
 
 
-	public void StartWriting()
+	public void StartWriting ()
 	{
 		isGameStarted = false;
 		canSkip = true;
@@ -124,46 +125,46 @@ public class UI_manager : Singleton<UI_manager>
 	}
 
 
-	public void CloseWindow()
+	public void CloseWindow ()
 	{
 		ButtonCloseSound.Play();
 		Application.Quit();
 	}
 
-	public void CloseInfoPanel()
+	public void CloseInfoPanel ()
 	{
 		ButtonCloseSound.Play();
 		infoPanel.SetActive(false);
 	}
 
-	public void CloseBuyPanel()
+	public void CloseBuyPanel ()
 	{
 		ButtonCloseSound.Play();
 		buyPanel.SetActive(false);
 	}
 
-	public void SelectFirstTypeOfTower()
+	public void SelectFirstTypeOfTower ()
 	{
 		ButtonSelect.Play();
-		WindowBuyTower(0);
+		WindowBuyTower(TowerType.Tomate);
 	}
 
-	public void SelectSecondTypeOfTower()
+	public void SelectSecondTypeOfTower ()
 	{
 		ButtonSelect.Play();
-		WindowBuyTower(3);
+		WindowBuyTower(TowerType.Cabbage);
 	}
 
-	public void SelectThirdTypeOfTower()
+	public void SelectThirdTypeOfTower ()
 	{
 		ButtonSelect.Play();
-		WindowBuyTower(6);
+		WindowBuyTower(TowerType.Peas);
 	}
 
 	bool isBackSound = true;
-	public void BackGroundSoundOnOff()
+	public void BackGroundSoundOnOff ()
 	{
-		if (!isBackSound)
+		if ( !isBackSound )
 		{
 			BackGroundMusic.Play();
 			backGroundMusicButton.GetComponent<Image>().sprite = musicOn;
@@ -178,10 +179,10 @@ public class UI_manager : Singleton<UI_manager>
 		ButtonSelect.Play();
 	}
 
-	public void BackGroundSoundOnOff(bool value)
+	public void BackGroundSoundOnOff (bool value)
 	{
 		isBackSound = value;
-		if (value)
+		if ( value )
 		{
 			BackGroundMusic.Play();
 		}
@@ -192,9 +193,9 @@ public class UI_manager : Singleton<UI_manager>
 	}
 
 
-	public void WindowBuyTower(int id)
+	public void WindowBuyTower (TowerType type)
 	{
-		savedId = id;
+		selectedType = type;
 		infoPanel.SetActive(true);
 		//Прячем статы улучшения
 		upgradeDamage.gameObject.SetActive(false);
@@ -203,15 +204,15 @@ public class UI_manager : Singleton<UI_manager>
 		upgradeReload.gameObject.SetActive(false);
 		upgradeHealth.gameObject.SetActive(false);
 		upgradeAttackRange.gameObject.SetActive(false);
-		ShowMainStats(TowerStatsList.GetStatsByPrefabId(id));
+		ShowMainStats(TowerFabric.Instance.TowerStats(type, 1));
 		Accept.GetComponentInChildren<Text>().text = "Купить";
 		setStatus(Game.Instance.Money);
 		buyPanel.SetActive(false);
 	}
 
-	void WindowUpgradeTower(Tower tower)
+	void WindowUpgradeTower (Tower tower)
 	{
-		if (tower.info.PrefabId % 3 == 2)
+		if ( tower.Stats.Level == 3 )
 		{
 			//Прячем статы улучшения
 			upgradeDamage.gameObject.SetActive(false);
@@ -220,85 +221,90 @@ public class UI_manager : Singleton<UI_manager>
 			upgradeReload.gameObject.SetActive(false);
 			upgradeHealth.gameObject.SetActive(false);
 			upgradeAttackRange.gameObject.SetActive(false);
-			ShowMainStats(tower.info);
+			ShowMainStats(tower.Stats);
 			infoAboutTower.text = "Башня максимального уровня";
 			Accept.GetComponentInChildren<Text>().text = "";
 			setStatus(Game.Instance.Money);
 		}
 		else
 		{
-			ShowMainStats(tower.info);
+			var newLevel = TowerFabric.Instance.NextTowerStats(tower.Stats);
+			ShowMainStats(tower.Stats);
 			upgradeDamage.gameObject.SetActive(true);
 			upgradeRadius.gameObject.SetActive(true);
 			upgradeSpeed.gameObject.SetActive(true);
 			upgradeReload.gameObject.SetActive(true);
 			upgradeHealth.gameObject.SetActive(true);
 			upgradeAttackRange.gameObject.SetActive(true);
-			ShowUpgradeStats(tower.info);
-			price = TowerStatsList.GetStatsByPrefabId(tower.info.PrefabId + 1).Cost;
-			cost.text = "Стоимость: " + price;
+			ShowUpgradeStats(tower.Stats);
+			selectedPrice = newLevel.Cost;
+			cost.text = "Стоимость: " + selectedPrice;
 			Accept.GetComponentInChildren<Text>().text = "Улучшить";
 			setStatus(Game.Instance.Money);
 		}
 	}
 
-	void ShowMainStats(TowerStatsList tower)
+	void ShowMainStats (TowerStats stats)
 	{
-		title.text = tower.Name;
-		infoAboutTower.text = tower.Discription;
-		displayTower.sprite = towerPictures[tower.PrefabId];
-		damage.text = "Урон: " + tower.Projectile.Damage;
-		attackRange.text = "Радиус атаки: " + tower.Range;
-		radius.text = "Зона поражения: " + tower.Projectile.ExplosionRange;
-		speed.text = "Скорость снаряда: " + tower.Projectile.Velocity;
-		reload.text = "Перезарядка: " + tower.AttackDelay;
-		health.text = "Здоровье: " + tower.MaxHP;
-		price = tower.Cost;
-		cost.text = "Стоимость: " + price;
+		int towerRank = (int)stats.Type * 3 + stats.Level;
+		title.text = stats.Name;
+		infoAboutTower.text = stats.Description;
+		displayTower.sprite = towerPictures[towerRank - 1];
+		damage.text = "Урон: " + stats.Projectile.Damage;
+		attackRange.text = "Радиус атаки: " + stats.Range;
+		radius.text = "Зона поражения: " + stats.Projectile.ExplosionRange;
+		speed.text = "Скорость снаряда: " + stats.Projectile.Velocity;
+		reload.text = "Перезарядка: " + stats.AttackDelay;
+		health.text = "Здоровье: " + stats.MaxHP;
+		selectedPrice = stats.Cost;
+		cost.text = "Стоимость: " + selectedPrice;
 	}
 
-	void ShowUpgradeStats(TowerStatsList tower)
+	void ShowUpgradeStats (TowerStats stats)
 	{
-		upgradeDamage.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).Projectile.Damage - tower.Projectile.Damage);
-		upgradeRadius.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).Projectile.ExplosionRange - tower.Projectile.ExplosionRange);
-		upgradeAttackRange.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).Range - 11);
-		upgradeSpeed.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).Projectile.Velocity - tower.Projectile.Velocity);
-		upgradeReload.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).AttackDelay - tower.AttackDelay);
-		upgradeHealth.text = "+" + (TowerStatsList.GetStatsByPrefabId(tower.PrefabId + 1).MaxHP - tower.MaxHP);
+		var newStats = TowerFabric.Instance.NextTowerStats(stats);
+		if ( newStats == null )
+			return;
+		upgradeDamage.text = "+" + ( newStats.Projectile.Damage - stats.Projectile.Damage );
+		upgradeRadius.text = "+" + ( newStats.Projectile.ExplosionRange - stats.Projectile.ExplosionRange );
+		upgradeAttackRange.text = "+" + ( newStats.Range - stats.Range );
+		upgradeSpeed.text = "+" + ( newStats.Projectile.Velocity - stats.Projectile.Velocity );
+		upgradeReload.text = "+" + ( newStats.AttackDelay - stats.AttackDelay );
+		upgradeHealth.text = "+" + ( newStats.MaxHP - stats.MaxHP );
 	}
 
 	// Update is called once per frame
-	void Update()
+	void Update ()
 	{
-		if (isGameStarted == false && canSkip == true && Input.anyKey == true)
+		if ( isGameStarted == false && canSkip == true && Input.anyKey == true )
 		{
 			isGameStarted = true;
 			StartCoroutine(WaitForTransitionToGame());
 		}
-		if (Input.GetMouseButtonDown(0))
+		if ( Input.GetMouseButtonDown(0) )
 		{
 			Vector2 rayPos = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
-			foreach (var hit in Physics2D.RaycastAll(rayPos, Vector2.zero))
+			foreach ( var hit in Physics2D.RaycastAll(rayPos, Vector2.zero) )
 			{
-				if (hit.transform.tag == "UI_tower" || hit.transform.tag == "Tower" || hit.transform.tag == "Place")
+				if ( hit.transform.tag == "UI_tower" || hit.transform.tag == "Tower" || hit.transform.tag == "Place" )
 				{
-					if (hit.transform.tag == "UI_tower")
+					if ( hit.transform.tag == "UI_tower" )
 					{
 						var parent = hit.transform.parent;
 						tower = parent.transform.gameObject.GetComponent<Tower>();
 						WindowUpgradeTower(tower);
 						infoPanel.SetActive(true);
 					}
-					else if (hit.transform.tag == "Tower")
+					else if ( hit.transform.tag == "Tower" )
 					{
 						tower = hit.transform.gameObject.GetComponent<Tower>();
 						WindowUpgradeTower(tower);
 						infoPanel.SetActive(true);
 					}
-					else if (hit.transform.tag == "Place")
+					else if ( hit.transform.tag == "Place" )
 					{
 						place = hit.transform.gameObject.GetComponent<Place>();
-						if (place.isFree)
+						if ( place.isFree )
 							buyPanel.SetActive(true);
 					}
 					break;
@@ -307,37 +313,37 @@ public class UI_manager : Singleton<UI_manager>
 		}
 	}
 
-	public void ClickAccept()
+	public void ClickAccept ()
 	{
-		if (Accept.GetComponentInChildren<Text>().text == "Улучшить")
+		if ( Accept.GetComponentInChildren<Text>().text == "Улучшить" )
 		{
 			if ( tower == null || tower.isDestroyed )
 			{
 				CloseInfoPanel();
 				return;
 			}
-			Game.Instance.decreaseMoney((int)price);
+			Game.Instance.decreaseMoney((int)selectedPrice);
 			TowerFabric.Instance.upgradeTower(tower.TowerOrder);
 			infoPanel.SetActive(false);
 			ButtonBuild.Play();
 		}
-		else if (Accept.GetComponentInChildren<Text>().text == "Купить")
+		else if ( Accept.GetComponentInChildren<Text>().text == "Купить" )
 		{
-			Game.Instance.decreaseMoney((int)price);
-			TowerFabric.Instance.placeTower(place.Order, TowerStatsList.GetStatsByPrefabId(savedId));
+			Game.Instance.decreaseMoney((int)selectedPrice);
+			TowerFabric.Instance.placeTower(place.Order, selectedType, 1);
 			infoPanel.SetActive(false);
 			ButtonBuy.Play();
 		}
 		moneyStat.GetComponentInChildren<Text>().text = Game.Instance.Money.ToString();
 	}
 
-	IEnumerator ReadHistory()
+	IEnumerator ReadHistory ()
 	{
 		float textSpeed = 0.05f;
 		Writing.Play();
-		for (int i = 0; i < historyStr.Length; i++)
+		for ( int i = 0; i < historyStr.Length; i++ )
 		{
-			if (canSkip == false && Input.anyKey == true)
+			if ( canSkip == false && Input.anyKey == true )
 			{
 				textSpeed /= 10f;
 			}
@@ -349,7 +355,7 @@ public class UI_manager : Singleton<UI_manager>
 		Writing.Stop();
 	}
 
-	IEnumerator WaitForTransitionToMenu()
+	IEnumerator WaitForTransitionToMenu ()
 	{
 		transitor.SetTrigger("End");
 		yield return new WaitForSeconds(1.5f);
@@ -363,7 +369,7 @@ public class UI_manager : Singleton<UI_manager>
 		transitor.SetTrigger("Start");
 	}
 
-	IEnumerator WaitForTransitionToGame()
+	IEnumerator WaitForTransitionToGame ()
 	{
 		transitor.SetTrigger("End");
 		yield return new WaitForSeconds(1.5f);
@@ -385,18 +391,18 @@ public class UI_manager : Singleton<UI_manager>
 		//TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerPeasT3());
 	}
 
-	public void PrintScore(bool result, int score)
+	public void PrintScore (bool result, int score)
 	{
 		StartCoroutine(Result(result, score));
 	}
 
-	public void ExitGame()
+	public void ExitGame ()
 	{
 		ButtonCloseSound.Play();
 		Application.Quit();
 	}
 
-	public void PlayAgain()
+	public void PlayAgain ()
 	{
 		ClearLevel.Instance.Clear();
 		GooseFabric.Instance.Clear();
@@ -404,7 +410,7 @@ public class UI_manager : Singleton<UI_manager>
 		StartWriting();
 	}
 
-	IEnumerator Result(bool result, int score)
+	IEnumerator Result (bool result, int score)
 	{
 		yield return new WaitForSeconds(Game.gameEndTimeOut);
 		BackGroundSoundOnOff(false);
@@ -413,7 +419,7 @@ public class UI_manager : Singleton<UI_manager>
 		yield return new WaitForSeconds(1f);
 		resultScreen.SetActive(true);
 		scoreText.text = "Счёт: " + score;
-		if (result)
+		if ( result )
 		{
 			resultMusic.clip = winSound;
 			resultMusic.Play();
