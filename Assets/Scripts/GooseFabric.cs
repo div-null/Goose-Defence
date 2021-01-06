@@ -221,22 +221,4 @@ public class GooseFabric : Singleton<GooseFabric>
 			_geese.Add(_gooseBoss);
 		}
 	}
-	//TODO: вынести в класс Tower
-	public void OnAttack (float radius, Vector2 target, int damage, float coefSlow = 1, float timeSlow = 0)
-	{
-		//находим побитых гусей
-		RaycastHit2D[] hits = Physics2D.CircleCastAll(target, radius, Vector2.down, 5);
-
-		foreach ( var hit in hits )
-		{
-			//увидели гуся
-			var parent = hit.transform.parent;
-			if ( parent == null )
-				continue;
-			var goose = parent.gameObject.GetComponent<Goose>();
-			if ( goose && goose.IsAlive )
-				goose.GetDamage(damage, coefSlow, timeSlow);        //Бьём гуся
-		}
-	}
-
 }

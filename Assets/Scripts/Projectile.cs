@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
@@ -30,78 +29,91 @@ public class Projectile : MonoBehaviour
 	/// <summary>
 	/// Коэффициент замедения
 	/// </summary>
-	public float coefSlow;
+	public float CoefSlow;
 
 	/// <summary>
 	/// Время замедления
 	/// </summary>
-	public float timeSlow;
+	public float TimeSlow;
 
 	/// <summary>
 	/// Направление полёта снаряда
 	/// </summary>
-	Vector3 Direction;
+	private Vector3 _direction;
 
 	/// <summary>
 	/// Снаряд закончил падение
 	/// </summary>
-	bool isLanded;
+	private bool _isLanded;
 
 	/// <summary>
 	/// Оставшееся время до падения
 	/// </summary>
-	float RemainTime;
+	private float _remainTime;
 
 	public void Loauch (Vector3 tower, Vector3 point, ProjectileStats stats)
 	{
-		isLanded = false;
+		_isLanded = false;
 		Damage = stats.Damage;
 		this.Velocity = stats.Velocity;
 		transform.position = tower;
-		Direction = ( point - tower ).normalized;
-		RemainTime = Vector3.Distance(tower, point) / stats.Velocity;
+		_direction = ( point - tower ).normalized;
+		_remainTime = Vector3.Distance(tower, point) / stats.Velocity;
 		Radius = stats.ExplosionRange;
 
-		this.coefSlow = stats.SlowMultiplier;
-		this.timeSlow = stats.SlowTime;
-		//TODO: добавить поворот
+		this.CoefSlow = stats.SlowMultiplier;
+		this.TimeSlow = stats.SlowTime;
 		transform.rotation = Quaternion.LookRotation(Vector3.back);
 	}
-
-	void MakeDamage ()
-	{
-		Vector2 pos = transform.position;
-		// TODO: Вызов метода дамага гусей
-		GooseFabric.Instance.OnAttack(Radius, pos, Damage, coefSlow, timeSlow);
-		StartCoroutine(Destroy());
-	}
-
-
 	private void Start ()
 	{
 		animator = GetComponent<Animator>();
 	}
 
-	void FixedUpdate ()
+	private void FixedUpdate ()
 	{
-		if ( RemainTime <= 0 && !isLanded )
+		if ( _remainTime <= 0 && !_isLanded )
 		{
-			isLanded = true;
-			MakeDamage();
+			_isLanded = true;
+			_makeDamage();
 		}
 
-		if ( RemainTime > 0 )
+		if ( _remainTime > 0 )
 		{
-			// transform.Rotate(0, 0, 10f * Time.deltaTime);                       //вращение снаряда     
-			Vector3 newpos = transform.position + Direction * Velocity * Time.deltaTime;
-			RemainTime -= Time.deltaTime;
+			// transform.Rotate(0, 0, 10f * Time.deltaTime);                       //вращение снаряда
+			Vector3 newpos = transform.position + _direction * Velocity * Time.deltaTime;
+			_remainTime -= Time.deltaTime;
 			newpos.z = -3 + Mathf.Abs(newpos.y / 10);
 			transform.position = newpos;
 		}
 
 	}
 
-	IEnumerator Destroy ()
+	private void _makeDamage ()
+	{
+		Vector2 pos = transform.position;
+		_attack(pos);
+		StartCoroutine(_destroy());
+	}
+
+	private void _attack (Vector2 target)
+	{
+		//находим побитых гусей
+		RaycastHit2D[] hits = Physics2D.CircleCastAll(target, Radius, Vector2.down, 5);
+
+		foreach ( var hit in hits )
+		{
+			//увидели гуся
+			var parent = hit.transform.parent;
+			if ( parent == null )
+				continue;
+			var goose = parent.gameObject.GetComponent<Goose>();
+			if ( goose && goose.IsAlive )
+				goose.GetDamage(Damage, CoefSlow, TimeSlow);
+		}
+	}
+
+	private IEnumerator _destroy ()
 	{
 		animator.SetTrigger("Destroy");
 		yield return new WaitForSeconds(1f);
