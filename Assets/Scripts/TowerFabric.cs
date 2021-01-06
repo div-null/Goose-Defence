@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -141,7 +141,7 @@ public class TowerFabric : Singleton<TowerFabric>
 
 	public void placeTower (int order, TowerStats stats)
 	{
-		// НЕ ДЕЛАЮ БАЩНЮ ДОЧЕРНЕЙ 
+		// НЕ ДЕЛАЮ БАЩНЮ ДОЧЕРНЕЙ
 		// + new Vector3(0,2f)
 		Vector3 pos = Places[order].spawnPoint.position;
 		int towerPrefId = (int)stats.Type * 3 + stats.Level - 1;
@@ -253,9 +253,6 @@ public class TowerFabric : Singleton<TowerFabric>
 	/// </summary>
 	void destroyWall (Target wall)
 	{
-		for ( int i = 0; i < 3; i++ )
-			Destroy(wall.transform.Find("wall " + i.ToString())
-				 .GetComponent<BoxCollider>());
 		wall.DestroySelf();
 		Targets.Remove(wall);
 		GooseFabric.Instance.loanchBoss();

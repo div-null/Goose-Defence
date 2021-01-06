@@ -6,7 +6,7 @@ public class Wall : Target
 	/// <summary>
 	/// Хп стены
 	/// </summary>
-	public ProgressBar hpBar;
+	public ProgressBar HpBar;
 
 	/// <summary>
 	/// Спрайты стены
@@ -17,61 +17,59 @@ public class Wall : Target
 	/// Префаб полоски здоровья
 	/// </summary>
 	[SerializeField]
-	GameObject hpBarPrefab;
+	private GameObject _hpBarPrefab;
 
-	public void Initialize(int _maxHp)
+	private SpriteRenderer _renderer;
+
+	public void Initialize (int maxHp)
 	{
-		MaxHP = _maxHp;
+		MaxHP = maxHp;
 		HP = MaxHP;
-		var hpBarObj = GameObject.Instantiate(hpBarPrefab, new Vector3(-2f, 10f, -6f), Quaternion.identity);
+		var hpBarObj = GameObject.Instantiate(_hpBarPrefab, new Vector3(-2f, 10f, -6f), Quaternion.identity);
 		hpBarObj.transform.SetParent(transform);
-		hpBar = hpBarObj.GetComponent<ProgressBar>();
-		hpBar.Initialize(HP);
-		Damaged += getDamage;
+		HpBar = hpBarObj.GetComponent<ProgressBar>();
+		_renderer = GetComponentInChildren<SpriteRenderer>();
+		HpBar.Initialize(HP);
+		Damaged += _getDamage;
 
-		hpBar.Hp = HP;
+		HpBar.Hp = HP;
 	}
 
-	private void getDamage(Target obj)
+	public override void DestroySelf ()
 	{
-		hpBar.Hp = HP;
-		if (HP == MaxHP)
-		{
-			GetComponentInChildren<SpriteRenderer>().sprite = WallSprites[0];
-		}
-		else if (HP < MaxHP / 2)
-		{
-			GetComponentInChildren<SpriteRenderer>().sprite = WallSprites[1];
-		}
-		if (HP <= 0)
-		{
-			GetComponentInChildren<SpriteRenderer>().sprite = WallSprites[2];
-			hpBar.Destroy();
-		}
-	}
-
-	public override bool GetDamage(float dmg)
-	{
-		return base.GetDamage(dmg);
-	}
-
-	public override void DestroySelf()
-	{
-		Destroy(hpBar.gameObject);
-		//for ( int i = 0; i < 3; i++ )
-		//	Destroy(transform.Find("wall " + i.ToString())
-		//		 .GetComponent<BoxCollider>());
+		Destroy(HpBar.gameObject);
+		for ( int i = 0; i < 3; i++ )
+			Destroy(transform.Find("wall " + i.ToString())
+				 .GetComponent<BoxCollider>());
 		this.enabled = false;
 	}
 
-	public override void OnCollided(Collider collider)
+	public override void OnCollided (Collider collider)
 	{
 		base.OnCollided(collider);
 		var goose = collider.gameObject.GetComponentInParent<Goose>();
-		if (goose == null)
+		if ( goose == null )
 			return;
 
-		if (goose.State != GooseState.Attack)
+		if ( goose.State != GooseState.Attack )
 			goose.StartAttack(this);
+	}
+
+	private void _getDamage (Target obj)
+	{
+		HpBar.Hp = HP;
+		if ( HP == MaxHP )
+		{
+			_renderer.sprite = WallSprites[0];
+		}
+		else if ( HP < MaxHP / 2 )
+		{
+			_renderer.sprite = WallSprites[1];
+		}
+		if ( HP <= 0 )
+		{
+			_renderer.sprite = WallSprites[2];
+			HpBar.Destroy();
+		}
 	}
 }
