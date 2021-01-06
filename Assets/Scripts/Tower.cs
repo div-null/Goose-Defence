@@ -19,7 +19,6 @@ public class Tower : Target
 	[SerializeField]
 	protected List<Transform> _spawnPoints;
 
-
 	/// <summary>
 	/// Префаб снаряда
 	/// </summary>

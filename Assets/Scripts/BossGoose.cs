@@ -33,7 +33,6 @@ public class BossGoose : Goose, IBellHunter
 	IEnumerator _takeBell (BossBell bell)
 	{
 		State = GooseState.Attack;
-		//TODO: выяснить как сократить задержку
 		//Воспроизведение анимации атаки
 		_animator.SetInteger("GooseState", (int)State);
 		yield return new WaitForSeconds(AttackSpeed / 2);

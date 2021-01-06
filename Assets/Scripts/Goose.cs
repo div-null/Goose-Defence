@@ -240,7 +240,6 @@ public class Goose : Target
 		_animator.speed = 1;
 		if ( _aim != null )
 			_aim.Destroyed -= _findTarget;
-		GooseFabric.Instance.geese.Remove(this);
 		State = GooseState.Dead;
 		_animator.SetInteger("GooseState", (int)State);   //death
 		yield return new WaitForSeconds(0.9f / SpeedMultiplier);

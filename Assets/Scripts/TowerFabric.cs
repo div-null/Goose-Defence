@@ -231,7 +231,6 @@ public class TowerFabric : Singleton<TowerFabric>
 
 	IEnumerator GooseBossAway ()
 	{
-		GooseFabric.Instance.GoAwayAll();
 		yield return new WaitForSeconds(2f);
 		Game.Instance.LooseGame?.Invoke(false, Game.Instance.Score);
 	}
@@ -255,7 +254,7 @@ public class TowerFabric : Singleton<TowerFabric>
 	{
 		wall.DestroySelf();
 		Targets.Remove(wall);
-		GooseFabric.Instance.loanchBoss();
+		GooseFabric.Instance.LoanchBoss();
 		Debug.Log("Wall crushed");
 	}
 
