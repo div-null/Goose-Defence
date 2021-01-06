@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,56 +26,39 @@ public abstract class Target : MonoBehaviour
 	/// <summary>
 	/// Тип объекта
 	/// </summary>
-	public TargetType type;
+	public TargetType Type;
 
 	/// <summary>
 	/// максимальное хп
 	/// </summary>
-	[SerializeField]
-	public int maxHP;
+	public int MaxHP;
 
 	[SerializeField]
-	float hp = 100f;
+	float _hp = 100f;
 
 
-	public bool isDestroyed
-	{
-		get
-		{
-			return HP <= 0;
-		}
-	}
+	public bool IsDestroyed => HP <= 0;
 
-	public bool isAlive
-	{
-		get
-		{
-			return !isDestroyed;
-		}
-	}
+	public bool IsAlive => !IsDestroyed;
 
 	/// <summary>
 	/// Хп Башни, вызывает событие уничтожения уничтожение
 	/// </summary>
-	[SerializeField]
 	public float HP
 	{
-		get
-		{
-			return hp;
-		}
+		get => _hp;
 		protected set
 		{
-			if (value >= hp)
+			if ( value >= _hp )
 			{
-				hp = value;
+				_hp = value;
 				return;
 			}
-			hp = value;
+			_hp = value;
 			Damaged?.Invoke(this);
-			if (hp <= 0)
+			if ( _hp <= 0 )
 			{
-				hp = 0;
+				_hp = 0;
 				Destroyed?.Invoke(this);
 			}
 		}
@@ -86,26 +69,26 @@ public abstract class Target : MonoBehaviour
 	/// </summary>
 	/// <param name="dmg"></param>
 	/// <returns></returns>
-	public virtual bool GetDamage(float dmg)
+	public virtual bool GetDamage (float dmg)
 	{
-		if (HP <= 0)
+		if ( HP <= 0 )
 			return false;
 		HP -= dmg;
-		return isDestroyed;
+		return IsDestroyed;
 	}
 
-	public virtual void DestroySelf()
+	public virtual void DestroySelf ()
 	{
 		this.enabled = false;
 		GameObject.Destroy(gameObject);
 	}
 
-	public virtual void OnCollided(Collider collider)
+	public virtual void OnCollided (Collider collider)
 	{
 
 	}
 
-	private void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter (Collider other)
 	{
 		OnCollided(other);
 	}

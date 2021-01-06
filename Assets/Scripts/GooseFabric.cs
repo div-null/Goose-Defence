@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -85,7 +85,7 @@ public class GooseFabric : Singleton<GooseFabric>
 
 	public void loanchBoss ()
 	{
-		StartCoroutine(LoanchBoss());
+		StartCoroutine(_loanchBoss());
 	}
 
 	Vector3 getSpawnPosition ()
@@ -140,7 +140,7 @@ public class GooseFabric : Singleton<GooseFabric>
 			goose.Destroyed += onGooseDead;
 
 			//TODO: вынести в метод Initialize
-			GameObject.Instantiate(goose_prefabs[(int)goose.typeGoose], goose.transform, false);
+			GameObject.Instantiate(goose_prefabs[(int)goose.GooseType], goose.transform, false);
 			geese.Add(goose);
 
 			if ( countGooseOnLvl == spawnedGooseCount )
@@ -157,7 +157,7 @@ public class GooseFabric : Singleton<GooseFabric>
 		}
 	}
 
-	IEnumerator LoanchBoss ()
+	IEnumerator _loanchBoss ()
 	{
 		if ( canSpawnBoss )
 		{
@@ -169,11 +169,11 @@ public class GooseFabric : Singleton<GooseFabric>
 			Vector3 spawnPosition = getSpawnPosition();
 			var gooseObject = placeGoose(spawnPosition, 4f);
 			gooseObject.name = "Goose Boss";
-			GooseBoss = gooseObject.AddComponent<Goose>();
+			GooseBoss = gooseObject.AddComponent<BossGoose>();
 			GooseBoss.Destroyed += onBossDead;
 
 			GooseBoss.Initialize(40);
-			GameObject.Instantiate(goose_prefabs[(int)GooseBoss.typeGoose], GooseBoss.transform, false);
+			GameObject.Instantiate(goose_prefabs[(int)GooseBoss.GooseType], GooseBoss.transform, false);
 			geese.Add(GooseBoss);
 		}
 	}
@@ -184,7 +184,7 @@ public class GooseFabric : Singleton<GooseFabric>
 	/// <param name="goose"></param>
 	void onGooseDead (Target goose)
 	{
-		Game.Instance.increaseScore(goose.maxHP / 10);
+		Game.Instance.increaseScore(goose.MaxHP / 10);
 		goose.Destroyed -= onGooseDead;
 		geese.Remove(goose);
 	}
@@ -205,7 +205,7 @@ public class GooseFabric : Singleton<GooseFabric>
 		// foreach (var item in geese)
 		// {
 		// 	item.transform.rotation = Quaternion.Euler(0, 180, 0);
-		// }		
+		// }
 	}
 
 	public void Clear ()
@@ -233,7 +233,7 @@ public class GooseFabric : Singleton<GooseFabric>
 			if ( parent == null )
 				continue;
 			var goose = parent.gameObject.GetComponent<Goose>();
-			if ( goose && goose.isAlive )
+			if ( goose && goose.IsAlive )
 				goose.GetDamage(damage, coefSlow, timeSlow);        //Бьём гуся
 		}
 	}

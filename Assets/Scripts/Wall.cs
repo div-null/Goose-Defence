@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 public class Wall : Target
@@ -21,8 +21,8 @@ public class Wall : Target
 
 	public void Initialize(int _maxHp)
 	{
-		maxHP = _maxHp;
-		HP = maxHP;
+		MaxHP = _maxHp;
+		HP = MaxHP;
 		var hpBarObj = GameObject.Instantiate(hpBarPrefab, new Vector3(-2f, 10f, -6f), Quaternion.identity);
 		hpBarObj.transform.SetParent(transform);
 		hpBar = hpBarObj.GetComponent<ProgressBar>();
@@ -35,11 +35,11 @@ public class Wall : Target
 	private void getDamage(Target obj)
 	{
 		hpBar.Hp = HP;
-		if (HP == maxHP)
+		if (HP == MaxHP)
 		{
 			GetComponentInChildren<SpriteRenderer>().sprite = WallSprites[0];
 		}
-		else if (HP < maxHP / 2)
+		else if (HP < MaxHP / 2)
 		{
 			GetComponentInChildren<SpriteRenderer>().sprite = WallSprites[1];
 		}
@@ -58,6 +58,9 @@ public class Wall : Target
 	public override void DestroySelf()
 	{
 		Destroy(hpBar.gameObject);
+		//for ( int i = 0; i < 3; i++ )
+		//	Destroy(transform.Find("wall " + i.ToString())
+		//		 .GetComponent<BoxCollider>());
 		this.enabled = false;
 	}
 
@@ -68,7 +71,7 @@ public class Wall : Target
 		if (goose == null)
 			return;
 
-		if (goose.state != GooseState.atack)
-			goose.startAttack(this);
+		if (goose.State != GooseState.Attack)
+			goose.StartAttack(this);
 	}
 }

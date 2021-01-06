@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,40 +7,39 @@ using UnityEngine;
 
 public class BossBell : Target
 {
-	public void Initialize(int _maxHp)
+	public void Initialize (int _maxHp)
 	{
-		type = TargetType.Human;
-		maxHP = _maxHp;
-		HP = maxHP;
+		Type = TargetType.Human;
+		MaxHP = _maxHp;
+		HP = MaxHP;
 	}
 
-	public override void OnCollided(Collider collider)
+	public override void OnCollided (Collider collider)
 	{
 		base.OnCollided(collider);
 		var goose = collider.gameObject.GetComponentInParent<Goose>();
-		if (goose == null)
+		if ( goose == null )
 			return;
 
-		//если босс коснулся колокола
-		if (goose.typeGoose == GooseKind.Boss)
+		//если гусь может забрать колокол
+		if ( goose is IBellHunter hunter )
 		{
-			//то воспроизводим ваншот атаку
-			goose.StartCoroutine(goose.TakeBell(this));
+			hunter.TakeBell(this);
+			return;
 		}
-		else
-		{
-			if (goose.state != GooseState.atack)
-				goose.startAttack(this);
-		}
+		if ( goose.State != GooseState.Attack )
+			goose.StartAttack(this);
+
 	}
 
-	public override bool GetDamage(float dmg)
+	// FIXME: исправить логику ваншота
+	public override bool GetDamage (float dmg)
 	{
 		// если дамаг наносится малый, то игнор
-		if (dmg < 10000)
+		if ( dmg < 10000 )
 			return true;
 		// иначе ваншот
 		base.GetDamage(dmg * 100);
-		return isDestroyed;
+		return IsDestroyed;
 	}
 }

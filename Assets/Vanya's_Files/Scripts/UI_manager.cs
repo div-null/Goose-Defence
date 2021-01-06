@@ -317,7 +317,7 @@ public class UI_manager : Singleton<UI_manager>
 	{
 		if ( Accept.GetComponentInChildren<Text>().text == "Улучшить" )
 		{
-			if ( tower == null || tower.isDestroyed )
+			if ( tower == null || tower.IsDestroyed )
 			{
 				CloseInfoPanel();
 				return;

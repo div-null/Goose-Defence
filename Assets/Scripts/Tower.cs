@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,12 +52,12 @@ public class Tower : Target
 
 	public void Initialize (TowerStats stats, GameObject projectilePref, int order)
 	{
-		type = TargetType.Human;
+		Type = TargetType.Human;
 		Anim = GetComponent<Animator>();
 		spawnPoints = new List<Transform>();
 		TowerOrder = order;
 		this.stats = stats;
-		maxHP = stats.MaxHP;
+		MaxHP = stats.MaxHP;
 		HP = stats.MaxHP;
 
 		ProjectilePrefab = projectilePref;
@@ -136,8 +136,8 @@ public class Tower : Target
 		if ( goose == null )
 			return;
 
-		if ( goose.state != GooseState.atack )
-			goose.startAttack(this);
+		if ( goose.State != GooseState.Attack )
+			goose.StartAttack(this);
 	}
 
 	public override void DestroySelf ()
