@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.ComponentModel;
@@ -28,7 +28,7 @@ public class TowerStats : ScriptableObject
 	public string Description => description;
 
 	[SerializeField]
-	TowerType towerType;
+	TowerType towerType = default;
 	/// <summary>
 	/// Тип башни
 	/// </summary>

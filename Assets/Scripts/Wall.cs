@@ -17,7 +17,7 @@ public class Wall : Target
 	/// Префаб полоски здоровья
 	/// </summary>
 	[SerializeField]
-	private GameObject _hpBarPrefab;
+	private GameObject _hpBarPrefab = default;
 
 	private SpriteRenderer _renderer;
 

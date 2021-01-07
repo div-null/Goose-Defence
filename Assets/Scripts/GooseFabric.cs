@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
 public class GooseFabric : Singleton<GooseFabric>
 {
 	/// <summary>
@@ -20,7 +19,7 @@ public class GooseFabric : Singleton<GooseFabric>
 	/// Префабы гусей
 	/// </summary>
 	[SerializeField]
-	private List<GameObject> _goosePrefabs;
+	private List<GameObject> _goosePrefabs = default;
 
 	/// <summary>
 	/// Массив живых гусей

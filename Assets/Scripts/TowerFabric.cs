@@ -16,29 +16,29 @@ public class TowerFabric : Singleton<TowerFabric>
 
 	[Header("Prefabs")]
 	[SerializeField]
-	private GameObject _placePrefab;
+	private GameObject _placePrefab = default;
 
 	[SerializeField]
-	private GameObject[] _projectilePrefabs;
+	private GameObject[] _projectilePrefabs = default;
 
 	[SerializeField]
-	private GameObject[] _towerPrefabs;
+	private GameObject[] _towerPrefabs = default;
 
 	[SerializeField]
-	private GameObject[] _place;
+	private GameObject[] _place = default;
 
 	[SerializeField]
-	private Transform _battlefield;
+	private Transform _battlefield = default;
 
 	[Header("Stats")]
 	[SerializeField]
-	private List<TowerStats> _towerStatsList;
+	private List<TowerStats> _towerStatsList = default;
 
 	[SerializeField]
-	private TowerStats _colocolStats;
+	private TowerStats _colocolStats = default;
 
 	[SerializeField]
-	private TowerStats _wallStats;
+	private TowerStats _wallStats = default;
 
 	private Place[] _places;
 	private List<Target> _targets;
