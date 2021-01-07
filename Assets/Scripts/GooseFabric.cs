@@ -55,6 +55,7 @@ public class GooseFabric : Singleton<GooseFabric>
 
 	public void StartSpawning ()
 	{
+		canSpawnBoss = true;
 		_spawnGeeseRoutine = StartCoroutine(_spawnGeese());
 	}
 
