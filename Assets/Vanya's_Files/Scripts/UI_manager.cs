@@ -323,14 +323,14 @@ public class UI_manager : Singleton<UI_manager>
 				return;
 			}
 			Game.Instance.decreaseMoney((int)selectedPrice);
-			TowerFabric.Instance.upgradeTower(tower.TowerOrder);
+			TowerFabric.Instance.UpgradeTower(tower.TowerOrder);
 			infoPanel.SetActive(false);
 			ButtonBuild.Play();
 		}
 		else if ( Accept.GetComponentInChildren<Text>().text == "Купить" )
 		{
 			Game.Instance.decreaseMoney((int)selectedPrice);
-			TowerFabric.Instance.placeTower(place.Order, selectedType, 1);
+			TowerFabric.Instance.PlaceTower(place.Order, selectedType, 1);
 			infoPanel.SetActive(false);
 			ButtonBuy.Play();
 		}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -120,7 +120,7 @@ public class Game : Singleton<Game>
 
 	IEnumerator BeginGame ()
 	{
-		TowerFabric.Instance.spawnLocation();
+		TowerFabric.Instance.SpawnLocation();
 		yield return new WaitForSeconds(3f);
 		isGameStarted = true;
 		EarnMoneyRoutine = StartCoroutine(EarnMoney());

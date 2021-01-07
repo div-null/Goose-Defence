@@ -193,7 +193,7 @@ public class Goose : Target
 
 		//нахожу новую цель
 		if ( target == null || target.IsDestroyed )
-			_aim = TowerFabric.Instance.findNearTarget(transform.position);
+			_aim = TowerFabric.Instance.FindNearTarget(transform.position);
 		else
 			_aim = target;
 		_aim.Destroyed += _findTarget;

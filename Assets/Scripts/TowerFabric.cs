@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,117 +10,73 @@ public class TowerFabric : Singleton<TowerFabric>
 	/// <summary>
 	/// Количество не пустых мест
 	/// </summary>
-	public int TowerCount { get { return Places.Count(place => place.isFree); } }
-
-	public GameObject PlacePrefab;
-
-	[SerializeField]
-	public GameObject[] ProjectilePrefabs;
-
-	[SerializeField]
-	public GameObject[] TowerPrefabs;
-
-	[SerializeField]
-	public List<TowerStats> TowerStatsList;
-
-	[SerializeField]
-	private TowerStats ColocolStats;
-
-	[SerializeField]
-	private TowerStats WallStats;
+	public int TowerCount => _places.Count(place => place.isFree);
 
 	public List<Tower> Towers;
-	List<Target> Targets;
-	Wall wall;
-	BossBell bell;
 
-	public GameObject[] place;
-	public Place[] Places;
+	[Header("Prefabs")]
+	[SerializeField]
+	private GameObject _placePrefab;
+
+	[SerializeField]
+	private GameObject[] _projectilePrefabs;
+
+	[SerializeField]
+	private GameObject[] _towerPrefabs;
+
+	[SerializeField]
+	private GameObject[] _place;
+
+	[SerializeField]
+	private Transform _battlefield;
+
+	[Header("Stats")]
+	[SerializeField]
+	private List<TowerStats> _towerStatsList;
+
+	[SerializeField]
+	private TowerStats _colocolStats;
+
+	[SerializeField]
+	private TowerStats _wallStats;
+
+	private Place[] _places;
+	private List<Target> _targets;
+	private Wall _wall;
+	private BossBell _bell;
+
 
 	/// <summary>
-	/// Префаб полоски здоровья
+	/// Инициализирует уровень
 	/// </summary>
-	[SerializeField]
-	GameObject hpBarPrefab;
-
-	public int TowerSelectedOrder;
-
-	[SerializeField]
-	Vector3 UpSpawnPoint;
-
-	[SerializeField]
-	Vector3 DownSpawnPoint;
-
-	[SerializeField]
-	Transform Battlefield;
-
-	public void spawnLocation ()
+	public void SpawnLocation ()
 	{
-
-		//for ( int i = 0; i < 11; i++ )
-		//	Debug.Log(TowerStatsList.GetStatsByPrefabId(i));
-		Battlefield = GameObject.Find("BattleField").transform;
+		_battlefield = GameObject.Find("BattleField").transform;
 		Towers = new List<Tower>();
-		Targets = new List<Target>();
-		Places = new Place[MaxTowerCount];
-		for ( int i = 0; i < MaxTowerCount; i++ )
+		_targets = new List<Target>();
+		_places = new Place[MaxTowerCount];
+		for ( int placeId = 0; placeId < MaxTowerCount; placeId++ )
 		{
+			Vector3 placePosition = _place[placeId].transform.position;
+			placePosition.z = -3 + placePosition.y / 10f + 1.5f;
+
+			var placeObject = GameObject.Instantiate(_placePrefab, placePosition, Quaternion.identity, _battlefield);
+			_places[placeId] = placeObject.GetComponent<Place>();
+			_places[placeId].Initialize(placeId, true, placePosition);
+
 			Towers.Add(null);
-			Vector3 pos = place[i].transform.position;
-			pos.z = -3 + pos.y / 10f + 1.5f;
-			var obj = GameObject.Instantiate(PlacePrefab, pos, Quaternion.identity, Battlefield);
-			Places[i] = obj.GetComponent<Place>();
-			Places[i].Initialize(i, true, pos);
 		}
 
-		Camera camera = GameObject.Find("Main Camera").GetComponent<Camera>();
-		UpSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
-		DownSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0));
-
-
-		//////////////////////////
-		/// СПАВН стены
-		var wallObj = GameObject.Instantiate(TowerPrefabs[9], new Vector3(-13.4f, 0.77f, 0), Quaternion.identity, Battlefield);
-		wallObj.transform.tag = "Tower";
-
-		Vector3 pos1 = wallObj.transform.position;
-		pos1.z = Places[0].transform.position.z + 0.001f;
-		wallObj.transform.position = pos1;
-
-		wall = wallObj.GetComponent<Wall>();
-		wall.Destroyed += destroyWall;
-		wall.Initialize(WallStats.MaxHP);
-		Targets.Add(wall);
-
-
-		//////////////////////////
-		/// СПАВН колокола
-		var bellObj = GameObject.Instantiate(TowerPrefabs[10], new Vector3(-19.95f, -0.7f, 0), Quaternion.identity, Battlefield);
-		bellObj.transform.tag = "Tower";
-
-		pos1 = bellObj.transform.position;
-		pos1.z = -3 + Mathf.Abs(pos1.y / 10) + 0.1f;
-		bellObj.transform.position = pos1;
-
-		bell = bellObj.GetComponent<BossBell>();
-		bell.Destroyed += destroyBell;
-		bell.Initialize(ColocolStats.MaxHP);
-		Targets.Add(bell);
-
-		//////////////////////////
-		/// СПАВН пустой башни
-		var emptytower = GameObject.Instantiate(TowerPrefabs[10], new Vector3(1000f, -1.38f, 0), Quaternion.identity, Battlefield);
-		bellObj.transform.tag = "Tower";
-
-		pos1 = emptytower.transform.position;
-		pos1.z = -3 + Mathf.Abs(pos1.y / 10) + 4f;
-		emptytower.transform.position = pos1;
-
-		var blank3 = emptytower.AddComponent<Tower>();
-		blank3.Initialize(ColocolStats, ProjectilePrefabs[0], 10);
-		Targets.Add(blank3);
+		_spawnWall(new Vector3(-13.4f, 0.77f, 0));
+		_spawnBell(new Vector3(-19.95f, -0.7f, 0));
+		_spawnDummyTarget(new Vector3(1000f, -1.38f, 0));
 	}
 
+	/// <summary>
+	/// Характеристика указанной башни
+	/// </summary>
+	/// <param name="order">Номер площадки</param>
+	/// <returns></returns>
 	public TowerStats SelectedTowerStats (int order)
 	{
 		if ( Towers[order] != null )
@@ -129,9 +84,15 @@ public class TowerFabric : Singleton<TowerFabric>
 		return null;
 	}
 
+	/// <summary>
+	/// Получает характеристики
+	/// </summary>
+	/// <param name="type">Тип башни</param>
+	/// <param name="Level">Уровень башни</param>
+	/// <returns></returns>
 	public TowerStats TowerStats (TowerType type, int Level = 1)
 	{
-		return TowerStatsList.Find(st => st.Type == type && st.Level == Level);
+		return _towerStatsList.Find(st => st.Type == type && st.Level == Level);
 	}
 
 	public TowerStats NextTowerStats (TowerStats stats)
@@ -139,124 +100,176 @@ public class TowerFabric : Singleton<TowerFabric>
 		return TowerStats(stats.Type, stats.Level + 1);
 	}
 
-	public void placeTower (int order, TowerStats stats)
+	/// <summary>
+	/// Ставит башню на позицию
+	/// </summary>
+	/// <param name="order">Номер площадки</param>
+	/// <param name="type">Тип башни</param>
+	/// <param name="Level">Уровень башни</param>
+	public void PlaceTower (int order, TowerType type, int Level)
 	{
-		// НЕ ДЕЛАЮ БАЩНЮ ДОЧЕРНЕЙ
-		// + new Vector3(0,2f)
-		Vector3 pos = Places[order].spawnPoint.position;
-		int towerPrefId = (int)stats.Type * 3 + stats.Level - 1;
-		int projPrefId = (int)stats.Type;
-		GameObject tower = GameObject.Instantiate(TowerPrefabs[towerPrefId], pos, Quaternion.identity, Battlefield);
-		var component = tower.AddComponent<Tower>();
-		component.Initialize(stats, ProjectilePrefabs[projPrefId], order);
-		component.MakeDamage();
-		component.Destroyed += deleteTower;
-
-		Targets.Add(component);
-		Towers[order] = component;
-		Places[order].isFree = false;
-	}
-
-	public void placeTower (int order, TowerType type, int Level)
-	{
-		placeTower(order, TowerStats(type, Level));
+		_setTower(order, TowerStats(type, Level));
 	}
 
 	/// <summary>
 	/// Обновляет башню на позиции
 	/// </summary>
-	/// <param name="order"></param>
-	public void upgradeTower (int order)
+	/// <param name="order">Номер площадки</param>
+	public void UpgradeTower (int order)
 	{
-		TowerStats stats = GetInfoByOrder(order);
+		TowerStats stats = _getStatsByOrder(order);
 		var newPrefid = (int)stats.Type * 3 + stats.Level;
-		var newStats = TowerStatsList[newPrefid];
-		destroyTower(order);
-		placeTower(order, newStats);
+		var newStats = _towerStatsList[newPrefid];
+		DestroyTower(order);
+		_setTower(order, newStats);
 	}
-
 
 	/// <summary>
-	/// УНИЧТОЖАЕТ ЗАДАННУЮ БАШНЮ
+	/// Убирает указанную башню
 	/// </summary>
-	/// <param name="order"></param>
-	public void destroyTower (int order)
+	/// <param name="order">Номер площадки</param>
+	public void DestroyTower (int order)
 	{
 		Tower tower = Towers[order];
-		tower.Destroyed -= deleteTower;
-		Targets.Remove(tower);
+		_targets.Remove(tower);
+		tower.Destroyed -= onDeleteTower;
 		tower.DestroySelf();
+
 		Towers[order] = null;
-		Places[order].isFree = true;
+		_places[order].isFree = true;
 	}
 
-	public TowerStats GetInfoByOrder (int order)
+	/// <summary>
+	/// Ищет ближайшую к точке поиска цель
+	/// </summary>
+	/// <param name="searchingPoint">Точка поиска</param>
+	/// <param name="searchDistance">Радиус поиска</param>
+	/// <returns></returns>
+	public Target FindNearTarget (Vector3 searchingPoint, float searchDistance = 9999)
 	{
-		return Towers[order].Stats;
-	}
-
-	public Target findNearTarget (Vector3 pos)
-	{
-		Vector3 temp = Vector3.down * 1000;
-		float distance = 9999;
-		Target result = null;
-		foreach ( var target in Targets )
+		float closestDistance = searchDistance;
+		Target foundTarget = null;
+		foreach ( var target in _targets )
 		{
 			if ( target == null || target.HP <= 0 )
 				continue;
 
-			Vector3 towerPos = target.transform.position;
-			var dist = Vector3.Distance(towerPos, pos);
-			if ( dist < distance )
+			var distance = Vector3.Distance(target.transform.position, searchingPoint);
+			if ( distance < closestDistance )
 			{
-				distance = dist;
-				temp = towerPos;
-				result = target;
+				closestDistance = distance;
+				foundTarget = target;
 			}
 		}
+		return foundTarget;
+	}
 
-		return result;
-		//return (temp == Vector3.down * 1000) ? new Vector3(-10, 0, 0) : temp;
+	private void _setTower (int placeId, TowerStats stats)
+	{
+		Vector3 spawnPosition = _places[placeId].spawnPoint.position;
+		int towerPrefId = (int)stats.Type * 3 + stats.Level - 1;
+		int projPrefId = (int)stats.Type;
+
+		GameObject towerObject = GameObject.Instantiate(_towerPrefabs[towerPrefId], spawnPosition, Quaternion.identity, _battlefield);
+		var tower = towerObject.AddComponent<Tower>();
+
+		tower.Initialize(stats, _projectilePrefabs[projPrefId], placeId);
+		tower.MakeDamage();
+		tower.Destroyed += onDeleteTower;
+
+		_targets.Add(tower);
+		Towers[placeId] = tower;
+		_places[placeId].isFree = false;
+	}
+
+	private TowerStats _getStatsByOrder (int order)
+	{
+		return Towers[order].Stats;
+	}
+
+	private void _spawnWall (Vector3 position)
+	{
+		//////////////////////////
+		/// СПАВН стены
+		var wallObj = GameObject.Instantiate(_towerPrefabs[9], position, Quaternion.identity, _battlefield);
+		wallObj.transform.tag = "Tower";
+
+		Vector3 mutatedPosition = wallObj.transform.position;
+		mutatedPosition.z = _places[0].transform.position.z + 0.001f;
+		wallObj.transform.position = mutatedPosition;
+
+		_wall = wallObj.GetComponent<Wall>();
+		_wall.Destroyed += onWallDestroyed;
+		_wall.Initialize(_wallStats.MaxHP);
+		_targets.Add(_wall);
+	}
+
+	private void _spawnBell(Vector3 position)
+	{
+		var bellObject = GameObject.Instantiate(_towerPrefabs[10], position, Quaternion.identity, _battlefield);
+		bellObject.transform.tag = "Tower";
+
+		Vector3 mutatedPosition = bellObject.transform.position;
+		mutatedPosition.z = -3 + Mathf.Abs(mutatedPosition.y / 10) + 0.1f;
+		bellObject.transform.position = mutatedPosition;
+
+		_bell = bellObject.GetComponent<BossBell>();
+		_bell.Destroyed += onBellDestroyed;
+		_bell.Initialize(_colocolStats.MaxHP);
+		_targets.Add(_bell);
+	}
+
+	private void _spawnDummyTarget (Vector3 position)
+	{
+		var dummyObject = GameObject.Instantiate(_towerPrefabs[10], position, Quaternion.identity, _battlefield);
+		dummyObject.transform.tag = "Tower";
+
+		Vector3 mutatedPosition = dummyObject.transform.position;
+		mutatedPosition.z = -3 + Mathf.Abs(mutatedPosition.y / 10) + 4f;
+		dummyObject.transform.position = mutatedPosition;
+
+		var tower = dummyObject.AddComponent<Tower>();
+		tower.Initialize(_colocolStats, _projectilePrefabs[0], 10);
+		_targets.Add(tower);
 	}
 
 	/// <summary>
 	/// Обработчик уничтожения башни
 	/// </summary>
 	/// <param name="tower"></param>
-	void deleteTower (Target tower)
+	private void onDeleteTower (Target tower)
 	{
 		int index = Towers.IndexOf((Tower)tower);
-		destroyTower(index);
+		DestroyTower(index);
 	}
 
-	IEnumerator GooseBossAway ()
+	/// <summary>
+	/// Обработчик уничтожения колокола
+	/// </summary>
+	/// <param name="bossBell"></param>
+	private void onBellDestroyed (Target bell)
 	{
+		StartCoroutine(_bellDestroyed(bell));
+	}
+
+	/// <summary>
+	/// Обработчик уничтожения стены
+	/// </summary>
+	private void onWallDestroyed (Target wall)
+	{
+		Debug.Log("Wall crushed");
+		wall.DestroySelf();
+		_targets.Remove(wall);
+		GooseFabric.Instance.LoanchBoss();
+	}
+
+	private IEnumerator _bellDestroyed (Target bossBell)
+	{
+		Debug.Log("Bell Destroyed");
+		_targets.Remove(bossBell);
+		bossBell.DestroySelf();
 		yield return new WaitForSeconds(2f);
 		Game.Instance.LooseGame?.Invoke(false, Game.Instance.Score);
 	}
-
-	/// <summary>
-	/// УНИЧТОЖЕН КОЛОКОЛ
-	/// </summary>
-	/// <param name="bossBell"></param>
-	void destroyBell (Target bossBell)
-	{
-		Debug.Log("Bell Destroyed");
-		Targets.Remove(bossBell);
-		bossBell.DestroySelf();
-		StartCoroutine(GooseBossAway());
-	}
-
-	/// <summary>
-	/// УНИЧТОЖЕНА СТЕНА
-	/// </summary>
-	void destroyWall (Target wall)
-	{
-		wall.DestroySelf();
-		Targets.Remove(wall);
-		GooseFabric.Instance.LoanchBoss();
-		Debug.Log("Wall crushed");
-	}
-
 
 }
