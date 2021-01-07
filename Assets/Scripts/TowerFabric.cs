@@ -10,7 +10,7 @@ public class TowerFabric : Singleton<TowerFabric>
 	/// <summary>
 	/// Количество не пустых мест
 	/// </summary>
-	public int TowerCount => _places.Count(place => place.isFree);
+	public int TowerCount => _places.Count(place => place.IsFree);
 
 	public List<Tower> Towers;
 
@@ -136,7 +136,7 @@ public class TowerFabric : Singleton<TowerFabric>
 		tower.DestroySelf();
 
 		Towers[order] = null;
-		_places[order].isFree = true;
+		_places[order].IsFree = true;
 	}
 
 	/// <summary>
@@ -166,7 +166,7 @@ public class TowerFabric : Singleton<TowerFabric>
 
 	private void _setTower (int placeId, TowerStats stats)
 	{
-		Vector3 spawnPosition = _places[placeId].spawnPoint.position;
+		Vector3 spawnPosition = _places[placeId].Position;
 		int towerPrefId = (int)stats.Type * 3 + stats.Level - 1;
 		int projPrefId = (int)stats.Type;
 
@@ -179,7 +179,7 @@ public class TowerFabric : Singleton<TowerFabric>
 
 		_targets.Add(tower);
 		Towers[placeId] = tower;
-		_places[placeId].isFree = false;
+		_places[placeId].IsFree = false;
 	}
 
 	private TowerStats _getStatsByOrder (int order)

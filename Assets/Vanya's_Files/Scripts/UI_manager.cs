@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -304,7 +304,7 @@ public class UI_manager : Singleton<UI_manager>
 					else if ( hit.transform.tag == "Place" )
 					{
 						place = hit.transform.gameObject.GetComponent<Place>();
-						if ( place.isFree )
+						if ( place.IsFree )
 							buyPanel.SetActive(true);
 					}
 					break;
