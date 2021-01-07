@@ -107,8 +107,8 @@ public class GooseFabric : Singleton<GooseFabric>
 		Camera camera = GameObject.Find("Main Camera").GetComponent<Camera>();
 		var depth = 0;
 
-		_upSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, depth));
-		_downSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, depth));
+		_upSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, depth)) + Vector3.right;
+		_downSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, depth)) + Vector3.right;
 	}
 
 	private Vector3 _getSpawnPosition ()
