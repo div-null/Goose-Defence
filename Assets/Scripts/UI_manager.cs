@@ -149,7 +149,7 @@ public class UI_manager : Singleton<UI_manager>
 	public void SelectFirstTypeOfTower ()
 	{
 		ButtonSelect.Play();
-		WindowBuyTower(TowerType.Tomate);
+		WindowBuyTower(TowerType.Tomato);
 	}
 
 	public void SelectSecondTypeOfTower ()

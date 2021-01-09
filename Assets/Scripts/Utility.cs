@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using System.Collections;
 
@@ -8,7 +8,7 @@ using System.Collections;
 public enum TowerType
 {
 	//Капуста
-	Tomate = 0,
+	Tomato = 0,
 	Cabbage,
 	Peas
 }
@@ -20,12 +20,12 @@ public enum TowerType
 public struct GooseTypeStats
 {
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	/// <param name="hp">Хп</param>
 	/// <param name="dmg">Дамаг</param>
 	/// <param name="speedMul">Множитель скорости</param>
-	public GooseTypeStats(int hp, int dmg, float speedMul)
+	public GooseTypeStats (int hp, int dmg, float speedMul)
 	{
 		Damage = dmg;
 		Hp = hp;
