@@ -28,6 +28,9 @@ public class UI_manager : Singleton<UI_manager>
 	Place place;
 	TowerType selectedType;
 	float selectedPrice;
+	[SerializeField]
+	float _gameEndTimeOut = 2.5f;
+
 	public GameObject backGroundMusicButton;
 	[Header("Audio")]
 	public AudioSource ButtonCloseSound;
@@ -322,14 +325,14 @@ public class UI_manager : Singleton<UI_manager>
 				CloseInfoPanel();
 				return;
 			}
-			Game.Instance.decreaseMoney((int)selectedPrice);
+			Game.Instance.DecreaseMoney((int)selectedPrice);
 			TowerFabric.Instance.UpgradeTower(tower.TowerOrder);
 			infoPanel.SetActive(false);
 			ButtonBuild.Play();
 		}
 		else if ( Accept.GetComponentInChildren<Text>().text == "Купить" )
 		{
-			Game.Instance.decreaseMoney((int)selectedPrice);
+			Game.Instance.DecreaseMoney((int)selectedPrice);
 			TowerFabric.Instance.PlaceTower(place.Order, selectedType, 1);
 			infoPanel.SetActive(false);
 			ButtonBuy.Play();
@@ -386,7 +389,7 @@ public class UI_manager : Singleton<UI_manager>
 		//TowerFabric.Instance.placeTower(3, new TowerStatsList.TowerCabbageT1());
 		//TowerFabric.Instance.placeTower(4, new TowerStatsList.TowerPeasT1());
 
-		Game.Instance.startGame();
+		Game.Instance.StartGame();
 		//TowerFabric.Instance.placeTower(0, new TowerStatsList.TowerPeasT3());
 		//TowerFabric.Instance.placeTower(1, new TowerStatsList.TowerPeasT3());
 	}
@@ -412,7 +415,7 @@ public class UI_manager : Singleton<UI_manager>
 
 	IEnumerator Result (bool result, int score)
 	{
-		yield return new WaitForSeconds(Game.gameEndTimeOut);
+		yield return new WaitForSeconds(_gameEndTimeOut);
 		BackGroundSoundOnOff(false);
 
 		transitToEnd.SetActive(true);

@@ -152,7 +152,7 @@ public class GooseFabric : Singleton<GooseFabric>
 	/// <param name="goose"></param>
 	private void onGooseDead (Target goose)
 	{
-		Game.Instance.increaseScore(goose.MaxHP / 10);
+		Game.Instance.IncreaseScore(goose.MaxHP / 10);
 		goose.Destroyed -= onGooseDead;
 		_geese.Remove(goose);
 	}
