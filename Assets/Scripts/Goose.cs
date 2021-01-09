@@ -138,11 +138,8 @@ public class Goose : Target
 	public bool GetDamage (float damage, float coefSlow = 1, float timeSlow = 0)
 	{
 		base.GetDamage(damage);
-		if ( timeSlow != 0 )
-		{
-			this.StopRoutine(_slowdownRoutine);
-			_slowdownRoutine = StartCoroutine(_slowDown(coefSlow, timeSlow));
-		}
+		_applySlowEffect(coefSlow, timeSlow);
+
 		if ( IsDestroyed && State != GooseState.Dead )
 		{
 			State = GooseState.Dead;
@@ -185,7 +182,16 @@ public class Goose : Target
 		}
 	}
 
-	void _findTarget (Target target)
+	protected virtual void _applySlowEffect (float slowCoef, float time)
+	{
+		if ( time != 0 )
+		{
+			this.StopRoutine(_slowdownRoutine);
+			_slowdownRoutine = StartCoroutine(_slowDown(slowCoef, time));
+		}
+	}
+
+	private void _findTarget (Target target)
 	{
 		// если ранее цель была установлена
 		if ( _aim != null )

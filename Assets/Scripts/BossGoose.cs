@@ -30,7 +30,12 @@ public class BossGoose : Goose, IBellHunter
 		StartCoroutine(_takeBell(bell));
 	}
 
-	IEnumerator _takeBell (BossBell bell)
+	protected override void _applySlowEffect (float slowCoef, float time)
+	{
+		// do nothing
+	}
+
+	private IEnumerator _takeBell (BossBell bell)
 	{
 		State = GooseState.Attack;
 		//Воспроизведение анимации атаки
