@@ -410,6 +410,7 @@ public class UI_manager : Singleton<UI_manager>
 		ClearLevel.Instance.Clear();
 		GooseFabric.Instance.Clear();
 		ButtonSelect.Play();
+		BackGroundSoundOnOff(true);
 		StartWriting();
 	}
 
