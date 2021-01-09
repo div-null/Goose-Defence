@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public delegate void EndGame(bool result, int score);
-public delegate void StatUpdate(int score);
+public delegate void EndGame (bool result, int score);
+public delegate void StatUpdate (int score);
 
 public class Game : Singleton<Game>
 {
@@ -16,125 +16,106 @@ public class Game : Singleton<Game>
 	public event StatUpdate UpdateGold;
 	public event StatUpdate UpdateScore;
 
-	///<summary>
-	/// Задержка перед показом UI для конца игры
-	///</summary>
-	public static float gameEndTimeOut = 2.5f;
-
-	/// <summary>
-	/// Типы снарядов
-	/// </summary>
-	[SerializeField]
-	public ProjectileStats[,] ProjectilesTypes;
-
 	/// <summary>
 	/// Игра идёт
 	/// </summary>
-	public bool isGameStarted { get; protected set; } = false;
+	public bool IsGameStarted { get; protected set; } = false;
 
+	public int Score { get => _score; protected set { _score = value; UpdateScore?.Invoke(_score); } }
+
+	public int Money { get => _money; protected set { _money = value; UpdateGold?.Invoke(_money); } }
 
 	[SerializeField]
-	public int baseMoney = 1000;
+	private int _baseMoney = 1000;
+
+	[SerializeField]
+	private int _money;
+
+	[SerializeField]
+	private int _score;
 
 	/// <summary>
 	/// Ожидание между получением денег
 	/// </summary>
 	[SerializeField]
-	float moneyBackDelay = 1f;
+	private float _moneyBackDelay = 1f;
 
 	/// <summary>
 	/// Количество денег получаемое за ожидание
 	/// </summary>
-	int moneyPerDelay = 50;
+	private int _moneyPerDelay = 50;
 
-	[SerializeField]
-	int money;
-	public int Money { get { return money; } protected set { money = value; UpdateGold?.Invoke(money); } }
+	private Coroutine _earnMoneyRoutine;
 
-	[SerializeField]
-	int score;
-	public int Score { get { return score; } protected set { score = value; UpdateScore?.Invoke(score); } }
-
-	public void Clear()
+	public void Clear ()
 	{
 		Score = 0;
-		Money = baseMoney;
+		Money = _baseMoney;
 	}
 
-	public void increaseScore(int ammount)
+	public void IncreaseScore (int ammount)
 	{
 		Score += ammount;
 	}
 
-	public void increaseMoney(int ammount)
+	public void IncreaseMoney (int ammount)
 	{
 		Money += ammount;
 	}
 
-	public void decreaseMoney(int ammount)
+	public void DecreaseMoney (int ammount)
 	{
 		Money -= ammount;
 	}
 
-	/// <summary>
-	/// КОРУТИНА СПАВНА ГУСЕЙ И УВЕЛИЧЕНИЯ СЛОЖНОСТИ
-	/// </summary>
-	/// <returns></returns>
-	IEnumerator SpawnGooses()
-	{
-		GooseFabric.Instance.StartSpawning();
-		yield return null;
-	}
-
-	public void startGame()
+	public void StartGame ()
 	{
 		Score = 0;
-		Money = baseMoney;
-		StartCoroutine(BeginGame());
+		Money = _baseMoney;
+		StartCoroutine(_beginGame());
+		GooseFabric.Instance.StartSpawning();
 	}
 
-	public void finishGame(bool result, int score)
+	public void FinishGame (bool result, int score)
 	{
 		StopAllCoroutines();
+		StartCoroutine(_endGame());
 		GooseFabric.Instance.Stopspawning();
-		StartCoroutine(EndGame());
+	}
+
+	void Awake ()
+	{
+		LooseGame += FinishGame;
+		WinGame += FinishGame;
 	}
 
 	/// <summary>
 	/// Регулярное получение денег
 	/// </summary>
 	/// <returns></returns>
-	IEnumerator EarnMoney()
+	IEnumerator _earnMoney ()
 	{
-		while (true)
+		while ( true )
 		{
-			yield return new WaitForSeconds(moneyBackDelay);
+			yield return new WaitForSeconds(_moneyBackDelay);
 
-			Money += (int)(moneyPerDelay * (GooseFabric.Instance.GooseLvl / 8f + 1));
+			Money += (int)( _moneyPerDelay * ( GooseFabric.Instance.GooseLvl / 8f + 1 ) );
 		}
 	}
 
-	IEnumerator BeginGame()
+	IEnumerator _beginGame ()
 	{
-		TowerFabric.Instance.spawnLocation();
+		TowerFabric.Instance.SpawnLocation();
 		yield return new WaitForSeconds(3f);
-		isGameStarted = true;
-		StartCoroutine(EarnMoney());
-		StartCoroutine(SpawnGooses());
+		IsGameStarted = true;
+		_earnMoneyRoutine = StartCoroutine(_earnMoney());
 	}
 
-	IEnumerator EndGame()
+	IEnumerator _endGame ()
 	{
-		isGameStarted = false;
-		StopCoroutine("EarnMoney");
-		StopCoroutine("SpawnGooses");
+		IsGameStarted = false;
+		this.StopRoutine(_earnMoneyRoutine);
 		yield return new WaitForSeconds(0);
 	}
 
-	void Awake()
-	{
-		LooseGame += finishGame;
-		WinGame += finishGame;
-
-	}
 }

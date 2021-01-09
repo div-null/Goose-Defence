@@ -1,16 +1,17 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Place : MonoBehaviour
 {
-	public void Awake()
-	{
-		spawnPoint = transform.Find("SpawnPoint");
-	}
+	public Vector3 Position => _spawnPoint.position;
+	public int Order { get; protected set; }
+	public bool IsFree;
+	Transform _spawnPoint;
+
 
 	/// <summary>
-	/// Устанавливаем 
+	/// Установка площадки
 	/// </summary>
 	/// <param name="order"></param>
 	/// <param name="status"></param>
@@ -18,10 +19,11 @@ public class Place : MonoBehaviour
 	{
 		transform.position = position;
 		Order = order;
-		isFree = status;
+		IsFree = status;
+	}
+	void Awake()
+	{
+		_spawnPoint = transform.Find("SpawnPoint");
 	}
 
-	public Transform spawnPoint;
-	public int Order;
-	public bool isFree;
 }

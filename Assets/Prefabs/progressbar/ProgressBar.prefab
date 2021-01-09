@@ -112,11 +112,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8203d83719231474c8b76db4ab1b42ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  redProgress: {fileID: 1082399836751009950}
-  progress: {fileID: 1082399836527323277}
-  hint: {fileID: 1082399836193490277}
-  currentHp: 80
-  maxHp: 100
+  _redProgress: {fileID: 1082399836751009950}
+  _progress: {fileID: 1082399836527323277}
+  _hint: {fileID: 1082399836193490277}
+  _currentHp: 0
+  _maxHp: 0
 --- !u!1 &1082399836193490272
 GameObject:
   m_ObjectHideFlags: 0

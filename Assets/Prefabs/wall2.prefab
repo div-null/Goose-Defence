@@ -47,15 +47,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a86f391fa7beedd42ae2a4b47b15037d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
-  maxHP: 0
-  hp: 100
-  hpBar: {fileID: 0}
+  Type: 0
+  MaxHP: 0
+  _hp: 100
+  HpBar: {fileID: 0}
   WallSprites:
   - {fileID: 21300000, guid: d0faf9c3b1c4ba146be9dde0628cbc1d, type: 3}
   - {fileID: 21300000, guid: 7329c6ae17f8db8489178a7f265b7ad6, type: 3}
   - {fileID: 21300000, guid: 32dbb7acd55f0914ebff73a67eabc1ed, type: 3}
-  hpBarPrefab: {fileID: 252397107989796042, guid: 34facac7f35af1749b451689dc56cdbf,
+  _hpBarPrefab: {fileID: 252397107989796042, guid: 34facac7f35af1749b451689dc56cdbf,
     type: 3}
 --- !u!1 &595225414109114734
 GameObject:
