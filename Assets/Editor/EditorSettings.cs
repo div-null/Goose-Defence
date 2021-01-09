@@ -9,12 +9,12 @@ public class EditorSettings : MonoBehaviour
 	[MenuItem("Build/Build WEB")]
 	public static void MyBuild()
 	{
-		PlayerSettings.WebGL.memorySize = 8196;
+		PlayerSettings.WebGL.memorySize = 280;
 		PlayerSettings.WebGL.threadsSupport = true;
 		PlayerSettings.WebGL.linkerTarget = WebGLLinkerTarget.Wasm;
 		BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
 		buildPlayerOptions.scenes = new[] { "Assets/Scenes/GameScene1.unity" };
-		buildPlayerOptions.locationPathName = "F:\\Out";
+		buildPlayerOptions.locationPathName = EditorUtility.OpenFolderPanel("Select build path", "", "");
 		buildPlayerOptions.target = BuildTarget.WebGL;
 		buildPlayerOptions.options = BuildOptions.AutoRunPlayer;
 		

@@ -1,228 +1,224 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
-
 public class GooseFabric : Singleton<GooseFabric>
 {
+	/// <summary>
+	/// Начало новой волны
+	/// </summary>
 	public event StatUpdate UpdateGooseLvl;
 
-	[SerializeField]
-	Vector3 UpSpawnPoint;
-
-	[SerializeField]
-	Vector3 DownSpawnPoint;
+	/// <summary>
+	/// Номер волны
+	/// </summary>
+	public int GooseLvl { get => _gooseLvl; protected set { _gooseLvl = value; UpdateGooseLvl?.Invoke(_gooseLvl); } }
 
 	/// <summary>
-	/// Линии нумеруются сверху вниз
+	/// Префабы гусей
 	/// </summary>
 	[SerializeField]
-	GooseTypeStats[] GooseTypes;
-	public bool fabric_activity;                     //активность фабрики
-	[SerializeField]
-	public List<Goose> geese;                       //ГУУУУСИИИИ
-	[SerializeField]
-	public List<GameObject> goose_prefabs;
-	[SerializeField]
-	public int gooseLvl;
+	private List<GameObject> _goosePrefabs = default;
 
-	public int GooseLvl { get { return gooseLvl; } protected set { gooseLvl = value; UpdateGooseLvl?.Invoke(gooseLvl); } }
+	/// <summary>
+	/// Массив живых гусей
+	/// </summary>
+	[SerializeField]
+	private List<Target> _geese;
 
+	[SerializeField]
+	private int _gooseLvl;
 
-	void Awake()
+	/// <summary>
+	/// Верхняя граница спавна гусей
+	/// </summary>
+	[SerializeField]
+	private Vector3 _upSpawnPoint;
+
+	/// <summary>
+	/// Нижняя граница спавна гусей
+	/// </summary>
+	[SerializeField]
+	private Vector3 _downSpawnPoint;
+
+	/// <summary>
+	/// Босс на уровне
+	/// </summary>
+	private Goose _gooseBoss;
+
+	private bool canSpawnBoss = true;
+
+	private Transform _battleField;
+
+	private Coroutine _spawnGeeseRoutine;
+
+	public void StartSpawning ()
 	{
-		geese = new List<Goose>();
-
-		Camera camera = GameObject.Find("Main Camera").GetComponent<Camera>();
-		var depth = 0;
-
-		UpSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, depth));
-		DownSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, depth));
-
-		float length = UpSpawnPoint.y - DownSpawnPoint.y;
-		float step = length / 6;
-		float start = UpSpawnPoint.y;
+		canSpawnBoss = true;
+		_spawnGeeseRoutine = StartCoroutine(_spawnGeese());
 	}
 
-	public Goose FindGoose(Vector3 pos, float range)
+	public void Stopspawning ()
+	{
+		StopAllCoroutines();
+	}
+
+	public void LoanchBoss ()
+	{
+		StartCoroutine(_loanchBoss());
+	}
+
+	public void Clear ()
+	{
+		Stopspawning();
+		_geese = new List<Target>();
+		GooseLvl = 1;
+	}
+
+	//Изменение текущего уровня
+	public void ChangeGooseLvl (int gooseLvl)
+	{
+		GooseLvl = gooseLvl;
+	}
+
+	public Goose FindGoose (Vector3 pos, float range)
 	{
 		float minDistance = range;
 		Goose temp = null;
-		foreach (var goose in geese)
+		foreach ( var goose in _geese )
 		{
-			float distance = (goose.transform.position - pos).magnitude;
-			if (distance < minDistance && goose.cur_hp > 0)
+			float distance = ( goose.transform.position - pos ).magnitude;
+			if ( distance < minDistance && goose.HP > 0 )
 			{
 				minDistance = distance;
-				temp = goose;
+				temp = (Goose)goose;
 			}
 		}
 		return temp;
 	}
 
-	//Изменение текущего уровня
-	public void ChangeGooseLvl(int gooseLvl)
+
+
+	private void Awake ()
 	{
-		GooseLvl = gooseLvl;
+		_geese = new List<Target>();
+		_battleField = GameObject.Find("BattleField").GetComponent<Transform>();
+		Camera camera = GameObject.Find("Main Camera").GetComponent<Camera>();
+		var depth = 0;
+
+		_upSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, depth)) + Vector3.right;
+		_downSpawnPoint = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, depth)) + Vector3.right;
 	}
 
-	void incScore(Goose goose)
+	private Vector3 _getSpawnPosition ()
 	{
-		Game.Instance.increaseScore(goose.max_hp / 10);
+		float length = Mathf.Abs(_upSpawnPoint.y - _downSpawnPoint.y);
+		float x = _downSpawnPoint.x;
+		float z = Random.Range(-1f, 0f);
+		float y = _upSpawnPoint.y + z * length;
+		return new Vector3(x, y, z);
+	}
+
+	private GameObject _placeGoose (Vector3 position, float gooseSize)
+	{
+		// создаю объект с компонентами
+		GameObject gooseCollider = new GameObject("Collider", typeof(SphereCollider));
+		gooseCollider.transform.position = position;
+		gooseCollider.transform.rotation = Quaternion.identity;
+
+		//Добавил Никита
+		//gooseCollider.AddComponent<SphereCollider>();
+		SphereCollider collider = gooseCollider.GetComponent<SphereCollider>();
+		collider.radius = gooseSize;
+		collider.isTrigger = true;
+
+		GameObject gooseObject = new GameObject("Goose");
+		gooseObject.transform.tag = "Goose";
+		gooseObject.transform.position = position;
+		gooseObject.transform.rotation = Quaternion.identity;
+		gooseObject.transform.SetParent(_battleField);
+		//увеличиваю гуся в зависимости от его уровня
+		gooseObject.transform.localScale = new Vector3(gooseSize, gooseSize);
+
+		// помещаю коллайдер под гуся
+		gooseCollider.transform.SetParent(gooseObject.transform);
+		return gooseObject;
 	}
 
 	/// <summary>
 	/// Вызывается при смерте босса
 	/// </summary>
 	/// <param name="goose"></param>
-	void bossDead(Goose goose)
+	private void onGooseDead (Target goose)
+	{
+		Game.Instance.IncreaseScore(goose.MaxHP / 10);
+		goose.Destroyed -= onGooseDead;
+		_geese.Remove(goose);
+	}
+
+	/// <summary>
+	/// Вызывается при смерте босса
+	/// </summary>
+	/// <param name="goose"></param>
+	private void onBossDead (Target goose)
 	{
 		Game.Instance.WinGame?.Invoke(true, Game.Instance.Score);
+		onGooseDead(goose);
 	}
 
-	public void loanchGoose()
+	private IEnumerator _spawnGeese ()
 	{
-		StartCoroutine(LoanchBoss());
-	}
-
-	public void loanchBoss()
-	{
-		StartCoroutine(LoanchBoss());
-	}
-
-	bool isCanSpawnBoss = true;
-
-	IEnumerator LoanchBoss()
-	{
-		if (isCanSpawnBoss)
-		{
-			isCanSpawnBoss = false;
-
-			StopCoroutine("SpawnGeese");
-			yield return new WaitForSeconds(1.5f);
-
-			float length = Mathf.Abs(UpSpawnPoint.y - DownSpawnPoint.y);
-			float x = DownSpawnPoint.x;
-			float z = Random.Range(-1f, 0f);
-			float y = UpSpawnPoint.y + z * length;
-
-			GameObject tmpCol = new GameObject("Collider");
-			tmpCol.transform.position = new Vector3(x, y, z);
-			tmpCol.transform.rotation = Quaternion.identity;
-
-			GameObject tmpGM = new GameObject("Goose Boss");
-			tmpGM.transform.tag = "Goose";
-			tmpGM.transform.position = new Vector3(x, y, z);
-			tmpGM.transform.rotation = Quaternion.identity;
-			var tmpG = tmpGM.AddComponent<Goose>();
-			tmpGM.transform.localScale = new Vector3(4, 4);
-			tmpG.GooseDied += bossDead;
-
-			//Добавил Никита
-			var col = tmpCol.AddComponent<SphereCollider>();
-			tmpCol.GetComponent<SphereCollider>().radius = 4;
-			tmpCol.GetComponent<SphereCollider>().isTrigger = true;
-			//
-			tmpG.Initialize(40);
-			GameObject.Instantiate(goose_prefabs[tmpG.typeGoose], tmpG.transform, false);
-			tmpCol.transform.SetParent(tmpGM.transform);
-			geese.Add(tmpG);
-		}
-	}
-
-
-	public void GoAwayAll()
-	{
-		GameObject.Find("Goose Boss");
-		GameObject.Find("Goose Boss").GetComponentInChildren<Animator>().SetTrigger("WithBell");
-		foreach (var item in geese)
-		{
-			item.transform.rotation = Quaternion.Euler(0, 180, 0);
-		}		
-	} 
-
-	public void Clear()
-	{
-		Stopspawning();
-		geese = new List<Goose>();
-		GooseLvl = 1;
-	}
-
-	public void StartSpawning()
-	{		
-		StartCoroutine("SpawnGeese");
-	}
-
-	public void Stopspawning()
-	{
-        StopAllCoroutines();
-	}
-
-	public IEnumerator SpawnGeese()
-    {
 		GooseLvl = 1;
 		int spawnedGooseCount = 0;
-		while (true)
+		while ( true )
 		{
 			spawnedGooseCount++;
-			int countGooseOnLvl = (int)((gooseLvl / 25f) / Mathf.Sqrt(1 + Mathf.Pow(gooseLvl / 25f, 2)) * 50);
+			// вычисляю количество новых гусей на уровне
+			int countGooseOnLvl = (int)( ( GooseLvl / 25f ) / Mathf.Sqrt(1 + Mathf.Pow(GooseLvl / 25f, 2)) * 50 );
 
-			float length = Mathf.Abs(UpSpawnPoint.y - DownSpawnPoint.y);
-			float x = DownSpawnPoint.x;			
-			float z = Random.Range(-1f, 0f);
-			float y = UpSpawnPoint.y + z * length;
+			Vector3 spawnPosition = _getSpawnPosition();
+			var gooseObject = _placeGoose(spawnPosition, ( 1f + GooseLvl / 25f ));
+			var goose = gooseObject.AddComponent<Goose>();
+			goose.Initialize(GooseLvl);
+			goose.Destroyed += onGooseDead;
 
-            GameObject tmpCol = new GameObject("Collider");
-            tmpCol.transform.position = new Vector3(x, y, z);
-            tmpCol.transform.rotation = Quaternion.identity;
+			//TODO: вынести в метод Initialize
+			GameObject.Instantiate(_goosePrefabs[(int)goose.GooseType], goose.transform, false);
+			_geese.Add(goose);
 
-            GameObject tmpGM = new GameObject("Goose");
-            tmpGM.transform.tag = "Goose";
-            tmpGM.transform.position = new Vector3(x, y, z);
-			tmpGM.transform.rotation = Quaternion.identity;
-			var tmpG = tmpGM.AddComponent<Goose>();
-            tmpG.GooseDied += incScore;
-			tmpGM.transform.localScale = new Vector3((1f + gooseLvl / 25f), (1f + gooseLvl / 25f));
-            //Добавил Никита
-            var col = tmpCol.AddComponent<SphereCollider>();
-            tmpCol.GetComponent<SphereCollider>().radius = (1f + gooseLvl / 25f);
-            tmpCol.GetComponent<SphereCollider>().isTrigger = true;
-            //
-			tmpG.Initialize(gooseLvl);
-
-			GameObject.Instantiate(goose_prefabs[tmpG.typeGoose], tmpG.transform, false);
-            tmpCol.transform.SetParent(tmpGM.transform);
-            geese.Add(tmpG);
-			if(countGooseOnLvl == spawnedGooseCount)
+			if ( countGooseOnLvl == spawnedGooseCount )
 			{
 				spawnedGooseCount = 0;
 				GooseLvl++;
 			}
-			if (gooseLvl == 30)
+			if ( GooseLvl == 30 )
 			{
-				StartCoroutine("LoanchBoss");
+				LoanchBoss();
 				break;
 			}
 			yield return new WaitForSeconds(20f / countGooseOnLvl);
 		}
 	}
 
-    public void OnAttack(float radius, Vector2 target, int damage, float coefSlow = 1, float timeSlow = 0)
-    {
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(target, radius, Vector2.down, 5);                  //находим побитых гусей
-		
-        foreach(var hit in hits)                                                    //увидели гуся
-        {
-            var parent = hit.transform.parent;
-            if (parent == null)
-                continue;
-            var goose = parent.gameObject.GetComponent<Goose>();
-            if (goose && goose.cur_hp>0)
-                goose.OnDamage(damage, coefSlow, timeSlow);        //Бьём гуся
-        }
-    }
-     
+	private IEnumerator _loanchBoss ()
+	{
+		if ( canSpawnBoss )
+		{
+			canSpawnBoss = false;
 
+			this.StopRoutine(_spawnGeeseRoutine);
+			yield return new WaitForSeconds(1.5f);
 
+			Vector3 spawnPosition = _getSpawnPosition();
+			var gooseObject = _placeGoose(spawnPosition, 4f);
+			gooseObject.name = "Goose Boss";
+			_gooseBoss = gooseObject.AddComponent<BossGoose>();
+			_gooseBoss.Destroyed += onBossDead;
+
+			_gooseBoss.Initialize(40);
+			GameObject.Instantiate(_goosePrefabs[(int)_gooseBoss.GooseType], _gooseBoss.transform, false);
+			_geese.Add(_gooseBoss);
+		}
+	}
 }
