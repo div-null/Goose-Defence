@@ -1,4 +1,4 @@
-# Goose-Defence
+# Goose Defense
 
 [Siberian Game Jam - May 2020](https://itch.io/jam/sibgamejam-may-2020)
 
